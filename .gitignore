@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # copié depuis node_modules par « npm run cms »
 public/admin/sveltia-cms.js
+
+# Ressources brutes fournies par Automachine (photos, logos, documents) : jamais dans le dépôt public
+ressources/
