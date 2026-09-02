@@ -1,0 +1,967 @@
+{
+  "titre": "Quiz règlement machines — parcours Pro",
+  "mention": "Contenu informatif, ne constitue pas un conseil juridique.",
+  "source": "Questions rédigées par Automachine, importées du classeur quiz_reglement_machines.xlsx le 2026-09-02.",
+  "questions": [
+    {
+      "id": 1,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Nous livrons une ligne d'assemblage en novembre 2026, marquée CE au titre de la directive de 2006. Que se passe-t-il pour elle après le 20 janvier 2027 ?",
+      "options": {
+        "a": "Elle doit être remise en conformité avec le nouveau texte avant cette date",
+        "b": "Son marquage CE devient caduc et doit être réapposé sous six mois",
+        "c": "Elle doit faire l'objet d'un nouveau dossier visé par un organisme notifié",
+        "d": "Elle peut rester sur le marché sans nouvelle évaluation de conformité"
+      },
+      "bonne_reponse": "d",
+      "explication": "Le critère, c'est la date de mise sur le marché. Une machine mise sur le marché avant le 20 janvier 2027 reste commercialisable ensuite, sans reprise de dossier, et les certificats d'examen CE de type déjà obtenus restent valides jusqu'à leur expiration.",
+      "reference": "art. 52"
+    },
+    {
+      "id": 2,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Nous assemblons trois machines déjà marquées CE et un convoyeur de notre conception pour former une ligne pilotée en commun. Quelle est notre situation ?",
+      "options": {
+        "a": "Nous devenons fabricant de l'ensemble et marquons CE la ligne complète",
+        "b": "Chaque machine garde son marquage, aucune démarche supplémentaire n'est due",
+        "c": "Seul le convoyeur de notre conception doit être marqué CE par nos soins",
+        "d": "L'exploitant devient responsable de la conformité dès la mise en service"
+      },
+      "bonne_reponse": "a",
+      "explication": "Des machines commandées ensemble pour concourir à un même résultat forment elles-mêmes une machine. L'intégrateur en est le fabricant : analyse de risques, dossier et marquage CE au niveau de la ligne, en plus des marquages individuels qui subsistent.",
+      "reference": "art. 3, point 1 d)"
+    },
+    {
+      "id": 3,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Nous fournissons un poste robotisé sans protecteurs ni organes de commande, destiné à être intégré par le client dans sa propre ligne. Que devons-nous livrer avec ?",
+      "options": {
+        "a": "Une déclaration de conformité et un marquage CE apposé sur le poste",
+        "b": "Un simple procès-verbal de recette signé par le client à la réception",
+        "c": "Une déclaration d'incorporation et une notice d'assemblage, sans marquage CE",
+        "d": "Rien de particulier, le client restant responsable de son intégration"
+      },
+      "bonne_reponse": "c",
+      "explication": "Une quasi-machine ne se marque pas CE : déclaration d'incorporation et notice d'assemblage. Elle doit malgré tout respecter les exigences de sécurité qui la concernent. Nouveauté : la notice d'assemblage peut être numérique.",
+      "reference": "art. 11 et 22"
+    },
+    {
+      "id": 4,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Un client nous demande d'ajouter un poste de chargement automatique sur sa machine de 2015, ce qui impose de modifier le système de commande de sécurité existant. Qui porte la conformité ?",
+      "options": {
+        "a": "Le client, puisqu'il est à la fois exploitant et donneur d'ordre",
+        "b": "Nous, qui devenons fabricant pour la partie affectée par la modification",
+        "c": "Le fabricant d'origine, responsable pendant toute la durée de vie du bien",
+        "d": "Personne, une machine déjà en service échappant au marquage CE"
+      },
+      "bonne_reponse": "b",
+      "explication": "Modifier une machine au point de devoir toucher à sa commande de sécurité fait de nous le fabricant, pour la partie affectée. La directive de 2006 ne disait rien : la règle ne figurait que dans un guide. À chiffrer en avant-vente.",
+      "reference": "art. 18"
+    },
+    {
+      "id": 5,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Nous voulons livrer la notice d'utilisation uniquement via un QR code renvoyant vers un PDF hébergé en ligne. Est-ce recevable ?",
+      "options": {
+        "a": "Oui, si elle reste téléchargeable et accessible en ligne pendant des années",
+        "b": "Non, la version papier reste obligatoire pour toute machine industrielle",
+        "c": "Oui, sans condition, le format numérique étant désormais totalement libre",
+        "d": "Oui, mais seulement si le client est établi dans le même pays que nous"
+      },
+      "bonne_reponse": "a",
+      "explication": "Oui, mais la notice doit rester imprimable, téléchargeable et accessible en ligne au moins dix ans après la mise sur le marché. L'accès doit être indiqué sur la machine, et le papier fourni gratuitement si l'acheteur le demande.",
+      "reference": "art. 10, § 7"
+    },
+    {
+      "id": 6,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Une autorité de surveillance du marché nous adresse une demande motivée sur une machine que nous avons livrée. Que peut-elle exiger de nous ?",
+      "options": {
+        "a": "Uniquement la déclaration de conformité et l'attestation d'un organisme notifié",
+        "b": "Les plans mécaniques, à l'exclusion de tout élément logiciel ou immatériel",
+        "c": "L'accès physique à la machine chez le client, sans transmission de document",
+        "d": "Le dossier technique et, le cas échéant, le code source du programme"
+      },
+      "bonne_reponse": "d",
+      "explication": "Dossier technique à conserver dix ans, et code source communicable sur demande motivée s'il est nécessaire pour vérifier la conformité. Concrètement : archiver les programmes automate par machine et par version.",
+      "reference": "art. 10, §§ 2 et 3"
+    },
+    {
+      "id": 7,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Sur une de nos machines, l'automate de sécurité peut être reprogrammé depuis le réseau de l'usine. Qu'exige le nouveau texte sur ce point ?",
+      "options": {
+        "a": "Rien, la sécurité informatique relevant d'autres textes européens spécifiques",
+        "b": "L'interdiction de toute connexion réseau vers un automate de sécurité",
+        "c": "Une protection contre les altérations et une traçabilité des interventions",
+        "d": "Une validation par un organisme notifié avant chaque mise à jour logicielle"
+      },
+      "bonne_reponse": "c",
+      "explication": "Les logiciels ayant une incidence sur la sécurité doivent être protégés contre toute altération et la machine doit garder la trace des interventions. Le réseau n'est pas interdit, il doit être maîtrisé. Rien de tel n'existait en 2006.",
+      "reference": "annexe III, 1.1.9"
+    },
+    {
+      "id": 8,
+      "semaine": 1,
+      "theme": "Cadre général et bascule",
+      "question": "Nous étudions une fonction de sécurité pilotée par une intelligence artificielle qui continue d'apprendre après la mise en service. Quel régime s'applique ?",
+      "options": {
+        "a": "Le passage par un organisme notifié devient obligatoire pour ce produit",
+        "b": "Le même régime que pour une fonction de sécurité classique, sans surcoût",
+        "c": "Une interdiction : une fonction de sécurité ne peut pas reposer sur du logiciel",
+        "d": "Une simple déclaration complémentaire au titre de la réglementation sur l'IA"
+      },
+      "bonne_reponse": "a",
+      "explication": "Une IA qui apprend en continu et assure une fonction de sécurité relève de la catégorie la plus exigeante : organisme notifié obligatoire, quelles que soient les normes appliquées. À repérer dès l'avant-projet.",
+      "reference": "annexe I, partie A"
+    },
+    {
+      "id": 9,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Nous achetons une machine standard chez un fabricant asiatique et la revendons sous notre propre marque à un client français. Quel est notre statut ?",
+      "options": {
+        "a": "Distributeur, avec un simple devoir de vérification des documents fournis",
+        "b": "Importateur, tenu de vérifier le travail du fabricant d'origine",
+        "c": "Fabricant, avec l'ensemble des obligations qui vont avec",
+        "d": "Mandataire du fabricant asiatique sur le territoire de l'Union"
+      },
+      "bonne_reponse": "c",
+      "explication": "Mettre un produit sur le marché sous son propre nom ou sa propre marque fait de nous le fabricant, avec toutes ses obligations. Il en va de même si nous modifions un produit déjà sur le marché au point d'affecter sa conformité.",
+      "reference": "art. 17"
+    },
+    {
+      "id": 10,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Nous importons directement une machine depuis un pays tiers, sans la rebaptiser. Que devons-nous vérifier avant de la mettre sur le marché ?",
+      "options": {
+        "a": "Uniquement la présence du marquage CE et de la notice en français",
+        "b": "Que la procédure de conformité a été appliquée et le dossier technique établi",
+        "c": "Rien, la responsabilité reposant intégralement sur le fabricant d'origine",
+        "d": "Que le fabricant dispose d'une assurance responsabilité civile valide"
+      },
+      "bonne_reponse": "b",
+      "explication": "L'importateur vérifie que la bonne procédure d'évaluation a été appliquée, que le dossier technique existe, que le marquage CE est apposé et que les documents accompagnent le produit. Il appose aussi ses propres coordonnées.",
+      "reference": "art. 13"
+    },
+    {
+      "id": 11,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Nous désignons un mandataire établi dans l'Union pour une de nos activités. Que ne pouvons-nous pas lui confier ?",
+      "options": {
+        "a": "La conservation des documents à disposition des autorités pendant dix ans",
+        "b": "La coopération avec les autorités en cas de mesure visant à éliminer un risque",
+        "c": "La transmission des documents de conformité sur demande motivée",
+        "d": "La conception conforme du produit et l'établissement du dossier technique"
+      },
+      "bonne_reponse": "d",
+      "explication": "Le mandat ne peut jamais couvrir la conception conforme ni l'établissement du dossier technique : ces deux obligations restent au fabricant. Le mandataire conserve les documents, les transmet et coopère avec les autorités.",
+      "reference": "art. 12"
+    },
+    {
+      "id": 12,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Nous construisons une machine spéciale pour équiper notre propre atelier, sans intention de la vendre. Quelles sont nos obligations ?",
+      "options": {
+        "a": "Aucune, le marquage CE ne visant que les produits destinés à la vente",
+        "b": "Les mêmes que pour une machine vendue : nous en sommes le fabricant",
+        "c": "Une simple analyse de risques, sans dossier technique ni déclaration",
+        "d": "Une déclaration d'incorporation suffit, faute de mise sur le marché"
+      },
+      "bonne_reponse": "b",
+      "explication": "Fabriquer une machine et la mettre en service pour son propre usage fait de nous un fabricant au sens du règlement. Dossier technique, évaluation de la conformité, déclaration et marquage CE sont dus, exactement comme pour une vente.",
+      "reference": "art. 3, point 18 b)"
+    },
+    {
+      "id": 13,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Notre modification substantielle ne touche qu'un seul poste d'une ligne qui en compte six. Sur quoi portent nos obligations de fabricant ?",
+      "options": {
+        "a": "Sur la ligne entière, qui doit être réévaluée et remarquée dans son ensemble",
+        "b": "Sur rien, une ligne existante n'étant pas concernée par une réévaluation",
+        "c": "Sur le poste affecté, tel que le démontre l'évaluation des risques",
+        "d": "Sur les seuls éléments que nous avons physiquement remplacés sur le site"
+      },
+      "bonne_reponse": "c",
+      "explication": "Quand la modification n'affecte la sécurité que d'une machine faisant partie d'un ensemble, les obligations portent sur cette machine seule. C'est l'évaluation des risques qui délimite le périmètre, pas le bon de commande.",
+      "reference": "art. 18"
+    },
+    {
+      "id": 14,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Un particulier modifie lui-même sa machine, achetée neuve, pour son usage personnel. Quel est son statut ?",
+      "options": {
+        "a": "Il devient fabricant et doit refaire une déclaration de conformité",
+        "b": "Il n'est pas considéré comme fabricant et n'a pas ces obligations",
+        "c": "Il doit faire valider sa modification par un organisme notifié",
+        "d": "Il engage la responsabilité du fabricant d'origine de la machine"
+      },
+      "bonne_reponse": "b",
+      "explication": "Un utilisateur non professionnel qui modifie sa propre machine pour son propre usage n'est pas considéré comme fabricant. L'exception ne vaut que dans ce cas précis : un professionnel qui modifie, même pour lui-même, reste fabricant.",
+      "reference": "art. 18"
+    },
+    {
+      "id": 15,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Une autorité nous demande de qui nous tenons un composant intégré dans une machine livrée il y a huit ans. Que devons-nous pouvoir fournir ?",
+      "options": {
+        "a": "L'identité du fournisseur, ces informations étant conservées dix ans",
+        "b": "Rien, le délai légal de conservation étant de cinq ans seulement",
+        "c": "Uniquement la facture d'achat, si elle est encore dans nos archives",
+        "d": "Le contrat commercial complet signé avec ce fournisseur à l'époque"
+      },
+      "bonne_reponse": "a",
+      "explication": "Tout opérateur économique doit pouvoir nommer qui lui a fourni un produit et à qui il l'a fourni, et conserver cette information au moins dix ans. C'est ce qui rend la chaîne traçable en cas de rappel.",
+      "reference": "art. 19"
+    },
+    {
+      "id": 16,
+      "semaine": 2,
+      "theme": "Qui porte quoi",
+      "question": "Un revendeur met à disposition sur le marché une de nos quasi-machines. Que doit-il vérifier avant ?",
+      "options": {
+        "a": "Que le marquage CE est bien apposé sur la quasi-machine elle-même",
+        "b": "Uniquement que nos coordonnées figurent sur l'emballage du produit",
+        "c": "Que l'attestation d'un organisme notifié accompagne bien la livraison",
+        "d": "Que la déclaration d'incorporation et la notice d'assemblage sont présentes"
+      },
+      "bonne_reponse": "d",
+      "explication": "Le distributeur de quasi-machines vérifie la présence de la déclaration d'incorporation et de la notice d'assemblage, cette dernière dans une langue compréhensible par celui qui va l'incorporer. Pas de marquage CE à chercher.",
+      "reference": "art. 16"
+    },
+    {
+      "id": 17,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Que doit contenir au minimum le dossier technique d'une de nos machines spéciales ?",
+      "options": {
+        "a": "Les plans et les schémas, l'analyse de risques restant un document interne",
+        "b": "L'analyse de risques documentée, les plans, les essais et la notice",
+        "c": "La seule déclaration de conformité et les certificats de nos fournisseurs",
+        "d": "Le cahier des charges client et le procès-verbal de recette contradictoire"
+      },
+      "bonne_reponse": "b",
+      "explication": "Le dossier comprend la description du produit, l'analyse de risques documentée avec les mesures de protection retenues, les plans et schémas, les normes appliquées, les rapports d'essais et une copie de la notice.",
+      "reference": "annexe IV, partie A"
+    },
+    {
+      "id": 18,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Notre machine relève aussi de la directive basse tension et de la compatibilité électromagnétique. Combien de déclarations établissons-nous ?",
+      "options": {
+        "a": "Une par texte applicable, chacune signée séparément par le fabricant",
+        "b": "Une seule, mentionnant tous les textes concernés et leurs références",
+        "c": "Une seule, mais uniquement si tous les textes sont des règlements",
+        "d": "Deux : une pour les machines, une pour l'ensemble des autres textes"
+      },
+      "bonne_reponse": "b",
+      "explication": "Quand plusieurs textes de l'Union imposent une déclaration, une seule déclaration est établie pour l'ensemble. Elle cite les titres et les références de publication de tous les actes concernés.",
+      "reference": "art. 21, § 3"
+    },
+    {
+      "id": 19,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Pouvons-nous nous dispenser de joindre la déclaration de conformité papier à la machine livrée ?",
+      "options": {
+        "a": "Non, l'original signé doit physiquement accompagner chaque machine",
+        "b": "Oui, si l'exemplaire est remis séparément au client sous trente jours",
+        "c": "Oui, en fournissant une adresse internet ou un code lisible par machine",
+        "d": "Oui, la déclaration n'étant obligatoire que sur demande du client"
+      },
+      "bonne_reponse": "c",
+      "explication": "La déclaration peut être remplacée par une adresse internet ou un code lisible par machine, indiqué dans la notice. Elle doit alors rester accessible en ligne pendant toute la durée de vie prévue et au moins dix ans.",
+      "reference": "art. 10, § 8"
+    },
+    {
+      "id": 20,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Quelles mentions minimales doivent figurer sur la machine elle-même, en plus du marquage CE ?",
+      "options": {
+        "a": "La désignation, l'année de construction, le type ou la série et un numéro",
+        "b": "Le nom du client final et le numéro de l'affaire commerciale concernée",
+        "c": "La seule référence de la norme harmonisée appliquée à la conception",
+        "d": "Le numéro de la déclaration de conformité et sa date de signature"
+      },
+      "bonne_reponse": "a",
+      "explication": "La plaque porte au minimum la désignation, l'année de construction, la série ou le type, un numéro de lot ou de série, ainsi que le nom et l'adresse du fabricant. Si la taille ne le permet pas, ces mentions passent sur l'emballage.",
+      "reference": "art. 10, §§ 5 et 6"
+    },
+    {
+      "id": 21,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "À quel moment le marquage CE doit-il être apposé sur une machine spéciale ?",
+      "options": {
+        "a": "À la réception définitive prononcée par le client sur son site",
+        "b": "Après la période de garantie, une fois la fiabilité confirmée",
+        "c": "À la fin des essais en plateforme, avant expédition vers le client",
+        "d": "Avant la mise sur le marché ou la mise en service de la machine"
+      },
+      "bonne_reponse": "d",
+      "explication": "Le marquage CE est apposé avant la mise sur le marché ou la mise en service, de manière visible, lisible et indélébile. Quand un organisme notifié intervient, son numéro d'identification suit le marquage.",
+      "reference": "art. 24"
+    },
+    {
+      "id": 22,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Notre notice de maintenance est destinée à nos propres techniciens, qui interviennent partout en Europe. Dans quelle langue peut-elle être rédigée ?",
+      "options": {
+        "a": "Dans la langue de chaque pays où une intervention est susceptible d'avoir lieu",
+        "b": "Dans une seule langue officielle de l'Union comprise par ce personnel",
+        "c": "Dans la langue du siège social du fabricant, sans autre condition",
+        "d": "En anglais uniquement, langue technique admise par défaut dans l'Union"
+      },
+      "bonne_reponse": "b",
+      "explication": "Par dérogation, la notice d'entretien destinée à un personnel spécialisé dépendant du fabricant ou de son mandataire peut n'exister que dans une seule langue officielle de l'Union comprise par ce personnel.",
+      "reference": "annexe III, 1.7.4"
+    },
+    {
+      "id": 23,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Pendant combien de temps devons-nous conserver le dossier technique d'une quasi-machine et sa déclaration d'incorporation ?",
+      "options": {
+        "a": "Cinq ans à compter de la date de facturation au client intégrateur",
+        "b": "Jusqu'à la mise en service de la machine finale par l'intégrateur",
+        "c": "Dix ans au moins après la mise sur le marché de la quasi-machine",
+        "d": "Sans limite, tant que la quasi-machine reste exploitée quelque part"
+      },
+      "bonne_reponse": "c",
+      "explication": "Même régime que pour une machine complète : dix ans au moins après la mise sur le marché, code source inclus le cas échéant. La quasi-machine a son propre dossier technique, distinct de celui de la machine finale.",
+      "reference": "art. 11, §§ 2 et 3"
+    },
+    {
+      "id": 24,
+      "semaine": 3,
+      "theme": "Dossier et documents",
+      "question": "Notre plaquette commerciale annonce une cadence que la notice conditionne à des protections supplémentaires. Est-ce acceptable ?",
+      "options": {
+        "a": "Oui, un document commercial n'ayant aucune portée réglementaire",
+        "b": "Oui, si la plaquette renvoie explicitement à la notice d'instructions",
+        "c": "Non, les documents commerciaux ne doivent pas contredire la notice",
+        "d": "Non, sauf si la mention figure en petits caractères en bas de page"
+      },
+      "bonne_reponse": "c",
+      "explication": "Les documents commerciaux ne doivent pas contredire la notice sur les aspects de santé et de sécurité, et doivent reprendre les mêmes informations d'émission. Le devis et la fiche produit engagent donc aussi la conformité.",
+      "reference": "annexe III, 1.7.5"
+    },
+    {
+      "id": 25,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Nous concevons une presse plieuse à chargement manuel en appliquant intégralement les normes harmonisées pertinentes. Quelle procédure pouvons-nous suivre ?",
+      "options": {
+        "a": "Le contrôle interne de la production, sans intervention extérieure",
+        "b": "L'examen UE de type, obligatoire pour toute presse quelle qu'elle soit",
+        "c": "L'assurance complète de la qualité, seule voie ouverte à ce produit",
+        "d": "La vérification à l'unité par un organisme notifié, machine par machine"
+      },
+      "bonne_reponse": "a",
+      "explication": "Pour les catégories de la partie B de l'annexe I, l'auto-certification reste possible à une condition stricte : appliquer des normes harmonisées ou des spécifications communes couvrant toutes les exigences pertinentes.",
+      "reference": "art. 25, § 3"
+    },
+    {
+      "id": 26,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Même presse, mais une exigence de sécurité n'est couverte par aucune norme harmonisée et nous la traitons par une solution maison. Que devient la procédure ?",
+      "options": {
+        "a": "Elle reste inchangée, la solution maison étant documentée au dossier",
+        "b": "Elle bascule vers une procédure faisant intervenir un organisme notifié",
+        "c": "Elle impose une déclaration complémentaire signée par le client final",
+        "d": "Elle exige une vérification à l'unité pour chaque exemplaire produit"
+      },
+      "bonne_reponse": "b",
+      "explication": "Dès que la couverture normative n'est pas complète, le contrôle interne n'est plus ouvert : il faut passer par l'examen UE de type, l'assurance complète de la qualité ou la vérification à l'unité. Un point à vérifier très tôt en conception.",
+      "reference": "art. 25, § 3"
+    },
+    {
+      "id": 27,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Notre machine spéciale ne correspond à aucune catégorie listée à l'annexe I. Quelle procédure s'applique ?",
+      "options": {
+        "a": "Une déclaration sur l'honneur adressée à l'autorité de surveillance",
+        "b": "L'examen UE de type, par défaut, en l'absence de catégorie identifiée",
+        "c": "Le contrôle interne de la production, sous notre seule responsabilité",
+        "d": "Une consultation préalable obligatoire d'un organisme notifié"
+      },
+      "bonne_reponse": "c",
+      "explication": "Hors annexe I, c'est le contrôle interne de la production. C'est le cas de la grande majorité de nos machines spéciales : nous évaluons nous-mêmes, mais l'exigence de fond reste entière.",
+      "reference": "art. 25, § 4"
+    },
+    {
+      "id": 28,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Quel est l'effet d'appliquer une norme harmonisée dont les références sont publiées au Journal officiel ?",
+      "options": {
+        "a": "Une présomption de conformité aux exigences que la norme couvre",
+        "b": "Une dispense d'analyse de risques pour les points traités par la norme",
+        "c": "Une obligation, toute norme harmonisée étant d'application contraignante",
+        "d": "Une garantie contre toute mesure ultérieure de surveillance du marché"
+      },
+      "bonne_reponse": "a",
+      "explication": "Appliquer une norme harmonisée reste volontaire, mais donne une présomption de conformité aux exigences qu'elle couvre. Cela n'exonère ni de l'analyse de risques ni du traitement des points hors norme.",
+      "reference": "art. 20"
+    },
+    {
+      "id": 29,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Que se passe-t-il si aucune norme harmonisée n'existe pour couvrir une exigence essentielle ?",
+      "options": {
+        "a": "L'exigence devient inapplicable jusqu'à publication d'une norme adaptée",
+        "b": "La Commission peut adopter des spécifications communes par acte d'exécution",
+        "c": "Le fabricant doit saisir un organisme notifié pour arbitrer le point",
+        "d": "Une norme nationale d'un État membre s'y substitue automatiquement"
+      },
+      "bonne_reponse": "b",
+      "explication": "Quand les normes harmonisées manquent ou sont insuffisantes, la Commission peut adopter des spécifications communes, qui produisent le même effet de présomption de conformité. Ce mécanisme est nouveau par rapport à 2006.",
+      "reference": "art. 20, § 3"
+    },
+    {
+      "id": 30,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Nous obtenons une attestation d'examen UE de type pour une gamme de machines. Quelle est sa durée de validité ?",
+      "options": {
+        "a": "Illimitée, tant que la conception du produit n'est pas modifiée",
+        "b": "Dix ans, alignée sur la durée de conservation du dossier technique",
+        "c": "Cinq ans au maximum, renouvellement compris",
+        "d": "Trois ans, avec un audit de surveillance annuel obligatoire"
+      },
+      "bonne_reponse": "c",
+      "explication": "La validité d'une attestation, initiale ou renouvelée, ne peut pas dépasser cinq ans. Et toute modification de la conception susceptible d'affecter la conformité impose un complément à l'attestation initiale.",
+      "reference": "annexe VII"
+    },
+    {
+      "id": 31,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "Nous voulons faire examiner une conception par un organisme notifié. Quelle règle s'impose au dépôt de la demande ?",
+      "options": {
+        "a": "La demande doit être déposée simultanément auprès de deux organismes",
+        "b": "L'organisme doit être établi dans le pays du siège social du fabricant",
+        "c": "L'organisme est imposé par l'autorité nationale de surveillance du marché",
+        "d": "Un seul organisme, avec déclaration écrite qu'aucune autre demande n'existe"
+      },
+      "bonne_reponse": "d",
+      "explication": "La demande va à un seul organisme notifié, librement choisi, accompagnée d'une déclaration écrite attestant qu'aucune demande identique n'a été déposée ailleurs. Impossible de mettre plusieurs organismes en concurrence sur le même dossier.",
+      "reference": "annexe VII"
+    },
+    {
+      "id": 32,
+      "semaine": 4,
+      "theme": "Évaluation de la conformité",
+      "question": "La liste des catégories de l'annexe I peut-elle évoluer après l'entrée en application du règlement ?",
+      "options": {
+        "a": "Non, toute modification exigeant une nouvelle procédure législative complète",
+        "b": "Oui, la Commission peut la modifier par acte délégué après consultation",
+        "c": "Oui, chaque État membre pouvant y ajouter des catégories nationales",
+        "d": "Non, la liste ayant été figée lors de l'adoption du texte en 2023"
+      },
+      "bonne_reponse": "b",
+      "explication": "La Commission peut ajouter, retirer ou déplacer une catégorie par acte délégué, en fonction du progrès technique et sur la base d'une évaluation du risque. La liste des machines à haut risque est donc évolutive.",
+      "reference": "art. 6"
+    },
+    {
+      "id": 33,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Le système de commande d'une machine doit résister à certaines influences extérieures. Lesquelles sont désormais visées explicitement ?",
+      "options": {
+        "a": "Les seules perturbations électromagnétiques et variations d'alimentation",
+        "b": "Les erreurs de programmation commises par l'intégrateur lui-même",
+        "c": "Les tentatives malveillantes de tiers raisonnablement prévisibles",
+        "d": "Les conditions climatiques extrêmes rencontrées en exploitation"
+      },
+      "bonne_reponse": "c",
+      "explication": "Le texte vise explicitement les tentatives malveillantes raisonnablement prévisibles de tiers conduisant à une situation dangereuse. La menace intentionnelle entre dans le champ de la conception du système de commande.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 34,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Sur une ligne composée de plusieurs machines, que doit provoquer un arrêt d'urgence actionné sur l'une d'elles ?",
+      "options": {
+        "a": "L'arrêt de cette seule machine, les autres poursuivant leur cycle",
+        "b": "L'arrêt de la machine et des équipements associés si le danger persiste",
+        "c": "L'arrêt de la ligne entière dans tous les cas, sans exception possible",
+        "d": "Une mise en sécurité progressive selon un ordre défini par l'exploitant"
+      },
+      "bonne_reponse": "b",
+      "explication": "Les commandes d'arrêt, arrêt d'urgence compris, doivent pouvoir arrêter non seulement la machine concernée mais aussi les équipements associés si leur maintien en fonctionnement constitue un danger. Point clé de la conception d'ensemble.",
+      "reference": "annexe III, 1.2.4.4"
+    },
+    {
+      "id": 35,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Comment doit se comporter le système de commande lorsqu'un ordre de marche et un ordre d'arrêt arrivent simultanément ?",
+      "options": {
+        "a": "L'ordre le plus récent l'emporte, quel que soit son sens",
+        "b": "L'ordre issu du pupitre principal prime sur les autres postes",
+        "c": "Le système se met en défaut et demande un acquittement opérateur",
+        "d": "L'ordre d'arrêt est prioritaire sur les ordres de mise en marche"
+      },
+      "bonne_reponse": "d",
+      "explication": "L'arrêt prime toujours sur la marche. Une fois l'arrêt des fonctions dangereuses obtenu, l'alimentation en énergie des actionneurs concernés est interrompue.",
+      "reference": "annexe III, 1.2.4.1"
+    },
+    {
+      "id": 36,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Nous prévoyons un pupitre de commande sans fil pour le réglage d'une machine. Quelle exigence s'impose ?",
+      "options": {
+        "a": "Une perte de liaison ne doit pas entraîner de situation dangereuse",
+        "b": "La commande sans fil est interdite dès lors qu'un protecteur est ouvert",
+        "c": "Une liaison filaire de secours doit doubler la liaison radio en permanence",
+        "d": "La portée doit être limitée à la seule zone visible depuis le pupitre"
+      },
+      "bonne_reponse": "a",
+      "explication": "Une défaillance de la communication, une connexion défectueuse ou une perte de liaison ne doit pas créer de situation dangereuse. C'est la conception du repli qui compte, pas la technologie radio en elle-même.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 37,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Nous intégrons des machines d'origines diverses dans une même ligne. Qu'exige le texte des parties de commande liées à la sécurité ?",
+      "options": {
+        "a": "Qu'elles proviennent toutes d'un même fabricant d'automates de sécurité",
+        "b": "Qu'elles soient doublées d'une supervision centralisée indépendante",
+        "c": "Qu'elles s'appliquent de manière cohérente à la totalité de l'ensemble",
+        "d": "Qu'elles soient certifiées individuellement par un organisme notifié"
+      },
+      "bonne_reponse": "c",
+      "explication": "Les parties du système de commande liées à la sécurité doivent s'appliquer de manière cohérente sur tout l'ensemble, machines et quasi-machines comprises. C'est exactement le travail d'un intégrateur, et c'est désormais écrit.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 38,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Une machine doit-elle obligatoirement être équipée d'un dispositif d'arrêt d'urgence ?",
+      "options": {
+        "a": "Oui, sans aucune exception, dès lors qu'elle comporte un élément mobile",
+        "b": "Non, si l'arrêt d'urgence ne réduirait pas réellement le risque",
+        "c": "Non, dès lors qu'un protecteur fixe interdit tout accès à la zone",
+        "d": "Oui, sauf accord écrit de l'exploitant consigné au dossier technique"
+      },
+      "bonne_reponse": "b",
+      "explication": "L'arrêt d'urgence est obligatoire sauf lorsqu'il ne réduirait pas le risque, ou pour les machines portatives tenues ou guidées à la main. Et il vient en appui des autres mesures de protection, il ne les remplace pas.",
+      "reference": "annexe III, 1.2.4.3"
+    },
+    {
+      "id": 39,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Notre machine dispose d'un mode réglage permettant de travailler protecteur ouvert. Que doit garantir le sélecteur de mode ?",
+      "options": {
+        "a": "Il verrouille la position et interdit tout autre mode en parallèle",
+        "b": "Il déclenche une alarme sonore pendant toute la durée du réglage",
+        "c": "Il limite la durée du mode réglage à une valeur définie en conception",
+        "d": "Il enregistre l'identité de l'opérateur ayant sélectionné ce mode"
+      },
+      "bonne_reponse": "a",
+      "explication": "Le sélecteur doit être verrouillable dans chaque position, désactiver tous les autres modes, n'autoriser les fonctions dangereuses que par action maintenue et en conditions de risque réduit, et neutraliser toute commande par les capteurs.",
+      "reference": "annexe III, 1.2.5"
+    },
+    {
+      "id": 40,
+      "semaine": 5,
+      "theme": "Commande et sécurité fonctionnelle",
+      "question": "Qui peut modifier les réglages ou les règles d'une fonction de sécurité une fois la machine en service ?",
+      "options": {
+        "a": "L'exploitant, après formation dispensée par le fabricant de la machine",
+        "b": "Le service maintenance, sous réserve d'une traçabilité des interventions",
+        "c": "L'automate lui-même, dans les limites de sa phase d'apprentissage",
+        "d": "Personne, lorsque ces modifications peuvent créer une situation dangereuse"
+      },
+      "bonne_reponse": "d",
+      "explication": "Les limites des fonctions de sécurité sont fixées par l'évaluation des risques du fabricant. Aucune modification générée par la machine ou par un opérateur, y compris pendant une phase d'apprentissage, ne doit pouvoir créer une situation dangereuse.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 41,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Nous déployons une mise à jour du logiciel de sécurité d'une machine déjà livrée. Que devons-nous prévoir côté machine ?",
+      "options": {
+        "a": "Une nouvelle attestation d'examen UE de type avant tout déploiement",
+        "b": "Un journal des versions téléchargées, actif pendant cinq ans",
+        "c": "Une information écrite à l'autorité de surveillance du marché",
+        "d": "Une remise à zéro du compteur de durée de vie de la machine"
+      },
+      "bonne_reponse": "b",
+      "explication": "Le journal de suivi des interventions et des versions de logiciels de sécurité téléchargées après la mise sur le marché doit rester actif cinq ans, aux seules fins de démontrer la conformité sur demande motivée d'une autorité.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 42,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Une machine à comportement partiellement auto-évolutif prend des décisions de sécurité. Combien de temps ces données doivent-elles être conservées ?",
+      "options": {
+        "a": "Trois mois, le temps d'un cycle d'exploitation complet en production",
+        "b": "Cinq ans, aligné sur le journal des versions logicielles téléchargées",
+        "c": "Un an après leur collecte, pour démontrer la conformité si nécessaire",
+        "d": "Dix ans, aligné sur la durée de conservation du dossier technique"
+      },
+      "bonne_reponse": "c",
+      "explication": "L'enregistrement des données relatives au processus décisionnel des systèmes de sécurité logiciels doit être activé, et ces données conservées un an après leur collecte, exclusivement pour démontrer la conformité.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 43,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Nous livrons une machine complète à laquelle il ne manque que le téléchargement du logiciel applicatif prévu par nos soins. Que livrons-nous au sens du texte ?",
+      "options": {
+        "a": "Une quasi-machine, tant que le logiciel n'est pas installé dessus",
+        "b": "Un produit connexe, relevant d'un régime spécifique d'évaluation",
+        "c": "Un ensemble de composants non couverts par le champ du règlement",
+        "d": "Une machine à part entière, malgré l'absence du logiciel"
+      },
+      "bonne_reponse": "d",
+      "explication": "Un ensemble auquel il ne manque que le téléchargement du logiciel destiné à l'application prévue par le fabricant est déjà une machine. Impossible de se placer sous le régime allégé de la quasi-machine par ce biais.",
+      "reference": "art. 3, point 1 f)"
+    },
+    {
+      "id": 44,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Un logiciel vendu seul peut-il constituer un composant de sécurité au sens du règlement ?",
+      "options": {
+        "a": "Oui, un composant de sécurité peut être physique ou numérique",
+        "b": "Non, un composant devant être un objet physique identifiable",
+        "c": "Oui, mais uniquement s'il est fourni sur un support matériel",
+        "d": "Non, un logiciel relevant exclusivement d'autres textes européens"
+      },
+      "bonne_reponse": "a",
+      "explication": "La définition vise expressément les composants physiques ou numériques, logiciel compris, mis isolément sur le marché et assurant une fonction de sécurité. C'est une extension nette par rapport à la directive de 2006.",
+      "reference": "art. 3, point 3"
+    },
+    {
+      "id": 45,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Que doit faire une machine lorsqu'une intervention modifie ses logiciels ayant une incidence sur la sécurité ?",
+      "options": {
+        "a": "Bloquer tout démarrage jusqu'à validation par le fabricant d'origine",
+        "b": "Recueillir les preuves de cette intervention, légitime ou non",
+        "c": "Notifier automatiquement l'autorité de surveillance du marché",
+        "d": "Restaurer la version d'origine dès la détection d'une différence"
+      },
+      "bonne_reponse": "b",
+      "explication": "Au-delà de la protection contre l'altération, la machine doit recueillir les preuves d'une intervention sur ses logiciels de sécurité, qu'elle soit légitime ou non. La traçabilité fait partie de l'exigence, pas seulement le verrouillage.",
+      "reference": "annexe III, 1.1.9"
+    },
+    {
+      "id": 46,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Notre machine intègre un composant certifié au titre du schéma européen de cybersécurité. Quel en est l'effet ?",
+      "options": {
+        "a": "Une exonération totale des exigences liées aux systèmes de commande",
+        "b": "Aucun effet, les deux dispositifs étant juridiquement indépendants",
+        "c": "Une présomption de conformité sur les points couverts par le certificat",
+        "d": "Une obligation de faire valider la machine par un organisme notifié"
+      },
+      "bonne_reponse": "c",
+      "explication": "Un produit certifié au titre du règlement européen sur la cybersécurité est présumé conforme aux exigences de protection contre l'altération et de fiabilité des systèmes de commande, dans la limite de ce que couvre le certificat.",
+      "reference": "art. 20, § 9"
+    },
+    {
+      "id": 47,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Une machine autonome à comportement évolutif est en service chez un client. Quelle exigence porte sur son périmètre d'action ?",
+      "options": {
+        "a": "Elle ne doit pas agir au-delà de son espace de travail et de mouvement défini",
+        "b": "Elle doit rester en permanence sous la surveillance visuelle d'un opérateur",
+        "c": "Elle doit s'arrêter automatiquement toutes les huit heures pour vérification",
+        "d": "Elle doit fonctionner exclusivement en dehors des heures de présence humaine"
+      },
+      "bonne_reponse": "a",
+      "explication": "Le système de commande doit empêcher la machine d'exécuter des actions au-delà de son espace défini de travail et de mouvement. Il doit aussi rester possible à tout moment de la corriger pour préserver sa sécurité intrinsèque.",
+      "reference": "annexe III, 1.2.1"
+    },
+    {
+      "id": 48,
+      "semaine": 6,
+      "theme": "Logiciel, cybersécurité, traçabilité",
+      "question": "Notre analyse de risques doit-elle couvrir l'évolution future du comportement d'une machine apprenante ?",
+      "options": {
+        "a": "Non, une évolution postérieure à la livraison échappant par nature à l'analyse",
+        "b": "Oui, pour l'évolution prévue et prévisible au moment de la mise sur le marché",
+        "c": "Oui, mais uniquement si le client souscrit un contrat de maintenance logicielle",
+        "d": "Non, ce point relevant exclusivement de la réglementation sur l'IA"
+      },
+      "bonne_reponse": "b",
+      "explication": "L'évaluation des risques inclut les dangers prévisibles au moment de la mise sur le marché au titre de l'évolution prévue du comportement ou de la logique de la machine. Le futur prévisible entre donc dans le dossier initial.",
+      "reference": "annexe III, partie B"
+    },
+    {
+      "id": 49,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Dans quel ordre les mesures de réduction du risque doivent-elles être envisagées en conception ?",
+      "options": {
+        "a": "Information, puis protection, puis suppression par la conception",
+        "b": "Protection collective, puis équipement individuel, puis formation",
+        "c": "Suppression par la conception, puis protection, puis information",
+        "d": "L'ordre est libre, seul le résultat final étant réglementairement évalué"
+      },
+      "bonne_reponse": "c",
+      "explication": "L'ordre est imposé : éliminer les dangers ou minimiser les risques par la conception, puis prendre les mesures de protection contre ce qui ne peut être éliminé, puis informer sur les risques résiduels. Informer ne rattrape jamais une conception dangereuse.",
+      "reference": "annexe III, 1.1.2"
+    },
+    {
+      "id": 50,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Que devons-nous fournir avec la machine pour que l'utilisateur puisse vérifier ses fonctions de sécurité ?",
+      "options": {
+        "a": "Une simple mention dans la notice invitant à un contrôle périodique",
+        "b": "Un contrat de maintenance préventive proposé en option à la commande",
+        "c": "Une attestation d'essai établie en plateforme avant expédition",
+        "d": "Les équipements et accessoires spéciaux et la description des essais"
+      },
+      "bonne_reponse": "d",
+      "explication": "La machine doit permettre de tester ses fonctions de sécurité et être fournie avec les équipements et accessoires spéciaux nécessaires, ainsi qu'avec la description des procédures d'essai fonctionnel.",
+      "reference": "annexe III, 1.1.2"
+    },
+    {
+      "id": 51,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Quelles sont les exigences sur les dispositifs d'isolement des sources d'énergie d'une machine ?",
+      "options": {
+        "a": "Clairement identifiés et verrouillables si la reconnexion présente un danger",
+        "b": "Regroupés obligatoirement dans une armoire unique fermée à clé",
+        "c": "Doublés d'un système automatique de coupure sur détection de présence",
+        "d": "Signalés par une simple étiquette apposée à proximité de chaque source"
+      },
+      "bonne_reponse": "a",
+      "explication": "Les dispositifs doivent isoler de toutes les sources d'énergie, être clairement identifiés et verrouillables dès que la reconnexion peut être dangereuse ou que l'opérateur ne peut pas vérifier la coupure depuis sa position. Les énergies résiduelles doivent pouvoir être évacuées sans risque.",
+      "reference": "annexe III, 1.6.3"
+    },
+    {
+      "id": 52,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Quelles phases de la vie de la machine les mesures de protection doivent-elles couvrir ?",
+      "options": {
+        "a": "La seule phase de production, les autres relevant de l'exploitant",
+        "b": "La production et la maintenance, à l'exclusion du démontage final",
+        "c": "Toute la durée d'existence, du transport à la mise au rebut",
+        "d": "La période couverte par la garantie contractuelle du fabricant"
+      },
+      "bonne_reponse": "c",
+      "explication": "Les mesures de protection visent à supprimer le risque pendant toute la durée d'existence prévisible, transport, montage, démontage, mise hors service et mise au rebut compris. La fin de vie fait partie du périmètre de conception.",
+      "reference": "annexe III, 1.1.2"
+    },
+    {
+      "id": 53,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Que devons-nous prendre en compte, au-delà de l'usage prévu, lors de la conception et de la rédaction de la notice ?",
+      "options": {
+        "a": "Les seules consignes formulées par le client dans son cahier des charges",
+        "b": "Le mauvais usage raisonnablement prévisible de la machine",
+        "c": "L'ensemble des détournements imaginables, même les plus improbables",
+        "d": "Les usages autorisés par la réglementation du pays de destination"
+      },
+      "bonne_reponse": "b",
+      "explication": "Le mauvais usage raisonnablement prévisible, c'est-à-dire ce qui résulte d'un comportement humain aisément prévisible, doit être intégré à la conception et signalé dans la notice. Ni les seules consignes du client, ni l'exhaustivité théorique.",
+      "reference": "annexe III, 1.1.2"
+    },
+    {
+      "id": 54,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "L'analyse de risques d'une ligne doit-elle traiter les interactions entre les machines qui la composent ?",
+      "options": {
+        "a": "Non, chaque machine ayant déjà fait l'objet de sa propre analyse",
+        "b": "Oui, ces interactions font partie de l'évaluation à mener sur l'ensemble",
+        "c": "Oui, mais uniquement pour les machines fournies par le même fabricant",
+        "d": "Non, ces risques relevant du document unique établi par l'exploitant"
+      },
+      "bonne_reponse": "b",
+      "explication": "L'évaluation des risques inclut expressément les risques résultant des interactions entre machines disposées et commandées pour concourir à un même résultat. C'est le cœur du travail d'analyse au niveau d'une ligne.",
+      "reference": "annexe III, partie B"
+    },
+    {
+      "id": 55,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Une exigence essentielle de santé et de sécurité s'applique-t-elle systématiquement à toutes nos machines ?",
+      "options": {
+        "a": "Oui, l'ensemble de l'annexe III s'appliquant à chaque machine sans distinction",
+        "b": "Non, uniquement si le danger correspondant existe pour la machine considérée",
+        "c": "Non, le fabricant choisissant librement les exigences qu'il retient",
+        "d": "Oui, sauf dérogation écrite accordée par un organisme notifié"
+      },
+      "bonne_reponse": "b",
+      "explication": "Une exigence ne s'applique que si le danger correspondant existe. Restent toutefois toujours applicables les principes d'intégration de la sécurité, le marquage de la machine et la notice d'instructions.",
+      "reference": "annexe III, partie B"
+    },
+    {
+      "id": 56,
+      "semaine": 7,
+      "theme": "Conception, protecteurs, intervention",
+      "question": "Notre machine doit-elle être livrée avec un éclairage incorporé ?",
+      "options": {
+        "a": "Oui, systématiquement, quel que soit l'environnement d'installation",
+        "b": "Non, l'éclairage relevant intégralement de l'aménagement de l'atelier",
+        "c": "Oui, là où son absence créerait un risque malgré l'éclairage ambiant",
+        "d": "Non, sauf demande expresse formulée par le client à la commande"
+      },
+      "bonne_reponse": "c",
+      "explication": "L'éclairage incorporé est dû là où son absence créerait un risque malgré un éclairage ambiant d'intensité normale. C'est une exigence conditionnelle, à trancher dans l'analyse de risques.",
+      "reference": "annexe III, 1.1.4"
+    },
+    {
+      "id": 57,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Que doit contenir la notice au sujet des risques qui subsistent malgré les protections mises en place ?",
+      "options": {
+        "a": "Une mention générale renvoyant à la réglementation du travail applicable",
+        "b": "Rien : signaler un risque résiduel revient à reconnaître un défaut",
+        "c": "L'information sur ces risques et les mesures à prendre par l'utilisateur",
+        "d": "Une clause de décharge de responsabilité à signer par l'exploitant"
+      },
+      "bonne_reponse": "c",
+      "explication": "La notice informe sur les risques résiduels et décrit les mesures de protection à prendre par l'utilisateur, équipement de protection individuelle compris. Signaler un risque résiduel n'est pas un aveu, c'est une obligation.",
+      "reference": "annexe III, 1.7.4.2"
+    },
+    {
+      "id": 58,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Nous exposons sur un salon un prototype non encore conforme. Est-ce possible ?",
+      "options": {
+        "a": "Non, toute machine présentée au public devant être conforme et marquée",
+        "b": "Oui, avec une indication visible signalant la non-conformité",
+        "c": "Oui, sans condition, un salon n'étant pas une mise sur le marché",
+        "d": "Non, sauf autorisation préalable de l'autorité de surveillance du marché"
+      },
+      "bonne_reponse": "b",
+      "explication": "La présentation d'un produit non conforme est admise en foire ou en démonstration, à condition qu'une indication visible le signale clairement et qu'il ne soit pas mis à disposition avant sa mise en conformité. Des mesures de protection des personnes sont prises pendant les démonstrations.",
+      "reference": "art. 4, § 2"
+    },
+    {
+      "id": 59,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Nous découvrons après livraison qu'une de nos machines présente un risque pour la sécurité des opérateurs. Que devons-nous faire ?",
+      "options": {
+        "a": "Attendre un incident avéré avant d'engager la moindre démarche officielle",
+        "b": "Informer uniquement le client, la relation restant contractuelle",
+        "c": "Informer les autorités nationales des États concernés et agir",
+        "d": "Saisir l'organisme notifié ayant délivré l'attestation d'examen de type"
+      },
+      "bonne_reponse": "c",
+      "explication": "Le fabricant prend immédiatement les mesures correctives nécessaires, mise en conformité, retrait ou rappel, et informe sans délai les autorités nationales des États membres concernés en précisant la non-conformité et les mesures prises.",
+      "reference": "art. 10, § 9"
+    },
+    {
+      "id": 60,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Quel régime de sanctions s'applique en cas de violation du règlement ?",
+      "options": {
+        "a": "Un barème d'amendes uniforme fixé directement par la Commission",
+        "b": "Des sanctions définies par chaque État membre, pénales si besoin",
+        "c": "Une simple mise en demeure, aucune sanction n'étant prévue par le texte",
+        "d": "Le retrait automatique du marquage CE de tous les produits du fabricant"
+      },
+      "bonne_reponse": "b",
+      "explication": "Chaque État membre détermine son régime de sanctions, qui doit être effectif, proportionné et dissuasif, et peut être de nature pénale pour les infractions graves. Ce régime devait être notifié à la Commission au plus tard le 20 octobre 2026.",
+      "reference": "art. 50"
+    },
+    {
+      "id": 61,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Nous vendons une machine susceptible d'être utilisée par un utilisateur non professionnel. Que devons-nous fournir sur papier ?",
+      "options": {
+        "a": "L'intégralité de la notice d'instructions, sans exception possible",
+        "b": "Rien, le format numérique étant admis sans distinction d'utilisateur",
+        "c": "La seule déclaration de conformité signée par le fabricant",
+        "d": "Les informations de sécurité essentielles à la mise en service et à l'usage"
+      },
+      "bonne_reponse": "d",
+      "explication": "Pour les machines destinées ou susceptibles d'être utilisées par des utilisateurs non professionnels, les informations de sécurité essentielles pour mettre en service et utiliser la machine en toute sécurité sont fournies sur papier.",
+      "reference": "art. 10, § 7"
+    },
+    {
+      "id": 62,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Qui détermine la langue dans laquelle la notice d'instructions doit être rédigée ?",
+      "options": {
+        "a": "L'État membre concerné, la notice devant être aisément comprise",
+        "b": "Le fabricant, selon la langue de travail de son bureau d'études",
+        "c": "Le client, par une clause insérée dans le contrat de fourniture",
+        "d": "La Commission, qui publie une liste de langues acceptées par produit"
+      },
+      "bonne_reponse": "a",
+      "explication": "La notice, les informations de sécurité et les informations de l'annexe III sont rédigées dans une langue aisément compréhensible par les utilisateurs, déterminée par l'État membre concerné. Elles doivent aussi être claires, compréhensibles et lisibles.",
+      "reference": "art. 10, § 7"
+    },
+    {
+      "id": 63,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Un État membre peut-il imposer ses propres exigences sur l'installation ou l'utilisation de nos machines ?",
+      "options": {
+        "a": "Non, le règlement harmonisant entièrement la conception et l'exploitation",
+        "b": "Oui, pour protéger les personnes, sans rendre la machine non conforme",
+        "c": "Oui, y compris en imposant des modifications de conception spécifiques",
+        "d": "Non, sauf notification préalable à la Commission et période de statu quo"
+      },
+      "bonne_reponse": "b",
+      "explication": "Les États membres peuvent prescrire des exigences de protection des personnes lors de l'installation ou de l'utilisation, à condition que ces règles n'imposent pas de modifier la machine d'une manière incompatible avec le règlement.",
+      "reference": "art. 5"
+    },
+    {
+      "id": 64,
+      "semaine": 8,
+      "theme": "Notice, marché, sanctions",
+      "question": "Comment relire nos procédures internes qui citent encore la directive de 2006 ?",
+      "options": {
+        "a": "En les conservant telles quelles, la directive restant applicable en parallèle",
+        "b": "En attendant la publication d'un guide d'application par la Commission",
+        "c": "En reprenant chaque référence via le tableau de correspondance annexé",
+        "d": "En les supprimant, aucune équivalence n'existant entre les deux textes"
+      },
+      "bonne_reponse": "c",
+      "explication": "La directive de 2006 est abrogée au 20 janvier 2027 et les références qui y sont faites se lisent désormais selon le tableau de correspondance annexé au règlement. C'est l'outil pour reprendre nos modèles de documents article par article.",
+      "reference": "art. 51 et annexe XII"
+    }
+  ]
+}
