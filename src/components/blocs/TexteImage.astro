@@ -1,0 +1,81 @@
+---
+// Bloc « texte et image ». L'image peut être à gauche ou à droite ; en dessous sur mobile.
+import { marked } from '../../scripts/markdown';
+
+export interface BlocTexteImage {
+	type: 'texte-image';
+	titre?: string;
+	texte: string;
+	image?: string;
+	image_alt?: string;
+	/** Texte affiché dans le cadre d'attente quand aucune image n'est fournie. */
+	image_attente?: string;
+	position_image?: 'gauche' | 'droite';
+	lien_libelle?: string;
+	lien_url?: string;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocTexteImage };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const aGauche = bloc.position_image === 'gauche';
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class={`bloc__interieur duo ${aGauche ? 'duo--inverse' : ''}`}>
+		<div class="duo__texte">
+			{bloc.titre && <h2>{bloc.titre}</h2>}
+			<div class="prose" set:html={marked(bloc.texte)} />
+			{
+				bloc.lien_url && (
+					<p class="duo__lien">
+						<a href={bloc.lien_url}>{bloc.lien_libelle ?? 'En savoir plus'}</a>
+					</p>
+				)
+			}
+		</div>
+		<figure class="duo__image">
+			{
+				bloc.image ? (
+					<img src={bloc.image} alt={bloc.image_alt ?? ''} loading="lazy" decoding="async" />
+				) : (
+					<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
+						<span>{bloc.image_attente ?? '[VISUEL À PRODUIRE]'}</span>
+					</div>
+				)
+			}
+		</figure>
+	</div>
+</section>
+
+<style>
+	.duo {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: clamp(1.5rem, 4vw, 3rem);
+		align-items: center;
+	}
+	@media (max-width: 800px) {
+		.duo {
+			grid-template-columns: 1fr;
+		}
+	}
+	.duo--inverse .duo__texte {
+		order: 2;
+	}
+	@media (max-width: 800px) {
+		.duo--inverse .duo__texte {
+			order: 0;
+		}
+	}
+	.duo__image {
+		margin: 0;
+	}
+	.duo__image .visuel {
+		aspect-ratio: 4 / 3;
+	}
+	.duo__lien {
+		margin: 1.25rem 0 0;
+		font-weight: 500;
+	}
+</style>

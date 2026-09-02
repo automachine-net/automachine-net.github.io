@@ -1,0 +1,140 @@
+---
+// Bloc « fiche machine ». Des cartes à faire défiler latéralement, une par machine.
+// Chaque carte porte un volume manipulable, en attendant les vrais modèles 3D (lot 3).
+import { getCollection } from 'astro:content';
+
+export interface BlocFicheMachine {
+	type: 'fiche-machine';
+	titre?: string;
+	introduction?: string;
+	/** Machines à montrer, par identifiant. Vide = toutes, dans l'ordre défini. */
+	machines?: string[];
+	lien_libelle?: string;
+	lien_url?: string;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocFicheMachine };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+
+const toutes = (await getCollection('machines')).sort((a, b) => a.data.ordre - b.data.ordre);
+const choisies = bloc.machines?.length
+	? bloc.machines.map((id) => toutes.find((m) => m.id === id)).filter((m) => m !== undefined)
+	: toutes;
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		{bloc.introduction && <p class="introduction">{bloc.introduction}</p>}
+
+		<ul class="cartes" data-cartes>
+			{
+				choisies.map((m, i) => (
+					<li class="carte">
+						<canvas
+							width="480"
+							height="340"
+							data-slug={m.data.modele_3d ?? m.id}
+							tabindex="0"
+							aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
+						/>
+						<div class="carte__corps">
+							<p class="carte__index">
+								{String(i + 1).padStart(2, '0')} · {m.data.secteur}
+							</p>
+							<h3>
+								<a href={`/machines/${m.id}`}>{m.data.nom}</a>
+							</h3>
+							<p class="carte__resume">{m.data.resume}</p>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+
+		{
+			bloc.lien_url && (
+				<p class="apres">
+					<a href={bloc.lien_url}>{bloc.lien_libelle ?? 'Toutes les machines'}</a>
+				</p>
+			)
+		}
+	</div>
+</section>
+
+<script>
+	import { modeles, monterScene } from '../../scripts/filaire';
+
+	document.querySelectorAll<HTMLCanvasElement>('[data-cartes] canvas').forEach((c) => {
+		const m = modeles.find((x) => x.slug === c.dataset.slug);
+		if (m) monterScene(c, m, { echelle: 0.2, trait: 1.5 });
+	});
+</script>
+
+<style>
+	.introduction {
+		max-width: var(--mesure);
+		font-size: 1.1rem;
+	}
+	.cartes {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0 0 1rem;
+		display: flex;
+		gap: 1rem;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+	.carte {
+		scroll-snap-align: start;
+		flex: 0 0 min(21rem, 82vw);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		background: var(--blanc);
+		overflow: hidden;
+	}
+	.carte canvas {
+		width: 100%;
+		aspect-ratio: 480 / 340;
+		background: var(--gris-clair);
+		cursor: grab;
+		touch-action: pan-x;
+		border-bottom: 1px solid var(--gris-moyen);
+	}
+	.carte canvas.actif {
+		cursor: grabbing;
+	}
+	.carte__corps {
+		padding: 1rem 1.1rem 1.2rem;
+	}
+	.carte__index {
+		font-family: var(--titres);
+		color: var(--bleu);
+		font-weight: 700;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin: 0;
+	}
+	.carte h3 {
+		font-size: 1.3rem;
+		margin: 0.15rem 0 0.4rem;
+	}
+	.carte h3 a {
+		text-decoration: none;
+	}
+	.carte h3 a:hover {
+		text-decoration: underline;
+	}
+	.carte__resume {
+		font-size: 0.95rem;
+		margin: 0;
+		color: var(--gris);
+	}
+	.apres {
+		margin: 1.25rem 0 0;
+		font-weight: 500;
+	}
+</style>

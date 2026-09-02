@@ -1,0 +1,68 @@
+---
+// Bloc « galerie ». Des images en grille, avec légendes facultatives.
+export interface BlocGalerie {
+	type: 'galerie';
+	titre?: string;
+	images: { image?: string; alt?: string; legende?: string; attente?: string }[];
+	/** Nombre de colonnes visé sur grand écran. */
+	colonnes?: 2 | 3 | 4;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocGalerie };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const minimum = { 2: '22rem', 3: '17rem', 4: '13rem' }[bloc.colonnes ?? 3];
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		<ul class="galerie" style={`--minimum: ${minimum}`}>
+			{
+				bloc.images.map((i) => (
+					<li>
+						<figure>
+							{i.image ? (
+								<img src={i.image} alt={i.alt ?? ''} loading="lazy" decoding="async" />
+							) : (
+								<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
+									<span>{i.attente ?? '[VISUEL À PRODUIRE]'}</span>
+								</div>
+							)}
+							{i.legende && <figcaption>{i.legende}</figcaption>}
+						</figure>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.galerie {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(var(--minimum), 1fr));
+		gap: 1.5rem;
+	}
+	.galerie figure {
+		margin: 0;
+	}
+	.galerie .visuel,
+	.galerie img {
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		width: 100%;
+		border-radius: var(--rayon);
+	}
+	.galerie figcaption {
+		margin-top: 0.5rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.bloc--sombre .galerie figcaption {
+		color: var(--bleu-clair);
+	}
+</style>

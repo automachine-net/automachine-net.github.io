@@ -1,0 +1,57 @@
+---
+// Compte à rebours vers l'application du règlement (UE) 2023/1230.
+// Sans JavaScript, la date reste lisible : seul le nombre de jours manque.
+const ECHEANCE = '2027-01-20';
+---
+
+<div class="compte" data-echeance={ECHEANCE}>
+	<p class="compte__valeur"><span data-jours>—</span></p>
+	<p class="compte__legende">
+		jours avant le <strong>20 janvier 2027</strong>, date d’application du règlement (UE) 2023/1230
+		qui remplace la directive 2006/42/CE.
+	</p>
+</div>
+
+<script>
+	for (const el of document.querySelectorAll<HTMLElement>('[data-echeance]')) {
+		const cible = new Date(el.dataset.echeance + 'T00:00:00');
+		const jours = Math.ceil((cible.getTime() - Date.now()) / 86_400_000);
+		const sortie = el.querySelector('[data-jours]');
+		if (sortie && jours > 0) sortie.textContent = String(jours);
+	}
+</script>
+
+<style>
+	.compte {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 1.5rem;
+		align-items: center;
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 1.5rem 2rem;
+		border-radius: var(--rayon);
+	}
+	@media (max-width: 600px) {
+		.compte {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+	}
+	.compte__valeur {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: clamp(3.5rem, 9vw, 6rem);
+		line-height: 1;
+		color: var(--orange);
+		margin: 0;
+	}
+	.compte__legende {
+		margin: 0;
+		font-size: 1.05rem;
+		color: var(--blanc);
+	}
+	.compte__legende strong {
+		color: var(--bleu-clair);
+	}
+</style>

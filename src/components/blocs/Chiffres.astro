@@ -1,0 +1,65 @@
+---
+// Bloc « chiffres clés ». Une valeur et sa légende, en ligne.
+export interface BlocChiffres {
+	type: 'chiffres';
+	titre?: string;
+	chiffres: { valeur: string; legende: string }[];
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocChiffres };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const aCompleter = (v: string) => v.trim().startsWith('[');
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		<dl class="chiffres">
+			{
+				bloc.chiffres.map((c) => (
+					<div>
+						<dt class={aCompleter(c.valeur) ? 'a-rediger' : ''}>{c.valeur}</dt>
+						<dd>{c.legende}</dd>
+					</div>
+				))
+			}
+		</dl>
+	</div>
+</section>
+
+<style>
+	.chiffres {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+		gap: 1.5rem 2rem;
+		margin: 0;
+	}
+	.chiffres dt {
+		font-family: var(--titres);
+		font-size: clamp(2rem, 4vw, 2.75rem);
+		font-weight: 700;
+		color: var(--bleu-nuit);
+		line-height: 1;
+		letter-spacing: -0.02em;
+	}
+	.bloc--sombre .chiffres dt {
+		color: var(--blanc);
+	}
+	.chiffres dt.a-rediger {
+		font-size: 1rem;
+		font-weight: 400;
+		font-family: var(--texte);
+	}
+	.chiffres dd {
+		margin: 0.5rem 0 0;
+		padding-top: 0.5rem;
+		border-top: 1px solid var(--gris-moyen);
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.bloc--sombre .chiffres dd {
+		color: var(--bleu-clair);
+		border-top-color: rgba(255, 255, 255, 0.2);
+	}
+</style>

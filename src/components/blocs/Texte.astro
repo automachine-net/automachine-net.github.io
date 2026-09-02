@@ -1,0 +1,22 @@
+---
+// Bloc « texte ». Un titre facultatif et un corps de texte en Markdown.
+import { marked } from '../../scripts/markdown';
+
+export interface BlocTexte {
+	type: 'texte';
+	titre?: string;
+	texte: string;
+	/** Fond clair (gris très pâle) ou fond blanc. */
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocTexte };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		<div class="prose" set:html={marked(bloc.texte)} />
+	</div>
+</section>

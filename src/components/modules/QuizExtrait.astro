@@ -1,0 +1,170 @@
+---
+// Extrait jouable du quiz sur le règlement machines.
+// Les questions viennent de content/quiz/reglement-machines.json, éditable dans le CMS.
+// Le retour est immédiat au clic : bonne réponse en bleu, réponse choisie fausse en orange,
+// puis l'explication et la référence d'article.
+import quiz from '../../../content/quiz/reglement-machines.json';
+
+interface Props {
+	nombre?: number;
+	/** Identifiants des questions à montrer. Sinon, une par thème, les plus courtes. */
+	questions?: number[];
+}
+
+const { nombre = 3, questions: choisies } = Astro.props;
+
+const selection = choisies?.length
+	? choisies.map((id) => quiz.questions.find((q) => q.id === id)!).filter(Boolean)
+	: (() => {
+			// Une question par thème, la plus courte, pour rester lisible sur un téléphone.
+			const parTheme = new Map<string, (typeof quiz.questions)[number]>();
+			for (const q of [...quiz.questions].sort((a, b) => a.question.length - b.question.length)) {
+				if (!parTheme.has(q.theme)) parTheme.set(q.theme, q);
+			}
+			return [...parTheme.values()].sort((a, b) => a.id - b.id).slice(0, nombre);
+		})();
+
+const lettres = ['a', 'b', 'c', 'd'] as const;
+const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
+---
+
+<div class="quiz" data-quiz>
+	<ol class="quiz__liste">
+		{
+			selection.map((q) => (
+				<li class="question" data-bonne={q.bonne_reponse}>
+					<p class="question__texte">{q.question}</p>
+					<div class="question__options" role="group" aria-label="Réponses possibles">
+						{lettres.map((l) => (
+							<button type="button" class="option" data-lettre={l}>
+								<span class="option__lettre">{l.toUpperCase()}</span>
+								<span>{q.options[l]}</span>
+							</button>
+						))}
+					</div>
+					<p class="question__explication" hidden>
+						<strong data-verdict />
+						{q.explication}
+						<span class="reference">Règlement (UE) 2023/1230, {article(q.reference)}.</span>
+					</p>
+				</li>
+			))
+		}
+	</ol>
+	<p class="quiz__mention">{quiz.mention}</p>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-quiz] .question').forEach((q) => {
+		const bonne = q.dataset.bonne;
+		const options = q.querySelectorAll<HTMLButtonElement>('.option');
+		const explication = q.querySelector<HTMLElement>('.question__explication');
+		const verdict = explication?.querySelector<HTMLElement>('[data-verdict]');
+		if (!explication || !verdict) return;
+
+		options.forEach((choix) =>
+			choix.addEventListener('click', () => {
+				if (q.classList.contains('repondue')) return;
+				q.classList.add('repondue');
+				const juste = choix.dataset.lettre === bonne;
+				options.forEach((autre) => {
+					autre.disabled = true;
+					if (autre.dataset.lettre === bonne) autre.classList.add('option--bonne');
+					else if (autre === choix) autre.classList.add('option--fausse');
+				});
+				verdict.textContent = juste ? 'Exact. ' : `Non, la bonne réponse est ${bonne!.toUpperCase()}. `;
+				explication.hidden = false;
+			})
+		);
+	});
+</script>
+
+<style>
+	.quiz__liste {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 2.5rem;
+	}
+	.question__texte {
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: var(--bleu-nuit);
+		max-width: 70ch;
+	}
+	/* Deux colonnes dès qu'il y a la place : les quatre réponses forment un carré,
+	   jamais trois sur une ligne et une seule en dessous. */
+	.question__options {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.6rem;
+	}
+	@media (min-width: 680px) {
+		.question__options {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	.option {
+		display: grid;
+		grid-template-columns: 1.75rem minmax(0, 1fr);
+		gap: 0.6rem;
+		align-items: start;
+		text-align: left;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.7rem 0.9rem;
+		cursor: pointer;
+		color: var(--gris);
+		line-height: 1.4;
+		transition:
+			border-color 0.15s,
+			background 0.15s;
+	}
+	.option:hover:not(:disabled) {
+		border-color: var(--bleu);
+	}
+	.option:disabled {
+		cursor: default;
+	}
+	.option__lettre {
+		font-family: var(--titres);
+		font-weight: 700;
+		color: var(--bleu);
+	}
+	.option--bonne {
+		background: var(--bleu);
+		border-color: var(--bleu);
+		color: var(--blanc);
+	}
+	.option--bonne .option__lettre {
+		color: var(--blanc);
+	}
+	.option--fausse {
+		background: var(--orange);
+		border-color: var(--orange);
+		color: var(--bleu-nuit);
+	}
+	.option--fausse .option__lettre {
+		color: var(--bleu-nuit);
+	}
+	.question__explication {
+		margin: 0.9rem 0 0;
+		padding: 0.9rem 1rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--bleu);
+		max-width: 75ch;
+	}
+	.reference {
+		display: block;
+		margin-top: 0.4rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.quiz__mention {
+		margin: 1.5rem 0 0;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+</style>

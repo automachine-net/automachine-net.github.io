@@ -1,0 +1,41 @@
+---
+// Bloc « appel à l'action ». Un titre, un texte court, un bouton.
+import { marked } from '../../scripts/markdown';
+
+export interface BlocAppel {
+	type: 'appel';
+	titre: string;
+	texte?: string;
+	lien_libelle: string;
+	lien_url: string;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocAppel };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'blanc' ? '' : 'bloc--sombre';
+---
+
+<section class={`bloc ${classeFond} appel`}>
+	<div class="bloc__interieur appel__interieur">
+		<h2>{bloc.titre}</h2>
+		{bloc.texte && <div class="prose" set:html={marked(bloc.texte)} />}
+		<p class="appel__action">
+			<a class={`bouton ${classeFond === 'bloc--sombre' ? 'bouton--clair' : ''}`} href={bloc.lien_url}>
+				{bloc.lien_libelle}
+			</a>
+		</p>
+	</div>
+</section>
+
+<style>
+	.appel__interieur {
+		max-width: 42rem;
+		text-align: center;
+	}
+	.appel__interieur .prose {
+		max-width: none;
+	}
+	.appel__action {
+		margin: 1.5rem 0 0;
+	}
+</style>

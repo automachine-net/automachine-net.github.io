@@ -1,0 +1,64 @@
+---
+// Bloc « module ». Insère un outil interactif dans une page.
+// Chaque outil est un composant autonome ; ce bloc choisit lequel afficher.
+import QuizExtrait from '../modules/QuizExtrait.astro';
+import CompteARebours from '../modules/CompteARebours.astro';
+
+export interface BlocModule {
+	type: 'module';
+	titre?: string;
+	introduction?: string;
+	/** Outil à insérer. */
+	module: 'quiz-extrait' | 'compte-a-rebours' | 'a-venir';
+	/** Nombre de questions montrées par l'extrait de quiz. */
+	nombre_questions?: number;
+	lien_libelle?: string;
+	lien_url?: string;
+	/** Texte du cadre d'attente pour un module pas encore construit. */
+	attente?: string;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocModule };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		{bloc.introduction && <p class="introduction" set:html={bloc.introduction} />}
+
+		{bloc.module === 'compte-a-rebours' && <CompteARebours />}
+		{bloc.module === 'quiz-extrait' && <QuizExtrait nombre={bloc.nombre_questions ?? 3} />}
+		{
+			bloc.module === 'a-venir' && (
+				<div class="visuel visuel--module">
+					<span>{bloc.attente ?? '[MODULE À CONSTRUIRE]'}</span>
+				</div>
+			)
+		}
+
+		{
+			bloc.lien_url && (
+				<p class="apres">
+					<a class="bouton" href={bloc.lien_url}>
+						{bloc.lien_libelle ?? 'Ouvrir l’outil'}
+					</a>
+				</p>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.introduction {
+		max-width: var(--mesure);
+		font-size: 1.05rem;
+	}
+	.visuel--module {
+		aspect-ratio: 16 / 6;
+	}
+	.apres {
+		margin: 1.75rem 0 0;
+	}
+</style>

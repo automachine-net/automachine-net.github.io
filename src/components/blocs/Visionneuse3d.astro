@@ -1,0 +1,82 @@
+---
+// Bloc « visionneuse 3D ». Un volume manipulable en grand, avec sa consigne.
+//
+// Aujourd'hui : volumes filaires dessinés au canvas, sans bibliothèque, en attendant les
+// fichiers glTF issus de la CAO. Au lot 3, ce composant recevra <model-viewer> et le volume
+// filaire deviendra l'image d'attente pendant le chargement du vrai modèle.
+export interface BlocVisionneuse3d {
+	type: 'visionneuse-3d';
+	titre?: string;
+	/** Identifiant du volume ou du modèle à afficher. */
+	modele: string;
+	legende?: string;
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocVisionneuse3d };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		<figure class="visionneuse">
+			<canvas
+				width="1000"
+				height="620"
+				data-visionneuse={bloc.modele}
+				tabindex="0"
+				aria-label="Volume en trois dimensions. Flèches du clavier pour le tourner."></canvas>
+			<figcaption>
+				<span class="consigne">Faites tourner le volume avec la souris, le doigt ou les flèches du clavier.</span>
+				{bloc.legende && <span>{bloc.legende}</span>}
+			</figcaption>
+		</figure>
+	</div>
+</section>
+
+<script>
+	import { modeles, monterScene } from '../../scripts/filaire';
+
+	document.querySelectorAll<HTMLCanvasElement>('[data-visionneuse]').forEach((c) => {
+		const m = modeles.find((x) => x.slug === c.dataset.visionneuse);
+		if (m) monterScene(c, m, { echelle: 0.24 });
+	});
+</script>
+
+<style>
+	.visionneuse {
+		margin: 0;
+	}
+	.visionneuse canvas {
+		width: 100%;
+		aspect-ratio: 1000 / 620;
+		background: var(--gris-clair);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		cursor: grab;
+		touch-action: none;
+	}
+	.visionneuse canvas.actif {
+		cursor: grabbing;
+	}
+	.bloc--sombre .visionneuse canvas {
+		background: var(--bleu-sombre);
+		border-color: transparent;
+	}
+	.visionneuse figcaption {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		margin-top: 0.6rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.consigne {
+		color: var(--bleu);
+		font-weight: 500;
+	}
+	.bloc--sombre .visionneuse figcaption {
+		color: var(--bleu-clair);
+	}
+</style>

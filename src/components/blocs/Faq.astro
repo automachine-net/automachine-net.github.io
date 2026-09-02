@@ -1,0 +1,84 @@
+---
+// Bloc « questions fréquentes ». Chaque réponse se déplie. Sans JavaScript, les balises
+// <details> fonctionnent quand même : le contenu reste accessible.
+import { marked } from '../../scripts/markdown';
+
+export interface BlocFaq {
+	type: 'faq';
+	titre?: string;
+	questions: { question: string; reponse: string }[];
+	fond?: 'blanc' | 'clair' | 'sombre';
+}
+
+const { bloc } = Astro.props as { bloc: BlocFaq };
+const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+---
+
+<section class={`bloc ${classeFond}`}>
+	<div class="bloc__interieur faq__interieur">
+		{bloc.titre && <h2>{bloc.titre}</h2>}
+		<div class="faq">
+			{
+				bloc.questions.map((q) => (
+					<details>
+						<summary>{q.question}</summary>
+						<div class="prose" set:html={marked(q.reponse)} />
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.faq__interieur {
+		max-width: 52rem;
+	}
+	.faq details {
+		border-top: 1px solid var(--gris-moyen);
+	}
+	.faq details:last-child {
+		border-bottom: 1px solid var(--gris-moyen);
+	}
+	.faq summary {
+		cursor: pointer;
+		padding: 1rem 2rem 1rem 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.1rem;
+		color: var(--bleu-nuit);
+		position: relative;
+		list-style: none;
+	}
+	.faq summary::-webkit-details-marker {
+		display: none;
+	}
+	.faq summary::after {
+		content: '';
+		position: absolute;
+		right: 0.35rem;
+		top: 1.45rem;
+		width: 0.6rem;
+		height: 0.6rem;
+		border-right: 2px solid var(--bleu);
+		border-bottom: 2px solid var(--bleu);
+		transform: rotate(45deg);
+		transition: transform 0.2s;
+	}
+	.faq details[open] summary::after {
+		transform: rotate(-135deg);
+		top: 1.7rem;
+	}
+	.faq summary:hover {
+		color: var(--bleu);
+	}
+	.faq .prose {
+		padding: 0 0 1.25rem;
+	}
+	.bloc--sombre .faq summary {
+		color: var(--blanc);
+	}
+	.bloc--sombre .faq details {
+		border-color: rgba(255, 255, 255, 0.2);
+	}
+</style>

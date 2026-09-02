@@ -1,0 +1,117 @@
+---
+// Bloc « en-tête de page ». Surtitre, grand titre, chapeau, un ou deux liens.
+import IconeSecteur from '../IconeSecteur.astro';
+import reglagesSecteurs from '../../../content/reglages/secteurs.json';
+
+export interface BlocHero {
+	type: 'hero';
+	surtitre?: string;
+	titre: string;
+	chapeau?: string;
+	lien_libelle?: string;
+	lien_url?: string;
+	lien_secondaire_libelle?: string;
+	lien_secondaire_url?: string;
+	/** Affiche la bande des secteurs sous le chapeau. */
+	afficher_secteurs?: boolean;
+	/** Le titre est un h1 sur la page d'accueil et les pages de premier niveau. */
+	titre_principal?: boolean;
+}
+
+const { bloc } = Astro.props as { bloc: BlocHero };
+const Titre = bloc.titre_principal === false ? 'h2' : 'h1';
+---
+
+<section class="bloc hero">
+	<div class="bloc__interieur hero__interieur">
+		{bloc.surtitre && <p class="surtitre">{bloc.surtitre}</p>}
+		<Titre set:html={bloc.titre} />
+		{bloc.chapeau && <p class="chapeau" set:html={bloc.chapeau} />}
+
+		{
+			bloc.afficher_secteurs && (
+				<ul class="secteurs" aria-label="Secteurs pris en charge">
+					{reglagesSecteurs.secteurs.map((s) => (
+						<li>
+							<IconeSecteur secteur={s.slug} />
+							<span>{s.nom}</span>
+						</li>
+					))}
+				</ul>
+			)
+		}
+
+		{
+			(bloc.lien_url || bloc.lien_secondaire_url) && (
+				<p class="hero__actions">
+					{bloc.lien_url && (
+						<a class="bouton" href={bloc.lien_url}>
+							{bloc.lien_libelle ?? 'En savoir plus'}
+						</a>
+					)}
+					{bloc.lien_secondaire_url && (
+						<a class="hero__lien" href={bloc.lien_secondaire_url}>
+							{bloc.lien_secondaire_libelle ?? 'En savoir plus'}
+						</a>
+					)}
+				</p>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.hero {
+		padding-top: clamp(2.5rem, 7vw, 5rem);
+		padding-bottom: clamp(2rem, 5vw, 3rem);
+	}
+	.hero__interieur {
+		max-width: 46rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 1rem;
+	}
+	.chapeau {
+		font-size: 1.2rem;
+		line-height: 1.55;
+	}
+	.hero__actions {
+		display: flex;
+		gap: 1.5rem;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-top: 1.75rem;
+		margin-bottom: 0;
+	}
+	.hero__lien {
+		font-weight: 500;
+	}
+	.secteurs {
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem 2.25rem;
+	}
+	.secteurs li {
+		display: grid;
+		justify-items: center;
+		gap: 0.35rem;
+		color: var(--bleu);
+		width: 5.5rem;
+		text-align: center;
+	}
+	.secteurs span {
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: var(--gris);
+		line-height: 1.25;
+	}
+</style>

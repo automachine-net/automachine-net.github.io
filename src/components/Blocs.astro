@@ -1,0 +1,49 @@
+---
+// Répartiteur de blocs : reçoit la liste des blocs d'une page et affiche le bon composant.
+// Pour ajouter un type de bloc : créer le composant dans src/components/blocs/,
+// l'ajouter ici, puis l'ajouter dans public/admin/config.yml pour qu'il apparaisse dans le CMS.
+import Hero from './blocs/Hero.astro';
+import Texte from './blocs/Texte.astro';
+import TexteImage from './blocs/TexteImage.astro';
+import Galerie from './blocs/Galerie.astro';
+import Chiffres from './blocs/Chiffres.astro';
+import FicheMachine from './blocs/FicheMachine.astro';
+import Visionneuse3d from './blocs/Visionneuse3d.astro';
+import Citation from './blocs/Citation.astro';
+import Appel from './blocs/Appel.astro';
+import Faq from './blocs/Faq.astro';
+import Module from './blocs/Module.astro';
+import Clients from './blocs/Clients.astro';
+
+const composants = {
+	hero: Hero,
+	texte: Texte,
+	'texte-image': TexteImage,
+	galerie: Galerie,
+	chiffres: Chiffres,
+	'fiche-machine': FicheMachine,
+	'visionneuse-3d': Visionneuse3d,
+	citation: Citation,
+	appel: Appel,
+	faq: Faq,
+	module: Module,
+	clients: Clients,
+} as const;
+
+interface Props {
+	blocs: { type: keyof typeof composants; [k: string]: unknown }[];
+}
+const { blocs } = Astro.props;
+---
+
+{
+	blocs.map((bloc) => {
+		const Composant = composants[bloc.type];
+		if (!Composant) {
+			throw new Error(
+				`Type de bloc inconnu : « ${bloc.type} ». Types acceptés : ${Object.keys(composants).join(', ')}.`
+			);
+		}
+		return <Composant bloc={bloc} />;
+	})
+}
