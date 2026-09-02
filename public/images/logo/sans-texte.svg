@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58.62 58.62">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clippath-11);
+      }
+
+      .cls-2 {
+        fill: #53769a;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke-width: 0px;
+      }
+
+      .cls-6 {
+        clip-path: url(#clippath-2);
+      }
+
+      .cls-7 {
+        clip-path: url(#clippath-6);
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-8 {
+        clip-path: url(#clippath-7);
+      }
+
+      .cls-9 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-10 {
+        clip-path: url(#clippath-4);
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-11 {
+        clip-path: url(#clippath-9);
+      }
+
+      .cls-12 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-5 {
+        fill: #7aabd6;
+      }
+
+      .cls-13 {
+        clip-path: url(#clippath-3);
+      }
+
+      .cls-14 {
+        clip-path: url(#clippath-8);
+      }
+
+      .cls-15 {
+        clip-path: url(#clippath-5);
+      }
+
+      .cls-16 {
+        clip-path: url(#clippath-10);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-3" x="19.1" y="20.64" width="104.29" height="104.29"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <path class="cls-3" d="M123.33,72.78c0,28.77-23.31,52.09-52.09,52.09s-52.08-23.31-52.08-52.09,23.31-52.08,52.08-52.08,52.09,23.31,52.09,52.08"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <rect class="cls-3" x="35.67" y="46.4" width="47.86" height="50.46"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <polygon class="cls-3" points="41.63 96.76 35.75 96.76 65 46.68 83.46 78.27 77.7 78.27 64.99 56.79 41.63 96.76"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <rect class="cls-3" x="47.83" y="64.58" width="58.2" height="32.28"/>
+    </clipPath>
+    <clipPath id="clippath-5">
+      <polygon class="cls-3" points="102.96 91.58 105.94 96.65 47.95 96.77 65.84 64.85 68.75 69.81 56.65 91.64 102.96 91.58"/>
+    </clipPath>
+    <clipPath id="clippath-6">
+      <rect class="cls-3" x="63.38" y="35.45" width="36.96" height="51.1"/>
+    </clipPath>
+    <clipPath id="clippath-7">
+      <polygon class="cls-3" points="68.55 40.51 71.49 35.5 100 86.48 63.41 86.33 66.32 81.37 91.28 81.34 68.55 40.51"/>
+    </clipPath>
+    <clipPath id="clippath-8">
+      <rect class="cls-3" x="18.7" y="71.62" width="7.99" height="27.72"/>
+    </clipPath>
+    <clipPath id="clippath-9">
+      <path class="cls-3" d="M18.76,71.67v.05c0,10.09,2.88,19.5,7.85,27.48l.02-.03c-4.99-7.98-7.85-17.41-7.87-27.5"/>
+    </clipPath>
+    <clipPath id="clippath-10">
+      <rect class="cls-3" x="18.7" y="19.48" width="98.65" height="79.86"/>
+    </clipPath>
+    <clipPath id="clippath-11">
+      <path class="cls-3" d="M70.85,19.63c-28.75,0-52.05,23.3-52.08,52.04.02,10.09,2.88,19.52,7.87,27.48,6.36-11.7,15.01-21.98,25.36-30.2l13-22.28,6.08,10.39c1.77-.84,3.57-1.63,5.39-2.37l-7.92-14.21,2.94-5,9.75,17.44c9.99-3.43,20.72-5.28,31.88-5.28l3.96.1c-8.66-16.69-26.1-28.11-46.23-28.11M62.33,61.77l-.39.23,3.04-5.19c0,.32-.02,3.4-.02,3.4l-2.64,1.56Z"/>
+    </clipPath>
+    <clipPath id="clippath-12">
+      <rect class="cls-3" x="68.5" y="35.45" width="13.01" height="19.26"/>
+    </clipPath>
+    <symbol id="Nouveau_symbole" data-name="Nouveau symbole" viewBox="0 0 140.71 140.71">
+      <g>
+        <g class="cls-12">
+          <g class="cls-9">
+            <rect class="cls-5" x="0" width="140.71" height="140.71"/>
+          </g>
+        </g>
+        <g class="cls-6">
+          <g class="cls-13">
+            <rect class="cls-4" x="6.89" y="7.66" width="127.92" height="127.92"/>
+          </g>
+        </g>
+        <g class="cls-10">
+          <g class="cls-15">
+            <rect class="cls-4" x="6.89" y="7.66" width="127.92" height="127.92"/>
+          </g>
+        </g>
+        <g class="cls-7">
+          <g class="cls-8">
+            <rect class="cls-4" x="6.89" y="7.66" width="127.92" height="127.92"/>
+          </g>
+        </g>
+        <g class="cls-14">
+          <g class="cls-11">
+            <rect class="cls-4" x="6.89" y="7.66" width="127.92" height="127.92"/>
+          </g>
+        </g>
+        <g class="cls-16">
+          <g class="cls-1">
+            <rect class="cls-2" x="6.89" y="7.66" width="127.92" height="127.92"/>
+          </g>
+        </g>
+        <path class="cls-3" d="M66.56,59.43c-.43-.6-.87-1.21-1.17-1.89-.1-.22-.21-.4-.35-.59.12-.12.26.31.29.39.04.1.08.21.11.31.04.12.04.18.19.15-.01,0-.02,0-.03,0"/>
+        <polygon class="cls-2" points="64.77 58.37 66.48 59.34 64.77 60.33 64.77 58.37"/>
+        <polygon class="cls-2" points="65 56.8 65.97 58.45 64.19 58.54 65 56.8"/>
+        <polygon class="cls-2" points="65.45 57.58 66.48 59.33 64.65 59.44 65.45 57.58"/>
+      </g>
+    </symbol>
+  </defs>
+  <g id="Calque_1-2" data-name="Calque 1">
+    <use width="140.71" height="140.71" transform="scale(.42)" xlink:href="#Nouveau_symbole"/>
+  </g>
+</svg>
