@@ -1,0 +1,175 @@
+---
+// Bandeau supérieur, collé en haut. Le menu se replie derrière un bouton sur petit écran.
+import navigation from '../../content/reglages/navigation.json';
+import site from '../../content/reglages/site.json';
+
+const chemin = Astro.url.pathname.replace(/\/$/, '') || '/';
+const estActif = (href: string) => chemin === href || (href !== '/' && chemin.startsWith(href));
+---
+
+<header class="entete">
+	<a href="/" class="marque" aria-label={`${site.nom}, accueil`}>
+		<img
+			src="/images/logo/avec-texte.svg"
+			alt={`${site.nom}, ${site.baseline.toLowerCase()}`}
+			width="157"
+			height="59"
+		/>
+	</a>
+
+	<button class="bascule" type="button" aria-expanded="false" aria-controls="menu-principal">
+		<span class="bascule__barres" aria-hidden="true"></span>
+		<span class="sr-only">Ouvrir le menu</span>
+	</button>
+
+	<nav id="menu-principal" aria-label="Navigation principale">
+		<ul>
+			{
+				navigation.principale.map((n) => (
+					<li>
+						<a href={n.href} aria-current={estActif(n.href) ? 'page' : undefined}>
+							{n.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+</header>
+
+<script>
+	// Menu repliable. Sans JavaScript, le menu reste affiché : rien n'est caché par défaut en CSS
+	// tant que le bouton n'a pas pris la main.
+	const bouton = document.querySelector<HTMLButtonElement>('.bascule');
+	const entete = document.querySelector<HTMLElement>('.entete');
+	if (bouton && entete) {
+		entete.classList.add('entete--repliable');
+		const basculer = (ouvert: boolean) => {
+			bouton.setAttribute('aria-expanded', String(ouvert));
+			entete.classList.toggle('entete--ouvert', ouvert);
+			bouton.querySelector('.sr-only')!.textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
+		};
+		bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') basculer(false);
+		});
+	}
+</script>
+
+<style>
+	.entete {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		background: var(--blanc);
+		border-bottom: 2px solid var(--bleu-nuit);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding: 0.75rem var(--marge);
+	}
+	.marque {
+		display: block;
+		flex: 0 0 auto;
+	}
+	.marque img {
+		width: 104px;
+		height: auto;
+	}
+
+	nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		gap: clamp(0.9rem, 2vw, 1.75rem);
+		flex-wrap: wrap;
+	}
+	nav a {
+		display: block;
+		text-decoration: none;
+		color: var(--bleu-nuit);
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		padding: 0.25rem 0;
+		border-bottom: 2px solid transparent;
+	}
+	nav a:hover {
+		color: var(--bleu);
+	}
+	nav a[aria-current='page'] {
+		border-bottom-color: var(--orange);
+	}
+
+	/* Bouton du menu : visible seulement sur petit écran, et seulement si JavaScript a pris la main. */
+	.bascule {
+		display: none;
+		background: none;
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.55rem 0.6rem;
+		cursor: pointer;
+	}
+	.bascule__barres,
+	.bascule__barres::before,
+	.bascule__barres::after {
+		display: block;
+		width: 20px;
+		height: 2px;
+		background: var(--bleu-nuit);
+		transition: transform 0.2s;
+	}
+	.bascule__barres::before,
+	.bascule__barres::after {
+		content: '';
+		position: relative;
+	}
+	.bascule__barres::before {
+		top: -6px;
+	}
+	.bascule__barres::after {
+		top: 4px;
+	}
+
+	@media (max-width: 760px) {
+		.entete--repliable .bascule {
+			display: block;
+		}
+		.entete--repliable nav {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: var(--blanc);
+			border-bottom: 2px solid var(--bleu-nuit);
+			padding: 0.5rem var(--marge) 1rem;
+		}
+		.entete--ouvert nav {
+			display: block;
+		}
+		.entete--repliable nav ul {
+			flex-direction: column;
+			gap: 0;
+		}
+		.entete--repliable nav a {
+			padding: 0.75rem 0;
+			border-bottom: 1px solid var(--gris-moyen);
+		}
+		.entete--ouvert .bascule__barres {
+			background: transparent;
+		}
+		.entete--ouvert .bascule__barres::before {
+			top: -2px;
+			transform: rotate(45deg);
+		}
+		.entete--ouvert .bascule__barres::after {
+			top: -4px;
+			transform: rotate(-45deg);
+		}
+	}
+</style>

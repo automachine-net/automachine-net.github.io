@@ -1,0 +1,67 @@
+---
+// Gabarit commun à toutes les pages du site.
+import '../styles/base.css';
+import Entete from '../components/Entete.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import site from '../../content/reglages/site.json';
+
+interface Props {
+	titre: string;
+	description?: string;
+	/** Empêche l'indexation (pages en chantier, modules non publics). */
+	noindex?: boolean;
+	/** Image de partage, chemin absolu depuis la racine du site. */
+	image?: string;
+}
+
+const { titre, description = site.description, noindex = false, image } = Astro.props;
+const url = new URL(Astro.url.pathname, Astro.site ?? 'https://automachine-net.github.io');
+const imageAbsolue = image ? new URL(image, url).href : undefined;
+const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `${titre} — ${site.nom}`;
+---
+
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{titreComplet}</title>
+		<meta name="description" content={description} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
+		<link rel="canonical" href={url.href} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.nom} />
+		<meta property="og:locale" content="fr_FR" />
+		<meta property="og:title" content={titreComplet} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={url.href} />
+		{imageAbsolue && <meta property="og:image" content={imageAbsolue} />}
+		<meta name="twitter:card" content={imageAbsolue ? 'summary_large_image' : 'summary'} />
+
+		<link rel="icon" type="image/svg+xml" href="/images/logo/sans-texte.svg" />
+		<link
+			rel="preload"
+			href="/fonts/league-spartan-600-latin.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			href="/fonts/ibm-plex-sans-400-latin.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+	</head>
+	<body>
+		<a class="evitement" href="#contenu">Aller au contenu</a>
+		<Entete />
+		<main id="contenu">
+			<slot />
+		</main>
+		<PiedDePage />
+	</body>
+</html>
