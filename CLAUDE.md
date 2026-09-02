@@ -140,3 +140,8 @@ via le bloc « module ». Aucune donnée personnelle collectée.
   personnel (sans relais PHP). Tant que le dépôt est public : aucun secret, aucune adresse
   mail dans le dépôt. Passage en dépôt privé + relais OAuth PHP + rsync vers Infomaniak
   quand l'hébergement sera souscrit. Le formulaire de contact et Matomo attendent Infomaniak.
+- 2026-09-02 : **lot 0 validé dans sa version gratuite.** Circuit complet vérifié : une
+  modification enregistrée dans le CMS par le dirigeant (commit « Update Page “accueil” »)
+  est apparue sur `https://automachine-net.github.io/` sans intervention, en moins de trois
+  minutes. Reste à faire à la souscription Infomaniak : relais OAuth PHP, compte mail
+  d'envoi, déploiement rsync, passage du dépôt en privé.
