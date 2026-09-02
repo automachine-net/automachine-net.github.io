@@ -1,0 +1,211 @@
+---
+// Fiche détaillée d'une machine : visionneuse 3D, description, caractéristiques.
+// Le nom du client n'apparaît que s'il est renseigné, c'est-à-dire uniquement avec son
+// accord écrit. Sinon, seul le secteur est indiqué.
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Blocs from '../../components/Blocs.astro';
+import { marked } from '../../scripts/markdown';
+
+export const getStaticPaths = (async () => {
+	const machines = await getCollection('machines');
+	return machines.map((machine) => ({ params: { slug: machine.id }, props: { machine } }));
+}) satisfies GetStaticPaths;
+
+const { machine } = Astro.props;
+const d = machine.data;
+
+const toutes = (await getCollection('machines')).sort((a, b) => a.data.ordre - b.data.ordre);
+const position = toutes.findIndex((m) => m.id === machine.id);
+const suivante = toutes[(position + 1) % toutes.length];
+---
+
+<Base titre={d.nom} description={d.resume.replace(/^\[à relire\]\s*/i, '')}>
+	<article>
+		<header class="bloc fiche__entete">
+			<div class="bloc__interieur">
+				<p class="fil"><a href="/machines">Machines</a> <span aria-hidden="true">›</span> {d.nom}</p>
+				<p class="surtitre">{d.client ? `${d.secteur} · ${d.client}` : d.secteur}</p>
+				<h1>{d.nom}</h1>
+				<p class="chapeau">{d.resume}</p>
+			</div>
+		</header>
+
+		{
+			d.modele_3d && (
+				<section class="bloc fiche__visionneuse">
+					<div class="bloc__interieur">
+						<figure>
+							<canvas
+								width="1000"
+								height="620"
+								data-visionneuse={d.modele_3d}
+								tabindex="0"
+								aria-label={`Volume en trois dimensions : ${d.nom}. Flèches du clavier pour le tourner.`}
+							/>
+							<figcaption>
+								<span class="consigne">
+									Faites tourner le volume avec la souris, le doigt ou les flèches du clavier.
+								</span>
+								<span class="a-rediger">
+									[MODÈLE 3D À PRODUIRE] volume d’attente. Le modèle issu de la CAO le remplacera.
+								</span>
+							</figcaption>
+						</figure>
+					</div>
+				</section>
+			)
+		}
+
+		<section class="bloc">
+			<div class="bloc__interieur fiche__corps">
+				<div class="prose" set:html={marked(d.description)} />
+
+				{
+					d.caracteristiques.length > 0 && (
+						<aside class="fiche__technique">
+							<h2>Fiche technique</h2>
+							<dl>
+								{d.caracteristiques.map((c) => (
+									<div>
+										<dt>{c.libelle}</dt>
+										<dd class={c.valeur.trim().startsWith('[À') ? 'a-rediger' : ''}>{c.valeur}</dd>
+									</div>
+								))}
+							</dl>
+						</aside>
+					)
+				}
+			</div>
+		</section>
+
+		<Blocs blocs={d.blocs} />
+
+		<nav class="bloc bloc--clair" aria-label="Machine suivante">
+			<div class="bloc__interieur suite">
+				<p class="suite__libelle">Machine suivante</p>
+				<p class="suite__nom"><a href={`/machines/${suivante.id}`}>{suivante.data.nom}</a></p>
+			</div>
+		</nav>
+	</article>
+</Base>
+
+<script>
+	import { modeles, monterScene } from '../../scripts/filaire';
+
+	document.querySelectorAll<HTMLCanvasElement>('[data-visionneuse]').forEach((c) => {
+		const m = modeles.find((x) => x.slug === c.dataset.visionneuse);
+		if (m) monterScene(c, m, { echelle: 0.24 });
+	});
+</script>
+
+<style>
+	.fiche__entete {
+		padding-bottom: 1rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.2rem;
+		max-width: 46rem;
+	}
+	.fiche__visionneuse {
+		padding-top: 0;
+	}
+	.fiche__visionneuse figure {
+		margin: 0;
+	}
+	.fiche__visionneuse canvas {
+		width: 100%;
+		aspect-ratio: 1000 / 620;
+		background: var(--gris-clair);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		cursor: grab;
+		touch-action: none;
+	}
+	.fiche__visionneuse canvas.actif {
+		cursor: grabbing;
+	}
+	.fiche__visionneuse figcaption {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		margin-top: 0.6rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.consigne {
+		color: var(--bleu);
+		font-weight: 500;
+	}
+	.fiche__corps {
+		display: grid;
+		grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
+	}
+	@media (max-width: 860px) {
+		.fiche__corps {
+			grid-template-columns: 1fr;
+		}
+	}
+	.fiche__technique h2 {
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--gris-leger);
+		font-weight: 600;
+	}
+	.fiche__technique dl {
+		margin: 0;
+		font-size: 0.95rem;
+	}
+	.fiche__technique dt {
+		font-weight: 500;
+		color: var(--gris-leger);
+		border-top: 1px solid var(--gris-moyen);
+		padding-top: 0.6rem;
+	}
+	.fiche__technique dd {
+		margin: 0 0 0.6rem;
+		color: var(--bleu-nuit);
+	}
+	.suite {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+	.suite__libelle {
+		margin: 0;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--gris-leger);
+		font-family: var(--titres);
+		font-weight: 600;
+	}
+	.suite__nom {
+		margin: 0;
+		font-family: var(--titres);
+		font-size: 1.5rem;
+		font-weight: 600;
+	}
+	.suite__nom a {
+		text-decoration: none;
+	}
+</style>

@@ -1,0 +1,18 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocs from '../components/Blocs.astro';
+import Formulaire from '../components/Formulaire.astro';
+
+const page = await getEntry('pages', 'contact');
+if (!page) throw new Error('content/pages/contact.md est introuvable.');
+
+// Le formulaire s'insère après le bloc d'en-tête, avant le reste de la page.
+const [entete, ...suite] = page.data.blocs;
+---
+
+<Base titre={page.data.titre} description={page.data.description} noindex={page.data.noindex}>
+	<Blocs blocs={entete ? [entete] : []} />
+	<Formulaire />
+	<Blocs blocs={suite} />
+</Base>

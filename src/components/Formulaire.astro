@@ -1,0 +1,168 @@
+---
+// Formulaire de contact.
+//
+// Il envoie ses données à /api/contact.php, un script PHP qui sera écrit au lot 2b, quand
+// l'hébergement Infomaniak sera en place. Tant que `formulaire_actif` vaut false dans
+// content/reglages/site.json, les champs sont désactivés et un avertissement s'affiche :
+// mieux vaut un formulaire visiblement inactif qu'un formulaire qui perd les messages.
+//
+// Anti-spam : un champ piège invisible (« site_web ») que seuls les robots remplissent, et
+// un horodatage d'ouverture du formulaire, vérifiés côté PHP. Aucun service tiers.
+import site from '../../content/reglages/site.json';
+
+const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true;
+---
+
+<section class="bloc">
+	<div class="bloc__interieur formulaire__interieur">
+		{
+			!actif && (
+				<p class="avertissement">
+					<strong>Formulaire inactif sur cette adresse de test.</strong> Il sera mis en service en
+					même temps que l’hébergement définitif. Les champs sont volontairement désactivés pour
+					qu’aucun message ne se perde.
+				</p>
+			)
+		}
+
+		<form
+			class="formulaire"
+			method="post"
+			action="/api/contact.php"
+			novalidate={!actif}
+			data-formulaire
+		>
+			<div class="champ">
+				<label for="nom">Votre nom <span aria-hidden="true">*</span></label>
+				<input type="text" id="nom" name="nom" required autocomplete="name" disabled={!actif} />
+			</div>
+
+			<div class="champ">
+				<label for="societe">Société</label>
+				<input type="text" id="societe" name="societe" autocomplete="organization" disabled={!actif} />
+			</div>
+
+			<div class="champ">
+				<label for="email">Votre adresse électronique <span aria-hidden="true">*</span></label>
+				<input type="email" id="email" name="email" required autocomplete="email" disabled={!actif} />
+			</div>
+
+			<div class="champ">
+				<label for="telephone">Téléphone</label>
+				<input type="tel" id="telephone" name="telephone" autocomplete="tel" disabled={!actif} />
+			</div>
+
+			<div class="champ champ--large">
+				<label for="message">Votre besoin <span aria-hidden="true">*</span></label>
+				<textarea id="message" name="message" rows="7" required disabled={!actif}></textarea>
+				<p class="aide">
+					L’opération à réaliser, comment vous la faites aujourd’hui, la cadence visée. Même
+					sommairement.
+				</p>
+			</div>
+
+			{/* Champ piège : invisible à l'écran et pour les lecteurs d'écran, rempli par les robots. */}
+			<div class="piege" aria-hidden="true">
+				<label for="site_web">Ne pas remplir ce champ</label>
+				<input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off" />
+			</div>
+			<input type="hidden" name="ouverture" value="" data-ouverture />
+
+			<p class="champ--large mention">
+				Les informations saisies servent uniquement à vous répondre. Elles ne sont pas conservées
+				sur le site et ne sont transmises à personne d’autre. Voir la
+				<a href="/confidentialite">politique de confidentialité</a>.
+			</p>
+
+			<p class="champ--large">
+				<button class="bouton" type="submit" disabled={!actif}>Envoyer</button>
+			</p>
+		</form>
+	</div>
+</section>
+
+<script>
+	// Horodatage d'ouverture : un envoi en moins de trois secondes est le fait d'un robot.
+	// La vérification se fait côté serveur ; ici on se contente d'inscrire l'heure.
+	const champ = document.querySelector<HTMLInputElement>('[data-ouverture]');
+	if (champ) champ.value = String(Date.now());
+</script>
+
+<style>
+	.formulaire__interieur {
+		max-width: 46rem;
+	}
+	.avertissement {
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		padding: 1rem 1.25rem;
+		margin-bottom: 2rem;
+	}
+	.formulaire {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem;
+	}
+	@media (max-width: 640px) {
+		.formulaire {
+			grid-template-columns: 1fr;
+		}
+	}
+	.champ--large,
+	.mention {
+		grid-column: 1 / -1;
+	}
+	.champ {
+		display: grid;
+		gap: 0.3rem;
+	}
+	label {
+		font-weight: 500;
+		font-size: 0.95rem;
+		color: var(--bleu-nuit);
+	}
+	input,
+	textarea {
+		font: inherit;
+		color: var(--gris);
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.6rem 0.75rem;
+		width: 100%;
+	}
+	input:focus,
+	textarea:focus {
+		border-color: var(--bleu);
+	}
+	input:disabled,
+	textarea:disabled {
+		background: var(--gris-clair);
+		color: var(--gris-leger);
+		cursor: not-allowed;
+	}
+	textarea {
+		resize: vertical;
+	}
+	.aide {
+		margin: 0.25rem 0 0;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.mention {
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+		margin: 0;
+	}
+	.piege {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+	button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+</style>

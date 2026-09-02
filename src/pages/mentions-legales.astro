@@ -1,0 +1,135 @@
+---
+// Mentions légales.
+//
+// Les données d'identification viennent de content/reglages/legal.json et de site.json :
+// elles ne sont saisies qu'une fois et restent modifiables depuis le CMS. La structure et
+// les formules obligatoires vivent dans ce gabarit, pour qu'une modification de contenu ne
+// puisse pas casser la conformité de la page.
+import Base from '../layouts/Base.astro';
+import legal from '../../content/reglages/legal.json';
+import site from '../../content/reglages/site.json';
+
+const aCompleter = (v: string) => v.trim().startsWith('[');
+const Valeur = ({ v }: { v: string }) => v;
+---
+
+<Base
+	titre="Mentions légales"
+	description="Mentions légales du site automachine.net : éditeur, directeur de la publication, hébergeur."
+>
+	<div class="bloc legal">
+		<div class="bloc__interieur">
+			<h1>Mentions légales</h1>
+
+			<h2>Éditeur du site</h2>
+			<dl>
+				<div><dt>Raison sociale</dt><dd>{legal.raison_sociale}</dd></div>
+				<div><dt>Forme juridique</dt><dd>{legal.forme_juridique}</dd></div>
+				<div>
+					<dt>Capital social</dt>
+					<dd class={aCompleter(legal.capital_social) ? 'a-rediger' : ''}>{legal.capital_social}</dd>
+				</div>
+				<div>
+					<dt>Siège social</dt>
+					<dd>
+						{site.adresse_voie}, {site.adresse_code_postal}
+						{site.adresse_ville}, {site.adresse_pays}
+					</dd>
+				</div>
+				<div><dt>SIREN</dt><dd>{legal.siren}</dd></div>
+				<div><dt>SIRET du siège</dt><dd>{legal.siret_siege}</dd></div>
+				<div>
+					<dt>Immatriculation</dt>
+					<dd class={aCompleter(legal.rcs) ? 'a-rediger' : ''}>{legal.rcs}</dd>
+				</div>
+				<div><dt>Numéro de TVA intracommunautaire</dt><dd>{legal.tva_intracommunautaire}</dd></div>
+				<div>
+					<dt>Code APE</dt>
+					<dd>{legal.code_ape} — {legal.libelle_ape}</dd>
+				</div>
+				<div>
+					<dt>Téléphone</dt>
+					<dd class={aCompleter(site.telephone) ? 'a-rediger' : ''}>{site.telephone}</dd>
+				</div>
+				<div>
+					<dt>Adresse électronique</dt>
+					<dd class={aCompleter(site.email) ? 'a-rediger' : ''}>{site.email}</dd>
+				</div>
+			</dl>
+
+			<h2>Directeur de la publication</h2>
+			<p>{legal.directeur_publication}</p>
+
+			<h2>Hébergeur</h2>
+			<p>
+				{legal.hebergeur_nom}<br />
+				{legal.hebergeur_adresse}<br />
+				{legal.hebergeur_telephone}
+			</p>
+
+			<h2>Propriété intellectuelle</h2>
+			<p>
+				L’ensemble des contenus de ce site, textes, images, rendus tridimensionnels et éléments
+				graphiques, est la propriété de {legal.raison_sociale}, sauf mention contraire. Toute
+				reproduction ou représentation, totale ou partielle, sans autorisation écrite préalable est
+				interdite.
+			</p>
+			<p>
+				Les logos des sociétés citées appartiennent à leurs titulaires respectifs et sont reproduits
+				avec leur accord.
+			</p>
+
+			<h2>Données personnelles</h2>
+			<p>
+				Le traitement des données transmises par le formulaire de contact et la mesure d’audience
+				sont décrits dans la <a href="/confidentialite">politique de confidentialité</a>.
+			</p>
+
+			<h2>Responsabilité</h2>
+			<p>
+				Les informations publiées sur ce site sont fournies à titre informatif. Elles ne constituent
+				pas un conseil juridique, en particulier celles relatives à la réglementation applicable aux
+				machines.
+			</p>
+		</div>
+	</div>
+</Base>
+
+<style>
+	.legal .bloc__interieur {
+		max-width: 52rem;
+	}
+	.legal h2 {
+		font-size: 1.35rem;
+		margin-top: 2.5rem;
+	}
+	.legal dl {
+		display: grid;
+		gap: 0;
+		margin: 0;
+	}
+	.legal dl > div {
+		display: grid;
+		grid-template-columns: 16rem minmax(0, 1fr);
+		gap: 0 1.5rem;
+		border-top: 1px solid var(--gris-moyen);
+		padding: 0.6rem 0;
+	}
+	@media (max-width: 640px) {
+		.legal dl > div {
+			grid-template-columns: 1fr;
+			gap: 0.15rem;
+		}
+	}
+	.legal dt {
+		color: var(--gris-leger);
+		font-weight: 500;
+	}
+	.legal dd {
+		margin: 0;
+		color: var(--bleu-nuit);
+	}
+	.legal p {
+		max-width: var(--mesure);
+	}
+</style>

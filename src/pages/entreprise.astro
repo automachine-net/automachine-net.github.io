@@ -3,8 +3,8 @@ import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Blocs from '../components/Blocs.astro';
 
-const page = await getEntry('pages', 'accueil');
-if (!page) throw new Error('content/pages/accueil.md est introuvable.');
+const page = await getEntry('pages', 'entreprise');
+if (!page) throw new Error('content/pages/entreprise.md est introuvable.');
 ---
 
 <Base titre={page.data.titre} description={page.data.description} noindex={page.data.noindex}>

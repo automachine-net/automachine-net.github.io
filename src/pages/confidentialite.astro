@@ -1,0 +1,134 @@
+---
+// Politique de confidentialité.
+//
+// Elle décrit ce que le site fait réellement : aucun service tiers chargé dans le navigateur,
+// mesure d'audience Matomo configurée sans cookie, formulaire de contact envoyé par courrier
+// électronique sans stockage. Toute évolution technique doit être répercutée ici.
+import Base from '../layouts/Base.astro';
+import legal from '../../content/reglages/legal.json';
+import site from '../../content/reglages/site.json';
+
+const aCompleter = (v: string) => v.trim().startsWith('[');
+---
+
+<Base
+	titre="Politique de confidentialité"
+	description="Ce que le site automachine.net collecte, pourquoi, pendant combien de temps, et comment exercer vos droits."
+>
+	<div class="bloc legal">
+		<div class="bloc__interieur">
+			<h1>Politique de confidentialité</h1>
+			<p class="chapeau">
+				Ce site est volontairement sobre en données. Il ne charge aucun service extérieur, n’affiche
+				aucune publicité et ne dépose aucun cookie publicitaire.
+			</p>
+
+			<h2>Responsable du traitement</h2>
+			<p>
+				{legal.raison_sociale}, {site.adresse_voie}, {site.adresse_code_postal}
+				{site.adresse_ville}, {site.adresse_pays}. Responsable : {legal.directeur_publication}.
+			</p>
+
+			<h2>Formulaire de contact</h2>
+			<ul>
+				<li>
+					<strong>Données collectées :</strong> le nom, la société, l’adresse électronique, le
+					numéro de téléphone et le message que vous saisissez.
+				</li>
+				<li>
+					<strong>Finalité :</strong> répondre à votre demande. Rien d’autre. Aucune prospection,
+					aucune cession à un tiers.
+				</li>
+				<li>
+					<strong>Base légale :</strong> votre démarche volontaire vers nous, qui relève de mesures
+					précontractuelles.
+				</li>
+				<li>
+					<strong>Destinataires :</strong> les personnes d’{legal.raison_sociale} chargées de
+					traiter les demandes.
+				</li>
+				<li>
+					<strong>Conservation :</strong> le site ne conserve rien. Le message est transmis par
+					courrier électronique et n’est enregistré dans aucune base de données. Il est ensuite
+					conservé dans notre messagerie le temps du traitement de votre demande, puis de la
+					relation commerciale s’il y en a une.
+				</li>
+				<li>
+					<strong>Lutte contre les envois automatisés :</strong> un champ invisible et un délai
+					minimal de saisie permettent d’écarter les robots. Aucun service extérieur de type
+					captcha n’est utilisé.
+				</li>
+			</ul>
+
+			<h2>Mesure d’audience</h2>
+			<p>
+				L’audience est mesurée avec <strong>Matomo</strong>, installé sur notre propre hébergement.
+				Les données ne quittent pas nos serveurs et ne sont transmises à personne.
+			</p>
+			<p>
+				La configuration retenue suit les recommandations de la CNIL permettant d’être exempté de
+				consentement : aucun cookie de suivi, adresse IP tronquée, pas de recoupement entre sites,
+				pas de suivi entre les visites. C’est la raison pour laquelle ce site n’affiche pas de
+				bandeau : il n’y a rien à accepter ou à refuser.
+			</p>
+			<p>
+				Les données d’audience sont conservées <span class="a-rediger">[À COMPLÉTER : durée retenue,
+				par exemple treize mois]</span>.
+			</p>
+
+			<h2>Cookies</h2>
+			<p>
+				Ce site ne dépose aucun cookie publicitaire ni aucun cookie de mesure d’audience. Aucune
+				police, aucun script et aucune image ne sont chargés depuis un serveur extérieur : tout est
+				servi depuis notre propre domaine.
+			</p>
+
+			<h2>Vos droits</h2>
+			<p>
+				Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation et
+				d’opposition sur les données vous concernant. Pour l’exercer, écrivez-nous à
+				<span class={aCompleter(site.email) ? 'a-rediger' : ''}>{site.email}</span> ou à l’adresse
+				postale ci-dessus.
+			</p>
+			<p>
+				Si la réponse ne vous satisfait pas, vous pouvez saisir la Commission nationale de
+				l’informatique et des libertés (CNIL), 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07,
+				ou sur <a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>.
+			</p>
+
+			<h2>Hébergement</h2>
+			<p>
+				Le site est hébergé par {legal.hebergeur_nom}, {legal.hebergeur_adresse}.
+			</p>
+
+			<h2>Modification</h2>
+			<p>
+				Cette politique peut évoluer si le site évolue. La version en vigueur est celle publiée sur
+				cette page.
+			</p>
+		</div>
+	</div>
+</Base>
+
+<style>
+	.legal .bloc__interieur {
+		max-width: 52rem;
+	}
+	.legal .chapeau {
+		font-size: 1.15rem;
+	}
+	.legal h2 {
+		font-size: 1.35rem;
+		margin-top: 2.5rem;
+	}
+	.legal p,
+	.legal ul {
+		max-width: var(--mesure);
+	}
+	.legal ul {
+		padding-left: 1.3rem;
+	}
+	.legal li {
+		margin-bottom: 0.6rem;
+	}
+</style>

@@ -1,0 +1,143 @@
+---
+// Page « Machines » : une page unique déroulante, une section pleine largeur par machine.
+// Ni grille, ni filtres, conformément aux décisions du projet.
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Blocs from '../../components/Blocs.astro';
+
+const page = await getEntry('pages', 'machines');
+if (!page) throw new Error('content/pages/machines.md est introuvable.');
+
+const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre - b.data.ordre);
+---
+
+<Base titre={page.data.titre} description={page.data.description}>
+	<Blocs blocs={page.data.blocs} />
+
+	{
+		machines.map((m, i) => (
+			<section class={`machine ${i % 2 === 1 ? 'machine--inverse' : ''}`}>
+				<div class="machine__interieur">
+					<div class="machine__visuel">
+						{m.data.image ? (
+							<img src={m.data.image} alt={m.data.image_alt ?? ''} loading="lazy" decoding="async" />
+						) : (
+							<canvas
+								width="900"
+								height="620"
+								data-slug={m.data.modele_3d ?? m.id}
+								tabindex="0"
+								aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
+							/>
+						)}
+					</div>
+
+					<div class="machine__texte">
+						<p class="machine__index">
+							{String(i + 1).padStart(2, '0')} · {m.data.secteur}
+						</p>
+						<h2>
+							<a href={`/machines/${m.id}`}>{m.data.nom}</a>
+						</h2>
+						<p class="machine__resume">{m.data.resume}</p>
+						<p>
+							<a class="bouton" href={`/machines/${m.id}`}>
+								Voir la fiche
+							</a>
+						</p>
+					</div>
+				</div>
+			</section>
+		))
+	}
+
+	<section class="bloc bloc--sombre">
+		<div class="bloc__interieur appel">
+			<h2>Votre machine n’est pas dans cette liste ?</h2>
+			<p>
+				<span class="a-rediger">[à relire]</span> C’est normal : chacune est un exemplaire unique.
+				Décrivez-nous la vôtre.
+			</p>
+			<p><a class="bouton bouton--clair" href="/contact">Nous contacter</a></p>
+		</div>
+	</section>
+</Base>
+
+<script>
+	import { modeles, monterScene } from '../../scripts/filaire';
+
+	document.querySelectorAll<HTMLCanvasElement>('.machine__visuel canvas').forEach((c) => {
+		const m = modeles.find((x) => x.slug === c.dataset.slug);
+		if (m) monterScene(c, m, { echelle: 0.24 });
+	});
+</script>
+
+<style>
+	.machine {
+		padding: clamp(2rem, 5vw, 3.5rem) var(--marge);
+		border-top: 1px solid var(--gris-moyen);
+	}
+	.machine__interieur {
+		max-width: var(--largeur);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+		gap: clamp(1.5rem, 4vw, 3rem);
+		align-items: center;
+	}
+	@media (max-width: 860px) {
+		.machine__interieur {
+			grid-template-columns: 1fr;
+		}
+	}
+	.machine--inverse .machine__visuel {
+		order: 2;
+	}
+	@media (max-width: 860px) {
+		.machine--inverse .machine__visuel {
+			order: 0;
+		}
+	}
+	.machine__visuel canvas,
+	.machine__visuel img {
+		width: 100%;
+		aspect-ratio: 900 / 620;
+		background: var(--gris-clair);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		object-fit: cover;
+	}
+	.machine__visuel canvas {
+		cursor: grab;
+		touch-action: none;
+	}
+	.machine__visuel canvas.actif {
+		cursor: grabbing;
+	}
+	.machine__index {
+		font-family: var(--titres);
+		color: var(--bleu);
+		font-weight: 700;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin: 0;
+	}
+	.machine h2 {
+		margin: 0.2rem 0 0.5rem;
+	}
+	.machine h2 a {
+		text-decoration: none;
+		color: inherit;
+	}
+	.machine h2 a:hover {
+		color: var(--bleu);
+	}
+	.machine__resume {
+		font-size: 1.05rem;
+	}
+	.appel {
+		max-width: 42rem;
+		text-align: center;
+	}
+</style>
