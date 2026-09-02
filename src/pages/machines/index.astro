@@ -4,6 +4,7 @@
 import { getCollection, getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
+import { typo } from '../../scripts/typographie';
 
 const page = await getEntry('pages', 'machines');
 if (!page) throw new Error('content/pages/machines.md est introuvable.');
@@ -35,9 +36,9 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 					<div class="machine__texte">
 						<p class="machine__secteur">{m.data.secteur}</p>
 						<h2>
-							<a href={`/machines/${m.id}`}>{m.data.nom}</a>
+							<a href={`/machines/${m.id}`}>{typo(m.data.nom)}</a>
 						</h2>
-						<p class="machine__resume">{m.data.resume}</p>
+						<p class="machine__resume">{typo(m.data.resume)}</p>
 						<p>
 							<a class="bouton" href={`/machines/${m.id}`}>
 								Voir la fiche

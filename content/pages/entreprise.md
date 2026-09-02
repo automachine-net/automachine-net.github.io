@@ -9,6 +9,7 @@ blocs:
     chapeau: '[à relire] Le bureau d’études et l’atelier sont au même endroit. Celui qui dessine la machine voit celui qui la monte, et inversement. C’est ce qui permet de corriger vite et de tenir les délais sur des pièces uniques.'
 
   - type: texte
+    fond: blanc
     titre: Notre histoire
     texte: |
       [à relire] L'entreprise est créée le 10 mars 2011 sous le nom de **Sourcitem**. Elle prend
@@ -33,6 +34,7 @@ blocs:
         legende: personnes dans l’équipe
 
   - type: texte
+    fond: blanc
     titre: Comment nous travaillons
     texte: |
       [à relire] Une machine spéciale est un exemplaire unique. On ne peut pas la corriger sur
@@ -64,6 +66,7 @@ blocs:
       traitement des non-conformités, tri et suivi des déchets d'atelier].
 
   - type: texte
+    fond: blanc
     titre: Les secteurs que nous servons
     texte: |
       [à relire] Nos machines partent dans des contextes très différents. Ce qui les relie,
@@ -79,8 +82,10 @@ blocs:
         non formé, donc à toute épreuve.
 
   - type: clients
+    fond: blanc
 
   - type: appel
+    fond: blanc
     titre: Travaillons ensemble
     texte: '[à relire] Décrivez-nous votre besoin. Nous vous dirons franchement si c’est un sujet pour nous.'
     lien_libelle: Nous contacter

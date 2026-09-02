@@ -7,6 +7,7 @@
 // est intact, seule la boucle disparaît.
 import { getCollection } from 'astro:content';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import { typo } from '../../scripts/typographie';
 
 export interface BlocFicheMachine {
 	type: 'fiche-machine';
@@ -58,9 +59,9 @@ const choisies = bloc.machines?.length
 							<div class="carte__corps">
 								<p class="carte__secteur">{m.data.secteur}</p>
 								<h3>
-									<a href={`/machines/${m.id}`}>{m.data.nom}</a>
+									<a href={`/machines/${m.id}`}>{typo(m.data.nom)}</a>
 								</h3>
-								<p class="carte__resume">{m.data.resume}</p>
+								<p class="carte__resume">{typo(m.data.resume)}</p>
 							</div>
 						</li>
 					))

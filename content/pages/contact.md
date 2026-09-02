@@ -9,6 +9,7 @@ blocs:
     chapeau: '[à relire] Même sommairement, même sans plan. Nous vous dirons rapidement si c’est un sujet pour nous et ce qu’il faudrait pour aller plus loin.'
 
   - type: texte
+    fond: blanc
     titre: Ce qui nous aide à vous répondre vite
     texte: |
       [à relire] Vous n'avez besoin de rien préparer. Mais si vous avez déjà ces éléments,

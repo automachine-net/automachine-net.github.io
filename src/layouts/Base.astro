@@ -4,6 +4,7 @@ import '../styles/base.css';
 import Entete from '../components/Entete.astro';
 import PiedDePage from '../components/PiedDePage.astro';
 import site from '../../content/reglages/site.json';
+import { typo } from '../scripts/typographie';
 
 interface Props {
 	titre: string;
@@ -17,7 +18,9 @@ interface Props {
 const { titre, description = site.description, noindex = false, image } = Astro.props;
 const url = new URL(Astro.url.pathname, Astro.site ?? 'https://automachine-net.github.io');
 const imageAbsolue = image ? new URL(image, url).href : undefined;
-const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `${titre} — ${site.nom}`;
+const titrePropre = typo(titre);
+const descriptionPropre = typo(description);
+const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `${titrePropre} — ${site.nom}`;
 ---
 
 <!doctype html>
@@ -27,7 +30,7 @@ const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{titreComplet}</title>
-		<meta name="description" content={description} />
+		<meta name="description" content={descriptionPropre} />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="canonical" href={url.href} />
 
@@ -35,7 +38,7 @@ const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `
 		<meta property="og:site_name" content={site.nom} />
 		<meta property="og:locale" content="fr_FR" />
 		<meta property="og:title" content={titreComplet} />
-		<meta property="og:description" content={description} />
+		<meta property="og:description" content={descriptionPropre} />
 		<meta property="og:url" content={url.href} />
 		{imageAbsolue && <meta property="og:image" content={imageAbsolue} />}
 		<meta name="twitter:card" content={imageAbsolue ? 'summary_large_image' : 'summary'} />

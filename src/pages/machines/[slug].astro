@@ -7,6 +7,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
 import { marked } from '../../scripts/markdown';
+import { typo } from '../../scripts/typographie';
 
 export const getStaticPaths = (async () => {
 	const machines = await getCollection('machines');
@@ -27,8 +28,8 @@ const suivante = toutes[(position + 1) % toutes.length];
 			<div class="bloc__interieur">
 				<p class="fil"><a href="/machines">Machines</a> <span aria-hidden="true">›</span> {d.nom}</p>
 				<p class="surtitre">{d.client ? `${d.secteur} · ${d.client}` : d.secteur}</p>
-				<h1>{d.nom}</h1>
-				<p class="chapeau">{d.resume}</p>
+				<h1>{typo(d.nom)}</h1>
+				<p class="chapeau">{typo(d.resume)}</p>
 			</div>
 		</header>
 
@@ -69,8 +70,8 @@ const suivante = toutes[(position + 1) % toutes.length];
 							<dl>
 								{d.caracteristiques.map((c) => (
 									<div>
-										<dt>{c.libelle}</dt>
-										<dd class={c.valeur.trim().startsWith('[À') ? 'a-rediger' : ''}>{c.valeur}</dd>
+										<dt>{typo(c.libelle)}</dt>
+										<dd class={c.valeur.trim().startsWith('[À') ? 'a-rediger' : ''}>{typo(c.valeur)}</dd>
 									</div>
 								))}
 							</dl>
@@ -85,7 +86,7 @@ const suivante = toutes[(position + 1) % toutes.length];
 		<nav class="bloc bloc--clair" aria-label="Machine suivante">
 			<div class="bloc__interieur suite">
 				<p class="suite__libelle">Machine suivante</p>
-				<p class="suite__nom"><a href={`/machines/${suivante.id}`}>{suivante.data.nom}</a></p>
+				<p class="suite__nom"><a href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a></p>
 			</div>
 		</nav>
 	</article>

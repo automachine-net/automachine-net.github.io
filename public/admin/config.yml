@@ -57,11 +57,12 @@ collections:
         label: Blocs de la page
         label_singular: Bloc
         widget: list
+        collapsed: true
         types: &blocs
           # ------------------------------------------------ En-tête
           - name: hero
             label: En-tête de page
-            summary: 'En-tête : {{fields.titre}}'
+            summary: 'En-tête de page — {{fields.titre}}'
             fields:
               - { name: surtitre, label: Surtitre, widget: string, required: false }
               - { name: titre, label: Grand titre, widget: string }
@@ -85,7 +86,7 @@ collections:
           # ------------------------------------------------ Texte
           - name: texte
             label: Texte
-            summary: 'Texte : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Texte — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - { name: texte, label: Texte, widget: markdown }
@@ -93,7 +94,6 @@ collections:
                 name: fond
                 label: Fond
                 widget: select
-                required: false
                 default: blanc
                 options:
                   - { label: Blanc, value: blanc }
@@ -103,7 +103,7 @@ collections:
           # ------------------------------------------------ Texte et image
           - name: texte-image
             label: Texte et image
-            summary: 'Texte et image : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Texte et image — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - { name: texte, label: Texte, widget: markdown }
@@ -133,13 +133,14 @@ collections:
           # ------------------------------------------------ Galerie
           - name: galerie
             label: Galerie d'images
-            summary: 'Galerie : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Galerie — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - name: images
                 label: Images
                 label_singular: Image
                 widget: list
+                collapsed: true
                 fields:
                   - { name: image, label: Image, widget: image, required: false }
                   - { name: alt, label: Description de l'image, widget: string, required: false }
@@ -156,13 +157,14 @@ collections:
           # ------------------------------------------------ Chiffres clés
           - name: chiffres
             label: Chiffres clés
-            summary: 'Chiffres clés : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Chiffres clés — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - name: chiffres
                 label: Chiffres
                 label_singular: Chiffre
                 widget: list
+                collapsed: true
                 summary: '{{fields.valeur}} — {{fields.legende}}'
                 fields:
                   - { name: valeur, label: Valeur, widget: string }
@@ -172,7 +174,7 @@ collections:
           # ------------------------------------------------ Machines
           - name: fiche-machine
             label: Cartes de machines
-            summary: 'Machines : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Machines — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - { name: introduction, label: Introduction, widget: text, required: false }
@@ -193,7 +195,7 @@ collections:
           # ------------------------------------------------ Visionneuse 3D
           - name: visionneuse-3d
             label: Visionneuse 3D
-            summary: 'Visionneuse 3D : {{fields.modele}}'
+            summary: '[{{fields.fond}}] Visionneuse 3D — {{fields.modele}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - name: modele
@@ -212,7 +214,7 @@ collections:
           # ------------------------------------------------ Citation
           - name: citation
             label: Citation
-            summary: 'Citation : {{fields.auteur}}'
+            summary: '[{{fields.fond}}] Citation — {{fields.auteur}}'
             fields:
               - { name: citation, label: Citation, widget: text }
               - { name: auteur, label: Auteur, widget: string, required: false }
@@ -222,7 +224,7 @@ collections:
           # ------------------------------------------------ Appel à l'action
           - name: appel
             label: Appel à l'action
-            summary: 'Appel : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Appel à l’action — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string }
               - { name: texte, label: Texte, widget: text, required: false }
@@ -233,13 +235,14 @@ collections:
           # ------------------------------------------------ Questions fréquentes
           - name: faq
             label: Questions fréquentes
-            summary: 'Questions fréquentes : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Questions fréquentes — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - name: questions
                 label: Questions
                 label_singular: Question
                 widget: list
+                collapsed: true
                 summary: '{{fields.question}}'
                 fields:
                   - { name: question, label: Question, widget: string }
@@ -249,7 +252,7 @@ collections:
           # ------------------------------------------------ Module interactif
           - name: module
             label: Module interactif
-            summary: 'Module : {{fields.titre}}'
+            summary: '[{{fields.fond}}] Module — {{fields.titre}}'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - { name: introduction, label: Introduction, widget: text, required: false }
@@ -276,7 +279,7 @@ collections:
           # ------------------------------------------------ Clients
           - name: clients
             label: Logos des clients
-            summary: Logos des clients
+            summary: '[{{fields.fond}}] Logos des clients'
             fields:
               - { name: titre, label: Titre, widget: string, required: false }
               - *fond
@@ -332,6 +335,7 @@ collections:
         label: Fiche technique
         label_singular: Ligne
         widget: list
+        collapsed: true
         required: false
         summary: '{{fields.libelle}} : {{fields.valeur}}'
         fields:
@@ -343,6 +347,7 @@ collections:
         label: Blocs supplémentaires
         label_singular: Bloc
         widget: list
+        collapsed: true
         required: false
         types: *blocs
 
@@ -362,6 +367,7 @@ collections:
             label: Questions
             label_singular: Question
             widget: list
+            collapsed: true
             summary: '{{fields.id}} — {{fields.question}}'
             fields:
               - { name: id, label: Numéro, widget: number, value_type: int }
@@ -415,6 +421,7 @@ collections:
             label: Menu du haut
             label_singular: Entrée
             widget: list
+            collapsed: true
             summary: '{{fields.label}} → {{fields.href}}'
             fields:
               - { name: label, label: Texte affiché, widget: string }
@@ -423,6 +430,7 @@ collections:
             label: Menu du pied de page
             label_singular: Entrée
             widget: list
+            collapsed: true
             summary: '{{fields.label}} → {{fields.href}}'
             fields:
               - { name: label, label: Texte affiché, widget: string }
@@ -437,6 +445,7 @@ collections:
             label: Clients
             label_singular: Client
             widget: list
+            collapsed: true
             summary: '{{fields.nom}}'
             fields:
               - { name: nom, label: Nom, widget: string }
@@ -450,6 +459,7 @@ collections:
             label: Secteurs
             label_singular: Secteur
             widget: list
+            collapsed: true
             summary: '{{fields.nom}}'
             fields:
               - name: slug
