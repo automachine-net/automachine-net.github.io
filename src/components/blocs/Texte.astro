@@ -1,6 +1,7 @@
 ---
 // Bloc « texte ». Un titre facultatif et un corps de texte en Markdown.
 import { marked } from '../../scripts/markdown';
+import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocTexte {
 	type: 'texte';
@@ -11,7 +12,7 @@ export interface BlocTexte {
 }
 
 const { bloc } = Astro.props as { bloc: BlocTexte };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 ---
 
 <section class={`bloc ${classeFond}`}>

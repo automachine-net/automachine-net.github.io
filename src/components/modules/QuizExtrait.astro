@@ -9,9 +9,20 @@ interface Props {
 	nombre?: number;
 	/** Identifiants des questions à montrer. Sinon, une par thème, les plus courtes. */
 	questions?: number[];
+	/** Libellé du bouton qui déroule les questions. */
+	libelle?: string;
+	/** Lien vers le quiz complet, affiché sous les questions. */
+	lien_libelle?: string;
+	lien_url?: string;
 }
 
-const { nombre = 3, questions: choisies } = Astro.props;
+const {
+	nombre = 3,
+	questions: choisies,
+	libelle = 'Répondre au quiz',
+	lien_libelle,
+	lien_url,
+} = Astro.props;
 
 const selection = choisies?.length
 	? choisies.map((id) => quiz.questions.find((q) => q.id === id)!).filter(Boolean)
@@ -28,7 +39,13 @@ const lettres = ['a', 'b', 'c', 'd'] as const;
 const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 ---
 
-<div class="quiz" data-quiz>
+{/* <details> : le quiz est replié à l'arrivée et se déroule au clic. Cela fonctionne sans
+    JavaScript, la balise est prévue pour ça. */}
+<details class="quiz" data-quiz>
+	<summary class="quiz__bouton">
+		<span>{libelle}</span>
+	</summary>
+
 	<ol class="quiz__liste">
 		{
 			selection.map((q) => (
@@ -51,8 +68,19 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 			))
 		}
 	</ol>
+
+	{
+		lien_url && (
+			<p class="quiz__suite">
+				<a class="bouton" href={lien_url}>
+					{lien_libelle ?? 'Continuer'}
+				</a>
+			</p>
+		)
+	}
+
 	<p class="quiz__mention">{quiz.mention}</p>
-</div>
+</details>
 
 <script>
 	document.querySelectorAll<HTMLElement>('[data-quiz] .question').forEach((q) => {
@@ -80,10 +108,42 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 </script>
 
 <style>
+	/* Bouton de déroulement : c'est la balise <summary>, habillée en bouton. */
+	.quiz__bouton {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		font-weight: 500;
+		padding: 0.8rem 1.4rem;
+		border-radius: var(--rayon);
+		cursor: pointer;
+		list-style: none;
+	}
+	.quiz__bouton::-webkit-details-marker {
+		display: none;
+	}
+	.quiz__bouton::after {
+		content: '';
+		width: 0.55rem;
+		height: 0.55rem;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: translateY(-0.15rem) rotate(45deg);
+		transition: transform 0.2s;
+	}
+	.quiz[open] .quiz__bouton::after {
+		transform: translateY(0.1rem) rotate(-135deg);
+	}
+	.quiz__bouton:hover {
+		background: var(--bleu);
+	}
+
 	.quiz__liste {
 		list-style: none;
 		padding: 0;
-		margin: 0;
+		margin: 2.5rem 0 0;
 		display: grid;
 		gap: 2.5rem;
 	}
@@ -162,8 +222,14 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 		font-size: 0.85rem;
 		color: var(--gris-leger);
 	}
+	.quiz__suite {
+		margin: 2.5rem 0 0;
+	}
+	/* La mention obligatoire ferme le bloc, rattachée par un filet : elle ne flotte pas. */
 	.quiz__mention {
 		margin: 1.5rem 0 0;
+		padding-top: 1rem;
+		border-top: 1px solid var(--gris-moyen);
 		font-size: 0.85rem;
 		color: var(--gris-leger);
 	}

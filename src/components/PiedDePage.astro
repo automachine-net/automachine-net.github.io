@@ -3,37 +3,48 @@ import navigation from '../../content/reglages/navigation.json';
 import site from '../../content/reglages/site.json';
 
 const annee = new Date().getFullYear();
-const aCompleter = (v: string) => v.startsWith('[');
+const aCompleter = (v: string) => v.trim().startsWith('[');
 ---
 
 <footer class="pied">
 	<div class="pied__interieur">
-		<div class="pied__marque">
-			<img src="/images/logo/fond-noir.svg" alt="" width="157" height="59" />
-			<p class="pied__baseline">{site.baseline}</p>
+		<div class="pied__colonne pied__colonne--marque">
+			<img src="/images/logo/fond-noir.svg" alt={site.nom} width="157" height="59" />
 		</div>
 
-		<address class="pied__coordonnees">
-			{site.adresse_voie}<br />
-			{site.adresse_code_postal} {site.adresse_ville}<br />
-			{site.adresse_pays}
-			<br /><br />
-			{
-				aCompleter(site.telephone) ? (
-					<span class="a-rediger">{site.telephone}</span>
-				) : (
-					<a href={`tel:${site.telephone.replace(/\s/g, '')}`}>{site.telephone}</a>
-				)
-			}
-		</address>
+		<div class="pied__colonne">
+			<h2>Nous trouver</h2>
+			<address>
+				{site.adresse_voie}<br />
+				{site.adresse_code_postal} {site.adresse_ville}<br />
+				{site.adresse_pays}
+			</address>
+			<p class="pied__telephone">
+				{
+					aCompleter(site.telephone) ? (
+						<span class="a-rediger">{site.telephone}</span>
+					) : (
+						<a href={`tel:${site.telephone.replace(/\s/g, '')}`}>{site.telephone}</a>
+					)
+				}
+			</p>
+		</div>
 
-		<nav class="pied__liens" aria-label="Navigation du pied de page">
+		<nav class="pied__colonne" aria-label="Navigation du pied de page">
+			<h2>Le site</h2>
 			<ul>
 				{navigation.principale.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
-				{navigation.pied.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
 			</ul>
 		</nav>
+
+		<div class="pied__colonne">
+			<h2>Informations</h2>
+			<ul>
+				{navigation.pied.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+			</ul>
+		</div>
 	</div>
+
 	<p class="pied__bas">© {annee} {site.nom}</p>
 </footer>
 
@@ -41,56 +52,72 @@ const aCompleter = (v: string) => v.startsWith('[');
 	.pied {
 		background: var(--bleu-nuit);
 		color: var(--blanc);
-		padding: clamp(2.5rem, 6vw, 4rem) var(--marge) 1.5rem;
+		padding: clamp(3rem, 6vw, 4.5rem) var(--marge) 1.75rem;
 		margin-top: clamp(3rem, 8vw, 5rem);
 	}
 	.pied__interieur {
 		max-width: var(--largeur);
 		margin: 0 auto;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-		gap: 2rem 3rem;
+		grid-template-columns: 1.4fr 1fr 1fr 1fr;
+		gap: 2.5rem;
 		align-items: start;
 	}
-	.pied__marque img {
-		width: 140px;
+	@media (max-width: 860px) {
+		.pied__interieur {
+			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		}
+	}
+
+	.pied__colonne h2 {
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.09em;
+		color: var(--bleu-clair);
+		margin: 0 0 1rem;
+		font-weight: 600;
+	}
+	.pied__colonne--marque img {
+		width: 160px;
 		height: auto;
 	}
-	.pied__baseline {
-		margin: 0.5rem 0 0;
-		color: var(--bleu-clair);
-		font-size: 0.9rem;
-	}
-	.pied__coordonnees {
+
+	address {
 		font-style: normal;
 		font-size: 0.95rem;
-		line-height: 1.7;
+		line-height: 1.75;
+		margin: 0;
 	}
-	.pied__coordonnees a {
-		color: var(--blanc);
+	.pied__telephone {
+		margin: 0.75rem 0 0;
+		font-size: 0.95rem;
 	}
-	.pied a {
-		color: var(--blanc);
-	}
-	.pied a:hover {
-		color: var(--orange);
-	}
-	.pied .a-rediger {
-		color: var(--bleu-clair);
-	}
-	.pied__liens ul {
+
+	.pied ul {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: grid;
-		gap: 0.4rem;
+		gap: 0.6rem;
 		font-size: 0.95rem;
 	}
+	.pied a {
+		color: var(--blanc);
+		text-decoration: none;
+	}
+	.pied a:hover {
+		color: var(--orange);
+		text-decoration: underline;
+	}
+	.pied .a-rediger {
+		color: var(--bleu-clair);
+	}
+
 	.pied__bas {
 		max-width: var(--largeur);
-		margin: 2.5rem auto 0;
-		padding-top: 1.25rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.2);
+		margin: 3rem auto 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.18);
 		font-size: 0.85rem;
 		color: var(--bleu-clair);
 	}

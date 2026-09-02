@@ -18,7 +18,11 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 	</a>
 
 	<button class="bascule" type="button" aria-expanded="false" aria-controls="menu-principal">
-		<span class="bascule__barres" aria-hidden="true"></span>
+		<span class="bascule__icone" aria-hidden="true">
+			<span></span>
+			<span></span>
+			<span></span>
+		</span>
 		<span class="sr-only">Ouvrir le menu</span>
 	</button>
 
@@ -44,10 +48,11 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 	const entete = document.querySelector<HTMLElement>('.entete');
 	if (bouton && entete) {
 		entete.classList.add('entete--repliable');
+		const libelle = bouton.querySelector('.sr-only')!;
 		const basculer = (ouvert: boolean) => {
 			bouton.setAttribute('aria-expanded', String(ouvert));
 			entete.classList.toggle('entete--ouvert', ouvert);
-			bouton.querySelector('.sr-only')!.textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
+			libelle.textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
 		};
 		bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
 		document.addEventListener('keydown', (e) => {
@@ -67,15 +72,21 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 		align-items: center;
 		justify-content: space-between;
 		gap: 1.5rem;
-		padding: 0.75rem var(--marge);
+		padding: 0.9rem var(--marge);
 	}
 	.marque {
 		display: block;
 		flex: 0 0 auto;
+		line-height: 0;
 	}
 	.marque img {
-		width: 104px;
+		width: 168px;
 		height: auto;
+	}
+	@media (max-width: 480px) {
+		.marque img {
+			width: 140px;
+		}
 	}
 
 	nav ul {
@@ -83,7 +94,7 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 		margin: 0;
 		padding: 0;
 		display: flex;
-		gap: clamp(0.9rem, 2vw, 1.75rem);
+		gap: clamp(1rem, 2.2vw, 2rem);
 		flex-wrap: wrap;
 	}
 	nav a {
@@ -95,7 +106,7 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 		font-size: 0.95rem;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		padding: 0.25rem 0;
+		padding: 0.3rem 0;
 		border-bottom: 2px solid transparent;
 	}
 	nav a:hover {
@@ -105,39 +116,61 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 		border-bottom-color: var(--orange);
 	}
 
-	/* Bouton du menu : visible seulement sur petit écran, et seulement si JavaScript a pris la main. */
+	/* Bouton du menu : sans cadre, zone de clic de 44 px, les trois barres deviennent une croix. */
 	.bascule {
 		display: none;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		margin-right: -0.6rem;
 		background: none;
-		border: 1px solid var(--gris-moyen);
-		border-radius: var(--rayon);
-		padding: 0.55rem 0.6rem;
+		border: 0;
+		color: var(--bleu-nuit);
 		cursor: pointer;
+		place-items: center;
+		-webkit-tap-highlight-color: transparent;
 	}
-	.bascule__barres,
-	.bascule__barres::before,
-	.bascule__barres::after {
-		display: block;
-		width: 20px;
-		height: 2px;
-		background: var(--bleu-nuit);
-		transition: transform 0.2s;
-	}
-	.bascule__barres::before,
-	.bascule__barres::after {
-		content: '';
+	.bascule__icone {
 		position: relative;
+		display: block;
+		width: 24px;
+		height: 16px;
 	}
-	.bascule__barres::before {
-		top: -6px;
+	.bascule__icone span {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: currentColor;
+		transition:
+			top 0.18s,
+			transform 0.18s,
+			opacity 0.18s;
 	}
-	.bascule__barres::after {
-		top: 4px;
+	.bascule__icone span:nth-child(1) {
+		top: 0;
+	}
+	.bascule__icone span:nth-child(2) {
+		top: 7px;
+	}
+	.bascule__icone span:nth-child(3) {
+		top: 14px;
+	}
+	.entete--ouvert .bascule__icone span:nth-child(1) {
+		top: 7px;
+		transform: rotate(45deg);
+	}
+	.entete--ouvert .bascule__icone span:nth-child(2) {
+		opacity: 0;
+	}
+	.entete--ouvert .bascule__icone span:nth-child(3) {
+		top: 7px;
+		transform: rotate(-45deg);
 	}
 
 	@media (max-width: 760px) {
 		.entete--repliable .bascule {
-			display: block;
+			display: grid;
 		}
 		.entete--repliable nav {
 			display: none;
@@ -147,7 +180,7 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 			right: 0;
 			background: var(--blanc);
 			border-bottom: 2px solid var(--bleu-nuit);
-			padding: 0.5rem var(--marge) 1rem;
+			padding: 0 var(--marge) 0.5rem;
 		}
 		.entete--ouvert nav {
 			display: block;
@@ -157,19 +190,17 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 			gap: 0;
 		}
 		.entete--repliable nav a {
-			padding: 0.75rem 0;
+			padding: 0.9rem 0;
 			border-bottom: 1px solid var(--gris-moyen);
+			border-left: 2px solid transparent;
+			padding-left: 0;
 		}
-		.entete--ouvert .bascule__barres {
-			background: transparent;
+		/* La dernière entrée n'a pas de filet : le trait fort du bandeau ferme déjà le menu. */
+		.entete--repliable nav li:last-child a {
+			border-bottom: 0;
 		}
-		.entete--ouvert .bascule__barres::before {
-			top: -2px;
-			transform: rotate(45deg);
-		}
-		.entete--ouvert .bascule__barres::after {
-			top: -4px;
-			transform: rotate(-45deg);
+		.entete--repliable nav a[aria-current='page'] {
+			color: var(--bleu);
 		}
 	}
 </style>

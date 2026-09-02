@@ -1,5 +1,7 @@
 ---
 // Bloc « galerie ». Des images en grille, avec légendes facultatives.
+import { classeFond as classeFond_ } from '../../scripts/blocs';
+
 export interface BlocGalerie {
 	type: 'galerie';
 	titre?: string;
@@ -10,7 +12,7 @@ export interface BlocGalerie {
 }
 
 const { bloc } = Astro.props as { bloc: BlocGalerie };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 const minimum = { 2: '22rem', 3: '17rem', 4: '13rem' }[bloc.colonnes ?? 3];
 ---
 

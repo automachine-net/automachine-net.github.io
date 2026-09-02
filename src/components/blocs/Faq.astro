@@ -2,6 +2,7 @@
 // Bloc « questions fréquentes ». Chaque réponse se déplie. Sans JavaScript, les balises
 // <details> fonctionnent quand même : le contenu reste accessible.
 import { marked } from '../../scripts/markdown';
+import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocFaq {
 	type: 'faq';
@@ -11,7 +12,7 @@ export interface BlocFaq {
 }
 
 const { bloc } = Astro.props as { bloc: BlocFaq };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 ---
 
 <section class={`bloc ${classeFond}`}>

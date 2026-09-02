@@ -4,6 +4,8 @@
 // Aujourd'hui : volumes filaires dessinés au canvas, sans bibliothèque, en attendant les
 // fichiers glTF issus de la CAO. Au lot 3, ce composant recevra <model-viewer> et le volume
 // filaire deviendra l'image d'attente pendant le chargement du vrai modèle.
+import { classeFond as classeFond_ } from '../../scripts/blocs';
+
 export interface BlocVisionneuse3d {
 	type: 'visionneuse-3d';
 	titre?: string;
@@ -14,7 +16,7 @@ export interface BlocVisionneuse3d {
 }
 
 const { bloc } = Astro.props as { bloc: BlocVisionneuse3d };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 ---
 
 <section class={`bloc ${classeFond}`}>

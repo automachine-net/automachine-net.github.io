@@ -1,5 +1,7 @@
 ---
 // Bloc « chiffres clés ». Une valeur et sa légende, en ligne.
+import { classeFond as classeFond_ } from '../../scripts/blocs';
+
 export interface BlocChiffres {
 	type: 'chiffres';
 	titre?: string;
@@ -8,7 +10,7 @@ export interface BlocChiffres {
 }
 
 const { bloc } = Astro.props as { bloc: BlocChiffres };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 const aCompleter = (v: string) => v.trim().startsWith('[');
 ---
 

@@ -1,13 +1,17 @@
 ---
-// Bloc « fiche machine ». Des cartes à faire défiler latéralement, une par machine.
-// Chaque carte porte un volume manipulable, en attendant les vrais modèles 3D (lot 3).
+// Bloc « cartes de machines ». Carrousel horizontal sans fin : on peut avancer indéfiniment
+// dans un sens comme dans l'autre, sans jamais buter sur une extrémité et sans compter les
+// machines. Chaque carte porte un volume manipulable, en attendant les vrais modèles 3D.
+//
+// Sans JavaScript, la liste reste une bande que l'on fait défiler normalement : le contenu
+// est intact, seule la boucle disparaît.
 import { getCollection } from 'astro:content';
+import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocFicheMachine {
 	type: 'fiche-machine';
 	titre?: string;
 	introduction?: string;
-	/** Machines à montrer, par identifiant. Vide = toutes, dans l'ordre défini. */
 	machines?: string[];
 	lien_libelle?: string;
 	lien_url?: string;
@@ -15,7 +19,7 @@ export interface BlocFicheMachine {
 }
 
 const { bloc } = Astro.props as { bloc: BlocFicheMachine };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 
 const toutes = (await getCollection('machines')).sort((a, b) => a.data.ordre - b.data.ordre);
 const choisies = bloc.machines?.length
@@ -25,75 +29,191 @@ const choisies = bloc.machines?.length
 
 <section class={`bloc ${classeFond}`}>
 	<div class="bloc__interieur">
-		{bloc.titre && <h2>{bloc.titre}</h2>}
-		{bloc.introduction && <p class="introduction">{bloc.introduction}</p>}
-
-		<ul class="cartes" data-cartes>
+		<div class="tete">
+			<div>
+				{bloc.titre && <h2>{bloc.titre}</h2>}
+				{bloc.introduction && <p class="introduction">{bloc.introduction}</p>}
+			</div>
 			{
-				choisies.map((m, i) => (
-					<li class="carte">
-						<canvas
-							width="480"
-							height="340"
-							data-slug={m.data.modele_3d ?? m.id}
-							tabindex="0"
-							aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
-						/>
-						<div class="carte__corps">
-							<p class="carte__index">
-								{String(i + 1).padStart(2, '0')} · {m.data.secteur}
-							</p>
-							<h3>
-								<a href={`/machines/${m.id}`}>{m.data.nom}</a>
-							</h3>
-							<p class="carte__resume">{m.data.resume}</p>
-						</div>
-					</li>
-				))
+				bloc.lien_url && (
+					<a class="tete__lien" href={bloc.lien_url}>
+						{bloc.lien_libelle ?? 'Toutes les machines'}
+					</a>
+				)
 			}
-		</ul>
+		</div>
 
-		{
-			bloc.lien_url && (
-				<p class="apres">
-					<a href={bloc.lien_url}>{bloc.lien_libelle ?? 'Toutes les machines'}</a>
-				</p>
-			)
-		}
+		<div class="carrousel" data-carrousel>
+			<ul class="cartes" data-piste>
+				{
+					choisies.map((m) => (
+						<li class="carte">
+							<canvas
+								width="480"
+								height="340"
+								data-slug={m.data.modele_3d ?? m.id}
+								tabindex="0"
+								aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
+							/>
+							<div class="carte__corps">
+								<p class="carte__secteur">{m.data.secteur}</p>
+								<h3>
+									<a href={`/machines/${m.id}`}>{m.data.nom}</a>
+								</h3>
+								<p class="carte__resume">{m.data.resume}</p>
+							</div>
+						</li>
+					))
+				}
+			</ul>
+
+			<button class="fleche fleche--avant" type="button" data-avant hidden>
+				<span aria-hidden="true"></span>
+				<span class="sr-only">Machine précédente</span>
+			</button>
+			<button class="fleche fleche--apres" type="button" data-apres hidden>
+				<span aria-hidden="true"></span>
+				<span class="sr-only">Machine suivante</span>
+			</button>
+		</div>
 	</div>
 </section>
 
 <script>
 	import { modeles, monterScene } from '../../scripts/filaire';
 
-	document.querySelectorAll<HTMLCanvasElement>('[data-cartes] canvas').forEach((c) => {
-		const m = modeles.find((x) => x.slug === c.dataset.slug);
-		if (m) monterScene(c, m, { echelle: 0.2, trait: 1.5 });
+	const monter = (racine: ParentNode) => {
+		racine.querySelectorAll<HTMLCanvasElement>('canvas[data-slug]').forEach((c) => {
+			if (c.dataset.monte) return;
+			c.dataset.monte = '1';
+			const m = modeles.find((x) => x.slug === c.dataset.slug);
+			if (m) monterScene(c, m, { echelle: 0.2, trait: 1.5 });
+		});
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-carrousel]').forEach((carrousel) => {
+		const piste = carrousel.querySelector<HTMLElement>('[data-piste]')!;
+		const originaux = [...piste.children] as HTMLElement[];
+		if (originaux.length === 0) return;
+
+		// Boucle sans fin : on place trois jeux de cartes bout à bout et on se tient au milieu.
+		// Quand on approche d'un bord, on saute d'un jeu entier — invisible, puisque le contenu
+		// est identique.
+		for (const jeu of [0, 1]) {
+			for (const carte of originaux) {
+				const copie = carte.cloneNode(true) as HTMLElement;
+				copie.setAttribute('aria-hidden', 'true');
+				copie.querySelectorAll('a, canvas').forEach((el) => el.setAttribute('tabindex', '-1'));
+				copie.dataset.copie = String(jeu);
+				piste.append(copie);
+			}
+		}
+		monter(piste);
+
+		const largeurJeu = () => piste.scrollWidth / 3;
+		let ajustement = false;
+		const recentrer = () => {
+			const jeu = largeurJeu();
+			if (jeu <= 0) return;
+			const snap = piste.style.scrollSnapType;
+			piste.style.scrollSnapType = 'none';
+			if (piste.scrollLeft < jeu * 0.5) piste.scrollLeft += jeu;
+			else if (piste.scrollLeft > jeu * 1.5) piste.scrollLeft -= jeu;
+			piste.style.scrollSnapType = snap;
+		};
+
+		// On démarre au début du deuxième jeu : il y a autant de marge des deux côtés.
+		requestAnimationFrame(() => {
+			piste.scrollLeft = largeurJeu();
+		});
+
+		piste.addEventListener(
+			'scroll',
+			() => {
+				if (ajustement) return;
+				ajustement = true;
+				requestAnimationFrame(() => {
+					recentrer();
+					ajustement = false;
+				});
+			},
+			{ passive: true }
+		);
+
+		const pas = () => (piste.querySelector('.carte') as HTMLElement).getBoundingClientRect().width + 16;
+		const avant = carrousel.querySelector<HTMLButtonElement>('[data-avant]')!;
+		const apres = carrousel.querySelector<HTMLButtonElement>('[data-apres]')!;
+		avant.hidden = false;
+		apres.hidden = false;
+		avant.addEventListener('click', () => piste.scrollBy({ left: -pas(), behavior: 'smooth' }));
+		apres.addEventListener('click', () => piste.scrollBy({ left: pas(), behavior: 'smooth' }));
 	});
+
+	// Cas sans carrousel monté (JavaScript partiel) : les volumes s'affichent quand même.
+	monter(document);
 </script>
 
 <style>
+	.tete {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 1.5rem 2rem;
+		flex-wrap: wrap;
+		margin-bottom: 1.75rem;
+	}
+	.tete h2 {
+		margin: 0;
+	}
 	.introduction {
 		max-width: var(--mesure);
-		font-size: 1.1rem;
+		font-size: 1.05rem;
+		margin: 0.75rem 0 0;
+	}
+	.tete__lien {
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		text-decoration: none;
+		border-bottom: 2px solid var(--orange);
+		padding-bottom: 0.2rem;
+		white-space: nowrap;
+	}
+	.bloc--sombre .tete__lien {
+		color: var(--blanc);
+	}
+
+	.carrousel {
+		position: relative;
+		/* Le carrousel déborde jusqu'aux bords de l'écran : la bande a l'air de continuer. */
+		margin: 0 calc(-1 * var(--marge));
 	}
 	.cartes {
 		list-style: none;
-		margin: 1.5rem 0 0;
-		padding: 0 0 1rem;
+		margin: 0;
+		padding: 0.25rem var(--marge) 1.25rem;
 		display: flex;
 		gap: 1rem;
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
-		scrollbar-width: thin;
+		scrollbar-width: none;
+	}
+	.cartes::-webkit-scrollbar {
+		display: none;
 	}
 	.carte {
-		scroll-snap-align: start;
-		flex: 0 0 min(21rem, 82vw);
+		scroll-snap-align: center;
+		flex: 0 0 min(21rem, 78vw);
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
 		background: var(--blanc);
 		overflow: hidden;
+	}
+	.bloc--sombre .carte {
+		border-color: rgba(255, 255, 255, 0.15);
+		background: var(--bleu-sombre);
 	}
 	.carte canvas {
 		width: 100%;
@@ -103,24 +223,31 @@ const choisies = bloc.machines?.length
 		touch-action: pan-x;
 		border-bottom: 1px solid var(--gris-moyen);
 	}
+	.bloc--sombre .carte canvas {
+		background: rgba(0, 0, 0, 0.15);
+		border-bottom-color: rgba(255, 255, 255, 0.15);
+	}
 	.carte canvas.actif {
 		cursor: grabbing;
 	}
 	.carte__corps {
-		padding: 1rem 1.1rem 1.2rem;
+		padding: 1.1rem 1.2rem 1.3rem;
 	}
-	.carte__index {
+	.carte__secteur {
 		font-family: var(--titres);
 		color: var(--bleu);
 		font-weight: 700;
-		font-size: 0.8rem;
+		font-size: 0.78rem;
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.07em;
 		margin: 0;
+	}
+	.bloc--sombre .carte__secteur {
+		color: var(--bleu-clair);
 	}
 	.carte h3 {
 		font-size: 1.3rem;
-		margin: 0.15rem 0 0.4rem;
+		margin: 0.3rem 0 0.5rem;
 	}
 	.carte h3 a {
 		text-decoration: none;
@@ -131,10 +258,50 @@ const choisies = bloc.machines?.length
 	.carte__resume {
 		font-size: 0.95rem;
 		margin: 0;
-		color: var(--gris);
 	}
-	.apres {
-		margin: 1.25rem 0 0;
-		font-weight: 500;
+
+	/* Flèches : discrètes, hors du flux, cachées tant que JavaScript n'a pas pris la main. */
+	.fleche {
+		position: absolute;
+		top: calc(50% - 3rem);
+		width: 2.75rem;
+		height: 2.75rem;
+		display: grid;
+		place-items: center;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: 50%;
+		cursor: pointer;
+		color: var(--bleu-nuit);
+		box-shadow: 0 2px 10px rgba(31, 48, 68, 0.12);
+	}
+	.fleche:hover {
+		border-color: var(--bleu);
+		color: var(--bleu);
+	}
+	.fleche span[aria-hidden] {
+		width: 0.6rem;
+		height: 0.6rem;
+		border-top: 2px solid currentColor;
+		border-right: 2px solid currentColor;
+	}
+	.fleche--avant {
+		left: calc(var(--marge) - 1.375rem);
+	}
+	.fleche--avant span[aria-hidden] {
+		transform: rotate(-135deg);
+		margin-left: 0.2rem;
+	}
+	.fleche--apres {
+		right: calc(var(--marge) - 1.375rem);
+	}
+	.fleche--apres span[aria-hidden] {
+		transform: rotate(45deg);
+		margin-right: 0.2rem;
+	}
+	@media (max-width: 760px) {
+		.fleche {
+			display: none;
+		}
 	}
 </style>

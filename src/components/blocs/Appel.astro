@@ -1,6 +1,7 @@
 ---
 // Bloc « appel à l'action ». Un titre, un texte court, un bouton.
 import { marked } from '../../scripts/markdown';
+import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocAppel {
 	type: 'appel';
@@ -12,7 +13,7 @@ export interface BlocAppel {
 }
 
 const { bloc } = Astro.props as { bloc: BlocAppel };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'blanc' ? '' : 'bloc--sombre';
+const classeFond = classeFond_(bloc.fond);
 ---
 
 <section class={`bloc ${classeFond} appel`}>

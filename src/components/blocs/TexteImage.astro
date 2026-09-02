@@ -1,6 +1,7 @@
 ---
 // Bloc « texte et image ». L'image peut être à gauche ou à droite ; en dessous sur mobile.
 import { marked } from '../../scripts/markdown';
+import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocTexteImage {
 	type: 'texte-image';
@@ -17,7 +18,7 @@ export interface BlocTexteImage {
 }
 
 const { bloc } = Astro.props as { bloc: BlocTexteImage };
-const classeFond = bloc.fond === 'clair' ? 'bloc--clair' : bloc.fond === 'sombre' ? 'bloc--sombre' : '';
+const classeFond = classeFond_(bloc.fond);
 const aGauche = bloc.position_image === 'gauche';
 ---
 

@@ -202,7 +202,8 @@ button {
 	border: 0;
 }
 
-/* Conteneur standard d'un bloc de page. */
+/* Conteneur standard d'un bloc de page. Tous les blocs partagent la même marge haute et
+   basse : c'est ce qui donne un espacement régulier d'un bout à l'autre du site. */
 .bloc {
 	padding: clamp(2.5rem, 6vw, 4rem) var(--marge);
 }
@@ -210,6 +211,15 @@ button {
 	max-width: var(--largeur);
 	margin: 0 auto;
 }
+
+/* Deux blocs de même fond qui se suivent forment une seule section : on supprime la marge
+   qui les séparerait, sinon un simple changement de couleur creuserait un trou. */
+.bloc--blanc + .bloc--blanc,
+.bloc--clair + .bloc--clair,
+.bloc--sombre + .bloc--sombre {
+	padding-top: 0;
+}
+
 .bloc--sombre {
 	background: var(--bleu-nuit);
 	color: var(--blanc);

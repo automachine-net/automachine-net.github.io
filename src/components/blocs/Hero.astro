@@ -22,7 +22,7 @@ const { bloc } = Astro.props as { bloc: BlocHero };
 const Titre = bloc.titre_principal === false ? 'h2' : 'h1';
 ---
 
-<section class="bloc hero">
+<section class="bloc bloc--blanc hero">
 	<div class="bloc__interieur hero__interieur">
 		{bloc.surtitre && <p class="surtitre">{bloc.surtitre}</p>}
 		<Titre set:html={bloc.titre} />

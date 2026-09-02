@@ -1,5 +1,7 @@
 ---
 // Bloc « citation ». Une phrase mise en avant, son auteur, sa fonction.
+import { classeFond as classeFond_ } from '../../scripts/blocs';
+
 export interface BlocCitation {
 	type: 'citation';
 	citation: string;
@@ -9,7 +11,7 @@ export interface BlocCitation {
 }
 
 const { bloc } = Astro.props as { bloc: BlocCitation };
-const classeFond = bloc.fond === 'sombre' ? 'bloc--sombre' : bloc.fond === 'blanc' ? '' : 'bloc--clair';
+const classeFond = classeFond_(bloc.fond);
 ---
 
 <section class={`bloc ${classeFond}`}>
