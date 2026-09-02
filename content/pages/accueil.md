@@ -1,7 +1,7 @@
 ---
 libelle: Accueil
 titre: Automachine
-description: Automachine conçoit et fabrique des machines spéciales à Tours, pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.
+description: Concepteur et fabriquant de machines spéciales à Tours, pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.
 noindex: false
 blocs:
   - type: hero
