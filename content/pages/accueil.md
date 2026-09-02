@@ -60,6 +60,11 @@ blocs:
   - type: clients
     titre: ''
     fond: blanc
+  - type: citation
+    fond: sombre
+    citation: Texte de la citation
+    auteur: Moi
+    fonction: Dire des trucs et faire un test
   - type: texte-image
     titre: L’entreprise
     lien_libelle: Découvrir l’entreprise
