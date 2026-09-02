@@ -13,18 +13,10 @@ import site from '../../content/reglages/site.json';
 const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true;
 ---
 
-<section class="bloc">
+{/* La classe « bloc--blanc » permet à ce bloc de fusionner avec l'en-tête de page, qui est
+    blanc lui aussi : sans elle, les deux marges se cumulaient et creusaient un grand vide. */}
+<section class="bloc bloc--blanc">
 	<div class="bloc__interieur formulaire__interieur">
-		{
-			!actif && (
-				<p class="avertissement">
-					<strong>Formulaire inactif sur cette adresse de test.</strong> Il sera mis en service en
-					même temps que l’hébergement définitif. Les champs sont volontairement désactivés pour
-					qu’aucun message ne se perde.
-				</p>
-			)
-		}
-
 		<form
 			class="formulaire"
 			method="post"
@@ -74,8 +66,15 @@ const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true
 				<a href="/confidentialite">politique de confidentialité</a>.
 			</p>
 
-			<p class="champ--large">
+			<p class="champ--large envoi">
 				<button class="bouton" type="submit" disabled={!actif}>Envoyer</button>
+				{
+					!actif && (
+						<span class="envoi__note">
+							L’envoi sera actif à la mise en ligne définitive.
+						</span>
+					)
+				}
 			</p>
 		</form>
 	</div>
@@ -92,11 +91,15 @@ const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true
 	.formulaire__interieur {
 		max-width: 46rem;
 	}
-	.avertissement {
-		background: var(--gris-clair);
-		border-left: 3px solid var(--orange);
-		padding: 1rem 1.25rem;
-		margin-bottom: 2rem;
+	.envoi {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+	.envoi__note {
+		font-size: 0.85rem;
+		color: var(--gris-leger);
 	}
 	.formulaire {
 		display: grid;

@@ -33,9 +33,7 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 					</div>
 
 					<div class="machine__texte">
-						<p class="machine__index">
-							{String(i + 1).padStart(2, '0')} · {m.data.secteur}
-						</p>
+						<p class="machine__secteur">{m.data.secteur}</p>
 						<h2>
 							<a href={`/machines/${m.id}`}>{m.data.nom}</a>
 						</h2>
@@ -114,13 +112,13 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 	.machine__visuel canvas.actif {
 		cursor: grabbing;
 	}
-	.machine__index {
+	.machine__secteur {
 		font-family: var(--titres);
 		color: var(--bleu);
 		font-weight: 700;
 		font-size: 0.85rem;
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.06em;
 		margin: 0;
 	}
 	.machine h2 {
