@@ -133,5 +133,10 @@ via le bloc « module ». Aucune donnée personnelle collectée.
 
 ## État d'avancement
 
-- 2026-09-02 : lot 0 démarré. Squelette Astro créé. Organisation GitHub retenue :
-  `automachine-net` (`automachine` déjà pris). Hébergement Infomaniak pas encore souscrit.
+- 2026-09-02 : lot 0 démarré. Squelette Astro créé. Organisation GitHub `automachine-net`
+  créée (`automachine` était déjà pris). Compte du dirigeant : `StanislasMoreau`.
+- **État provisoire, décidé par le dirigeant le 2026-09-02** : phase de test gratuite sur
+  GitHub Pages, dépôt `automachine-net.github.io` **public**, connexion au CMS par jeton
+  personnel (sans relais PHP). Tant que le dépôt est public : aucun secret, aucune adresse
+  mail dans le dépôt. Passage en dépôt privé + relais OAuth PHP + rsync vers Infomaniak
+  quand l'hébergement sera souscrit. Le formulaire de contact et Matomo attendent Infomaniak.
