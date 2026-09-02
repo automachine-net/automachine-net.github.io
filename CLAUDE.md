@@ -82,11 +82,12 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
 - Textes : tout réécrit, rien repris de l'ancien site. Non rédigé = `[À RÉDIGER]`.
   Jamais de lorem ipsum, de texte inventé, de chiffre ou de client fictif.
 - **Certifications (2026-09-02)** : ISO 9001 et ISO 14001 ont été obtenues puis **non
-  reconduites**, la charge étant disproportionnée pour une TPE. Le site le dit franchement :
-  aucune certification en cours n'est revendiquée, les méthodes de travail issues de ces
-  référentiels sont restées, et Automachine présente ses procédures aux organisations qui
-  s'appuient sur ces référentiels. Ne jamais laisser entendre que les certifications sont
-  encore valides. Années d'obtention et d'arrêt à compléter par le dirigeant.
+  reconduites**, la charge étant disproportionnée pour une TPE. Le site dit qu'elles ont été
+  obtenues, qu'elles n'ont pas été reconduites et pourquoi, et que les méthodes de travail
+  issues de ces référentiels sont restées. Ne jamais écrire ni laisser entendre que les
+  certifications sont encore valides. Le dirigeant a fait retirer la phrase explicite
+  « nous ne revendiquons aucune certification en cours » : ne pas la réintroduire.
+  Années d'obtention et d'arrêt à compléter par le dirigeant.
 - **Logos clients (2026-09-02)** : droit d'usage confirmé par le dirigeant pour Airbus, SNCF,
   EDF, CEA, Faiveley Transport, Filtratech et Yoteq. Section « Ils nous ont fait confiance ».
 - **Illustrations de secteurs fournies : écartées.** Vectoriels d'aspect banque d'images,
