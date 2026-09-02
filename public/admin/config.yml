@@ -1,23 +1,471 @@
-# Configuration de Sveltia CMS.
-# Chaque collection décrit un type de contenu et les champs que l'éditeur voit.
+# Configuration de Sveltia CMS — interface d'édition du site Automachine.
+#
+# Chaque « collection » est une rubrique de la colonne de gauche dans l'administration.
+# Chaque « field » est un champ que l'éditeur remplit.
+#
+# Pour ajouter un type de bloc : créer le composant dans src/components/blocs/, l'ajouter au
+# répartiteur src/components/Blocs.astro, l'ajouter au schéma src/content.config.ts, puis
+# ajouter son objet dans la liste `blocs` ci-dessous. Les quatre doivent rester d'accord.
 
 backend:
   name: github
   repo: automachine-net/automachine-net.github.io
   branch: main
 
-media_folder: public/images
-public_folder: /images
+# Emplacement des images téléversées depuis le CMS.
+media_folder: public/images/contenu
+public_folder: /images/contenu
+
+# L'interface est en français.
+locale: fr
 
 collections:
+  # ---------------------------------------------------------------- Pages
   - name: pages
     label: Pages
     label_singular: Page
+    description: Les pages du site. Chaque page est une pile de blocs que l'on peut réordonner.
     folder: content/pages
-    create: false
-    delete: false
     extension: md
     format: yaml-frontmatter
+    create: true
+    delete: false
+    identifier_field: titre
     fields:
-      - { name: titre, label: Titre, widget: string }
-      - { name: body, label: Texte, widget: markdown }
+      - { name: titre, label: Titre de la page, widget: string }
+      - name: description
+        label: Description pour les moteurs de recherche
+        widget: text
+        hint: Une ou deux phrases. C'est ce que Google affiche sous le titre.
+      - name: noindex
+        label: Masquer aux moteurs de recherche
+        widget: boolean
+        default: false
+        required: false
+        hint: À cocher pour une page en chantier ou un outil que l'on ne veut pas voir indexé.
+      - name: blocs
+        label: Blocs de la page
+        label_singular: Bloc
+        widget: list
+        types: &blocs
+          # ------------------------------------------------ En-tête
+          - name: hero
+            label: En-tête de page
+            summary: 'En-tête : {{fields.titre}}'
+            fields:
+              - { name: surtitre, label: Surtitre, widget: string, required: false }
+              - { name: titre, label: Grand titre, widget: string }
+              - { name: chapeau, label: Chapeau, widget: text, required: false }
+              - { name: lien_libelle, label: Bouton — texte, widget: string, required: false }
+              - { name: lien_url, label: Bouton — adresse, widget: string, required: false }
+              - { name: lien_secondaire_libelle, label: Second lien — texte, widget: string, required: false }
+              - { name: lien_secondaire_url, label: Second lien — adresse, widget: string, required: false }
+              - name: afficher_secteurs
+                label: Afficher les pictogrammes de secteurs
+                widget: boolean
+                default: false
+                required: false
+              - name: titre_principal
+                label: C'est le titre principal de la page
+                widget: boolean
+                default: true
+                required: false
+                hint: À laisser coché sauf s'il y a déjà un autre en-tête plus haut dans la page.
+
+          # ------------------------------------------------ Texte
+          - name: texte
+            label: Texte
+            summary: 'Texte : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - { name: texte, label: Texte, widget: markdown }
+              - &fond
+                name: fond
+                label: Fond
+                widget: select
+                required: false
+                default: blanc
+                options:
+                  - { label: Blanc, value: blanc }
+                  - { label: Gris clair, value: clair }
+                  - { label: Bleu nuit, value: sombre }
+
+          # ------------------------------------------------ Texte et image
+          - name: texte-image
+            label: Texte et image
+            summary: 'Texte et image : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - { name: texte, label: Texte, widget: markdown }
+              - { name: image, label: Image, widget: image, required: false }
+              - name: image_alt
+                label: Description de l'image
+                widget: string
+                required: false
+                hint: Décrit l'image pour les personnes qui ne la voient pas. Obligatoire si l'image porte du sens.
+              - name: image_attente
+                label: Texte du cadre d'attente
+                widget: string
+                required: false
+                hint: S'affiche tant qu'aucune image n'est choisie.
+              - name: position_image
+                label: Position de l'image
+                widget: select
+                required: false
+                default: droite
+                options:
+                  - { label: À droite, value: droite }
+                  - { label: À gauche, value: gauche }
+              - { name: lien_libelle, label: Lien — texte, widget: string, required: false }
+              - { name: lien_url, label: Lien — adresse, widget: string, required: false }
+              - *fond
+
+          # ------------------------------------------------ Galerie
+          - name: galerie
+            label: Galerie d'images
+            summary: 'Galerie : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - name: images
+                label: Images
+                label_singular: Image
+                widget: list
+                fields:
+                  - { name: image, label: Image, widget: image, required: false }
+                  - { name: alt, label: Description de l'image, widget: string, required: false }
+                  - { name: legende, label: Légende affichée, widget: string, required: false }
+                  - { name: attente, label: Texte du cadre d'attente, widget: string, required: false }
+              - name: colonnes
+                label: Nombre de colonnes
+                widget: select
+                required: false
+                default: 3
+                options: [2, 3, 4]
+              - *fond
+
+          # ------------------------------------------------ Chiffres clés
+          - name: chiffres
+            label: Chiffres clés
+            summary: 'Chiffres clés : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - name: chiffres
+                label: Chiffres
+                label_singular: Chiffre
+                widget: list
+                summary: '{{fields.valeur}} — {{fields.legende}}'
+                fields:
+                  - { name: valeur, label: Valeur, widget: string }
+                  - { name: legende, label: Légende, widget: string }
+              - *fond
+
+          # ------------------------------------------------ Machines
+          - name: fiche-machine
+            label: Cartes de machines
+            summary: 'Machines : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - { name: introduction, label: Introduction, widget: text, required: false }
+              - name: machines
+                label: Machines à montrer
+                widget: relation
+                collection: machines
+                search_fields: [nom]
+                value_field: '{{slug}}'
+                display_fields: [nom]
+                multiple: true
+                required: false
+                hint: Laisser vide pour montrer toutes les machines, dans leur ordre.
+              - { name: lien_libelle, label: Lien — texte, widget: string, required: false }
+              - { name: lien_url, label: Lien — adresse, widget: string, required: false }
+              - *fond
+
+          # ------------------------------------------------ Visionneuse 3D
+          - name: visionneuse-3d
+            label: Visionneuse 3D
+            summary: 'Visionneuse 3D : {{fields.modele}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - name: modele
+                label: Modèle à afficher
+                widget: select
+                options:
+                  - { label: Bobineuse, value: bobineuse }
+                  - { label: Banc de test hydraulique, value: banc-de-test-hydraulique }
+                  - { label: Machine à plisser, value: machine-a-plisser }
+                  - { label: Cabine robotisée, value: cabine-robotisee }
+                  - { label: Ligne de dépacking, value: depacking }
+                  - { label: Sableuse, value: sableuse }
+              - { name: legende, label: Légende, widget: string, required: false }
+              - *fond
+
+          # ------------------------------------------------ Citation
+          - name: citation
+            label: Citation
+            summary: 'Citation : {{fields.auteur}}'
+            fields:
+              - { name: citation, label: Citation, widget: text }
+              - { name: auteur, label: Auteur, widget: string, required: false }
+              - { name: fonction, label: Fonction, widget: string, required: false }
+              - *fond
+
+          # ------------------------------------------------ Appel à l'action
+          - name: appel
+            label: Appel à l'action
+            summary: 'Appel : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string }
+              - { name: texte, label: Texte, widget: text, required: false }
+              - { name: lien_libelle, label: Bouton — texte, widget: string }
+              - { name: lien_url, label: Bouton — adresse, widget: string }
+              - *fond
+
+          # ------------------------------------------------ Questions fréquentes
+          - name: faq
+            label: Questions fréquentes
+            summary: 'Questions fréquentes : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - name: questions
+                label: Questions
+                label_singular: Question
+                widget: list
+                summary: '{{fields.question}}'
+                fields:
+                  - { name: question, label: Question, widget: string }
+                  - { name: reponse, label: Réponse, widget: markdown }
+              - *fond
+
+          # ------------------------------------------------ Module interactif
+          - name: module
+            label: Module interactif
+            summary: 'Module : {{fields.titre}}'
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - { name: introduction, label: Introduction, widget: text, required: false }
+              - name: module
+                label: Module à insérer
+                widget: select
+                options:
+                  - { label: Extrait du quiz règlement machines, value: quiz-extrait }
+                  - { label: Compte à rebours du 20 janvier 2027, value: compte-a-rebours }
+                  - { label: Cadre d'attente (module pas encore construit), value: a-venir }
+              - name: nombre_questions
+                label: Nombre de questions du quiz
+                widget: number
+                required: false
+                default: 3
+                value_type: int
+                min: 1
+                max: 10
+              - { name: attente, label: Texte du cadre d'attente, widget: string, required: false }
+              - { name: lien_libelle, label: Bouton — texte, widget: string, required: false }
+              - { name: lien_url, label: Bouton — adresse, widget: string, required: false }
+              - *fond
+
+          # ------------------------------------------------ Clients
+          - name: clients
+            label: Logos des clients
+            summary: Logos des clients
+            fields:
+              - { name: titre, label: Titre, widget: string, required: false }
+              - *fond
+
+  # ---------------------------------------------------------------- Machines
+  - name: machines
+    label: Machines
+    label_singular: Machine
+    description: Une fiche par machine réalisée.
+    folder: content/machines
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    delete: false
+    identifier_field: nom
+    sortable_fields: [ordre, nom]
+    fields:
+      - { name: nom, label: Nom de la machine, widget: string }
+      - name: ordre
+        label: Ordre d'affichage
+        widget: number
+        value_type: int
+        hint: Les machines sont classées du plus petit au plus grand.
+      - name: secteur
+        label: Secteur
+        widget: select
+        options: [Industrie, Agriculture, Recherche, Bancs de test, Tertiaire et grand public]
+      - name: resume
+        label: Résumé en une phrase
+        widget: text
+        hint: Ce que fait la machine. S'affiche sur les cartes et en haut de la fiche.
+      - { name: description, label: Description complète, widget: markdown }
+      - name: client
+        label: Nom du client
+        widget: string
+        required: false
+        hint: >-
+          À ne remplir QUE si le client a donné son accord écrit. Sinon, laisser vide, et seul
+          le secteur sera affiché.
+      - name: modele_3d
+        label: Modèle 3D à afficher
+        widget: select
+        required: false
+        options:
+          - { label: Aucun, value: '' }
+          - { label: Bobineuse, value: bobineuse }
+          - { label: Banc de test hydraulique, value: banc-de-test-hydraulique }
+          - { label: Machine à plisser, value: machine-a-plisser }
+          - { label: Cabine robotisée, value: cabine-robotisee }
+          - { label: Ligne de dépacking, value: depacking }
+          - { label: Sableuse, value: sableuse }
+      - name: caracteristiques
+        label: Fiche technique
+        label_singular: Ligne
+        widget: list
+        required: false
+        summary: '{{fields.libelle}} : {{fields.valeur}}'
+        fields:
+          - { name: libelle, label: Libellé, widget: string }
+          - { name: valeur, label: Valeur, widget: string }
+      - { name: image, label: Photo ou rendu, widget: image, required: false }
+      - { name: image_alt, label: Description de l'image, widget: string, required: false }
+      - name: blocs
+        label: Blocs supplémentaires
+        label_singular: Bloc
+        widget: list
+        required: false
+        types: *blocs
+
+  # ---------------------------------------------------------------- Quiz
+  - name: quiz
+    label: Quiz
+    files:
+      - name: reglement-machines
+        label: Quiz règlement machines
+        file: content/quiz/reglement-machines.json
+        description: Les questions du parcours professionnel sur le règlement (UE) 2023/1230.
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: mention, label: Mention obligatoire, widget: string }
+          - { name: source, label: Origine des questions, widget: text }
+          - name: questions
+            label: Questions
+            label_singular: Question
+            widget: list
+            summary: '{{fields.id}} — {{fields.question}}'
+            fields:
+              - { name: id, label: Numéro, widget: number, value_type: int }
+              - { name: semaine, label: Semaine, widget: number, value_type: int }
+              - { name: theme, label: Thème, widget: string }
+              - { name: question, label: Question, widget: text }
+              - name: options
+                label: Réponses proposées
+                widget: object
+                fields:
+                  - { name: a, label: Réponse A, widget: text }
+                  - { name: b, label: Réponse B, widget: text }
+                  - { name: c, label: Réponse C, widget: text }
+                  - { name: d, label: Réponse D, widget: text }
+              - name: bonne_reponse
+                label: Bonne réponse
+                widget: select
+                options: [a, b, c, d]
+              - { name: explication, label: Explication, widget: text }
+              - { name: reference, label: Référence dans le règlement, widget: string }
+
+  # ---------------------------------------------------------------- Réglages
+  - name: reglages
+    label: Réglages
+    files:
+      - name: site
+        label: Coordonnées et réglages généraux
+        file: content/reglages/site.json
+        fields:
+          - { name: nom, label: Nom de l'entreprise, widget: string }
+          - { name: baseline, label: Accroche courte, widget: string }
+          - { name: description, label: Description du site, widget: text }
+          - { name: adresse_voie, label: Adresse — rue, widget: string }
+          - { name: adresse_code_postal, label: Adresse — code postal, widget: string }
+          - { name: adresse_ville, label: Adresse — ville, widget: string }
+          - { name: adresse_pays, label: Adresse — pays, widget: string }
+          - { name: telephone, label: Téléphone, widget: string }
+          - { name: email, label: Adresse électronique, widget: string }
+          - { name: linkedin, label: Page LinkedIn, widget: string, required: false }
+          - name: formulaire_actif
+            label: Formulaire de contact en service
+            widget: boolean
+            default: false
+            hint: À laisser décoché tant que l'hébergement définitif n'est pas en place.
+
+      - name: navigation
+        label: Menus
+        file: content/reglages/navigation.json
+        fields:
+          - name: principale
+            label: Menu du haut
+            label_singular: Entrée
+            widget: list
+            summary: '{{fields.label}} → {{fields.href}}'
+            fields:
+              - { name: label, label: Texte affiché, widget: string }
+              - { name: href, label: Adresse, widget: string }
+          - name: pied
+            label: Menu du pied de page
+            label_singular: Entrée
+            widget: list
+            summary: '{{fields.label}} → {{fields.href}}'
+            fields:
+              - { name: label, label: Texte affiché, widget: string }
+              - { name: href, label: Adresse, widget: string }
+
+      - name: clients
+        label: Logos des clients
+        file: content/reglages/clients.json
+        fields:
+          - { name: titre, label: Titre du bloc, widget: string }
+          - name: clients
+            label: Clients
+            label_singular: Client
+            widget: list
+            summary: '{{fields.nom}}'
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: logo, label: Logo, widget: image }
+
+      - name: secteurs
+        label: Secteurs
+        file: content/reglages/secteurs.json
+        fields:
+          - name: secteurs
+            label: Secteurs
+            label_singular: Secteur
+            widget: list
+            summary: '{{fields.nom}}'
+            fields:
+              - name: slug
+                label: Identifiant du pictogramme
+                widget: select
+                options: [industrie, agriculture, recherche, bancs-de-test, tertiaire]
+              - { name: nom, label: Nom affiché, widget: string }
+              - { name: description, label: Description, widget: text }
+
+      - name: legal
+        label: Informations légales
+        file: content/reglages/legal.json
+        description: Alimente les mentions légales et la politique de confidentialité.
+        fields:
+          - { name: raison_sociale, label: Raison sociale, widget: string }
+          - { name: forme_juridique, label: Forme juridique, widget: string }
+          - { name: capital_social, label: Capital social, widget: string }
+          - { name: siren, label: SIREN, widget: string }
+          - { name: siret_siege, label: SIRET du siège, widget: string }
+          - { name: tva_intracommunautaire, label: TVA intracommunautaire, widget: string }
+          - { name: rcs, label: Immatriculation au RCS, widget: string }
+          - { name: code_ape, label: Code APE, widget: string }
+          - { name: libelle_ape, label: Libellé du code APE, widget: string }
+          - { name: date_creation, label: Date de création, widget: string }
+          - { name: directeur_publication, label: Directeur de la publication, widget: string }
+          - { name: hebergeur_nom, label: Hébergeur — nom, widget: string }
+          - { name: hebergeur_adresse, label: Hébergeur — adresse, widget: string }
+          - { name: hebergeur_telephone, label: Hébergeur — téléphone, widget: string }
+          - { name: note, label: Note interne, widget: text, required: false }
