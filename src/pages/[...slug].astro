@@ -1,0 +1,32 @@
+---
+// Route générique des pages de contenu.
+//
+// Toute page créée dans le CMS (dossier content/pages) obtient automatiquement son adresse,
+// tirée du nom de son fichier : `services.md` devient `/services`. Sans cette route, une page
+// créée depuis l'interface d'édition n'aurait existé nulle part sur le site.
+//
+// Les pages qui ont besoin d'un traitement particulier gardent leur propre fichier de route
+// et sont donc exclues ici, sinon deux routes se disputeraient la même adresse.
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocs from '../components/Blocs.astro';
+
+export const getStaticPaths = (async () => {
+	// Déclaré à l'intérieur de la fonction : Astro isole `getStaticPaths` à la construction,
+	// une constante déclarée au-dessus n'y serait pas visible.
+	// Pages ayant leur propre fichier dans src/pages/ : accueil (index), contact (formulaire),
+	// machines (liste des réalisations).
+	const routesDediees = new Set(['accueil', 'contact', 'machines']);
+	const pages = await getCollection('pages');
+	return pages
+		.filter((page) => !routesDediees.has(page.id))
+		.map((page) => ({ params: { slug: page.id }, props: { page } }));
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<Base titre={page.data.titre} description={page.data.description} noindex={page.data.noindex}>
+	<Blocs blocs={page.data.blocs} />
+</Base>

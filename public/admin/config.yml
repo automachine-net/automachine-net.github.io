@@ -30,9 +30,19 @@ collections:
     format: yaml-frontmatter
     create: true
     delete: false
-    identifier_field: titre
+    # C'est le libellé, et non le titre, qui nomme la page dans cette interface : la page
+    # d'accueil a pour titre « Automachine », ce qui la rendait méconnaissable dans la liste.
+    identifier_field: libelle
+    summary: '{{libelle}}'
     fields:
-      - { name: titre, label: Titre de la page, widget: string }
+      - name: libelle
+        label: Nom de la page dans cette interface
+        widget: string
+        hint: Sert seulement à retrouver la page ici. Il n'apparaît pas sur le site.
+      - name: titre
+        label: Titre de la page
+        widget: string
+        hint: Apparaît dans l'onglet du navigateur et dans les résultats de recherche.
       - name: description
         label: Description pour les moteurs de recherche
         widget: text

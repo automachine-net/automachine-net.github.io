@@ -1,4 +1,5 @@
 ---
+libelle: Contact
 titre: Contact
 description: Contacter Automachine, conception et fabrication de machines spéciales à Tours.
 blocs:

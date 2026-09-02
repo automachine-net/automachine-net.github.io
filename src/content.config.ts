@@ -120,6 +120,8 @@ const bloc = z.discriminatedUnion('type', [
 const pages = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './content/pages' }),
 	schema: z.object({
+		/** Nom de la page dans l'interface d'édition. N'apparaît pas sur le site. */
+		libelle: z.string(),
 		titre: z.string(),
 		description: z.string(),
 		/** Retire la page des moteurs de recherche (module non public, page en chantier). */

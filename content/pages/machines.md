@@ -1,4 +1,5 @@
 ---
+libelle: Machines
 titre: Machines
 description: 'Réalisations d''Automachine : bobineuse, banc de test hydraulique, machine à plisser, cabine robotisée, ligne de dépacking, sableuse.'
 blocs:

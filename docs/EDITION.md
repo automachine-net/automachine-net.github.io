@@ -54,7 +54,20 @@ La colonne de gauche présente quatre rubriques.
 4. Attendre deux à trois minutes : le site en ligne se met à jour tout seul. Rien d'autre à
    faire. Si rien ne change au bout de dix minutes, voir `docs/DEPLOIEMENT.md`.
 
-## 4. Construire une page avec des blocs
+## 4. Créer une page
+
+1. Cliquer sur **Pages**, puis sur le bouton de création (le crayon, en bas à droite).
+2. Remplir **Nom de la page dans cette interface** : c'est ce qui vous permettra de la
+   retrouver dans la liste. Il n'apparaît nulle part sur le site.
+3. Remplir le **Titre de la page**, qui apparaît lui dans l'onglet du navigateur et dans les
+   résultats de recherche, puis la description.
+4. Empiler les blocs, comme pour n'importe quelle page (voir la section suivante).
+5. Enregistrer. La page obtient automatiquement son adresse, tirée de son nom : une page
+   nommée « Services » sera à l'adresse `/services`.
+6. **Pour qu'on puisse y accéder**, ajouter une entrée au menu : **Réglages**, puis **Menus**,
+   puis **Menu du haut**. Sans cela, la page existe mais aucun lien n'y mène.
+
+## 5. Construire une page avec des blocs
 
 Une page est une pile de **blocs**, empilés de haut en bas. Chaque bloc est un morceau de
 page : un en-tête, un texte, une galerie, un outil interactif.
@@ -86,7 +99,7 @@ Dans le champ **Blocs de la page** :
 Presque tous les blocs ont un champ **Fond** : blanc, gris clair ou bleu nuit. C'est ce qui
 donne le rythme de la page. Alterner sans excès, deux ou trois fonds sombres par page suffisent.
 
-## 5. Ajouter une machine
+## 6. Ajouter une machine
 
 1. **Machines**, puis le bouton pour créer une fiche.
 2. Remplir le nom, l'ordre d'affichage, le secteur, le résumé et la description.
@@ -96,7 +109,7 @@ donne le rythme de la page. Alterner sans excès, deux ou trois fonds sombres pa
    une valeur.
 5. Enregistrer. La machine apparaît automatiquement sur la page Machines et sur l'accueil.
 
-## 6. Changer une coordonnée, un menu, un logo
+## 7. Changer une coordonnée, un menu, un logo
 
 Tout est dans **Réglages** :
 
@@ -107,7 +120,7 @@ Tout est dans **Réglages** :
 - **Secteurs** : les cinq secteurs et leurs pictogrammes.
 - **Informations légales** : ce qui alimente la page des mentions légales.
 
-## 7. Les repères à remplir
+## 8. Les repères à remplir
 
 Le site contient des repères entre crochets, laissés volontairement visibles :
 

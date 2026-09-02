@@ -1,4 +1,5 @@
 ---
+libelle: Entreprise
 titre: Entreprise
 description: Automachine, conception et fabrication de machines spéciales à Tours depuis 2011. Histoire, méthode de travail, secteurs servis.
 blocs:
