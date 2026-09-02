@@ -5,7 +5,8 @@
 // titré par ce qu'il fait), textes parasites supprimés, section Secteurs remplacée par
 // une bande de clients.
 import Maquette from '../../layouts/Maquette.astro';
-import { navigation, machines, clients, chiffres, dateReglement } from '../../data/maquette';
+import IconeSecteur from '../../components/IconeSecteur.astro';
+import { navigation, machines, secteurs, clients, chiffres, dateReglement } from '../../data/maquette';
 import quiz from '../../../content/quiz/reglement-machines.json';
 
 const sommaire = [
@@ -51,7 +52,20 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 			<section class="ouverture">
 				<p class="surtitre">Conception et fabrication de machines spéciales</p>
 				<h1><span class="a-rediger">[À RÉDIGER]</span> une phrase courte, au présent.</h1>
-				<p class="chapeau"><span class="a-rediger">[À RÉDIGER]</span> deux phrases : le besoin, la méthode, ce que reçoit le client.</p>
+				<p class="chapeau">
+					<span class="a-rediger">[À RÉDIGER]</span> deux phrases : le besoin, la méthode, ce que reçoit
+					le client. Pour l’industrie, l’agriculture, la recherche, les bancs de test et le tertiaire.
+				</p>
+				<ul class="secteurs" aria-label="Secteurs pris en charge">
+					{
+						secteurs.map((s) => (
+							<li>
+								<IconeSecteur secteur={s.slug} />
+								<span>{s.nom}</span>
+							</li>
+						))
+					}
+				</ul>
 				<p class="actions"><a class="bouton" href="/contact">Décrire un besoin</a></p>
 			</section>
 
@@ -84,8 +98,8 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 					<span class="num">2</span>
 					<h2>Serez-vous prêt le 20 janvier 2027 ?</h2>
 					<p class="partie__note">
-						Le règlement (UE) 2023/1230 remplace la directive 2006/42/CE.
-						<strong><span data-echeance={dateReglement}><span data-jours>—</span> jours</span></strong> pour s’y préparer.
+						Le règlement (UE) 2023/1230 remplace la directive 2006/42/CE. Il reste
+						<strong><span data-echeance={dateReglement}> <span data-jours>—</span> jours</span></strong> pour s’y préparer.
 					</p>
 				</header>
 
@@ -112,7 +126,7 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 						}
 					</ol>
 					<p class="quiz__pied">
-						<a class="bouton" href="/outils/quiz-reglement-machines">Continuer, 64 questions</a>
+						<a class="bouton" href="/outils/quiz-reglement-machines">Continuer</a>
 						<span class="note">{quiz.mention}</span>
 					</p>
 				</div>
@@ -156,7 +170,11 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 					<p class="partie__note">Un ordre de grandeur en quelques questions, avant même de nous appeler.</p>
 				</header>
 				<div class="visuel visuel--module">
-					<span>[MODULE À DÉFINIR ENSEMBLE] estimation d’un ordre de prix. Méthode, bornes et avertissements à arrêter avec le dirigeant.</span>
+					<span>
+						[MODULE À DÉFINIR ENSEMBLE] pistes d’entrées évoquées : encombrement de la machine,
+						nombre de robots, niveau de sécurité demandé. Méthode, bornes et avertissements à arrêter
+						avant toute mise en ligne.
+					</span>
 				</div>
 			</section>
 
@@ -185,9 +203,14 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 					<h2>Ils nous ont fait confiance</h2>
 				</header>
 				<ul class="clients">
-					{clients.map((c) => <li><span>{c.nom}</span></li>)}
+					{
+						clients.map((c) => (
+							<li>
+								<img src={c.logo} alt={c.nom} width="200" height="200" loading="lazy" />
+							</li>
+						))
+					}
 				</ul>
-				<p class="a-rediger">[ACCORD À CONFIRMER] les logos ne seront publiés qu’après votre confirmation du droit d’usage de chaque marque. Les cadres ci-dessus montrent l’emplacement et la taille.</p>
 			</section>
 
 			<!-- 7. Entreprise -->
@@ -241,7 +264,8 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 	<script>
 		import { modeles, monterScene } from '../../scripts/filaire';
 
-		// Une scène par carte machine.
+		// Une scène par carte machine. Rotation lente continue, arrêtée dès que le volume sort
+		// de l'écran et pour les visiteurs qui demandent moins d'animation.
 		document.querySelectorAll<HTMLCanvasElement>('[data-cartes] canvas').forEach((c) => {
 			const m = modeles.find((x) => x.slug === c.dataset.slug);
 			if (m) monterScene(c, m, { echelle: 0.2, trait: 1.5 });
@@ -372,10 +396,16 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 	.criteres { padding-left: 1.2rem; font-size: 1.05rem; }
 	.criteres li { margin-bottom: 0.6rem; }
 
+	/* Secteurs : bande de pictogrammes sous l'introduction */
+	.secteurs { list-style: none; margin: 2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.75rem 2.25rem; }
+	.secteurs li { display: grid; justify-items: center; gap: 0.35rem; color: var(--bleu); width: 5.5rem; text-align: center; }
+	.secteurs span { font-size: 0.8rem; font-weight: 500; color: var(--gris); line-height: 1.25; }
+
 	/* Clients */
-	.clients { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1px; background: var(--gris-moyen); border: 1px solid var(--gris-moyen); }
-	.clients li { background: var(--blanc); display: grid; place-items: center; min-height: 6rem; padding: 1rem; }
-	.clients span { font-family: var(--titres); font-weight: 600; font-size: 1.1rem; color: var(--gris-leger); }
+	.clients { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 1px; background: var(--gris-moyen); border: 1px solid var(--gris-moyen); }
+	.clients li { background: var(--blanc); display: grid; place-items: center; min-height: 7rem; padding: 1rem; }
+	/* Hauteur fixée : la place est réservée avant le chargement, la mise en page ne saute pas. */
+	.clients img { width: 100%; height: 4.5rem; object-fit: contain; }
 
 	/* Entreprise */
 	.partie--sombre { background: var(--bleu-sombre); color: var(--blanc); margin: 0 calc(-1 * clamp(1rem, 4vw, 3rem)); padding-left: clamp(1rem, 4vw, 3rem); padding-right: clamp(1rem, 4vw, 3rem); border-bottom: 0; }

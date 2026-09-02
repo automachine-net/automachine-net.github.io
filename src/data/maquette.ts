@@ -32,17 +32,16 @@ export const secteurs = [
 	{ slug: 'tertiaire', nom: 'Tertiaire et grand public' },
 ];
 
-// Logos présents dans le dossier ressources fourni par le dirigeant.
-// Aucun logo n'est publié tant que l'accord d'usage de la marque n'est pas confirmé :
-// la maquette affiche des cadres à la bonne taille portant le nom en texte.
+// Logos fournis par le dirigeant, dont il a confirmé le droit d'usage le 2026-09-02.
+// Fichiers de 200 × 200 px, fond blanc, issus du dossier ressources.
 export const clients = [
-	{ nom: 'Airbus', logo: null },
-	{ nom: 'SNCF', logo: null },
-	{ nom: 'EDF', logo: null },
-	{ nom: 'CEA', logo: null },
-	{ nom: 'Siemens', logo: null },
-	{ nom: 'Faiveley Transport', logo: null },
-	{ nom: 'YOTEQ', logo: null },
+	{ nom: 'Airbus', logo: '/images/clients/airbus.png' },
+	{ nom: 'SNCF', logo: '/images/clients/sncf.png' },
+	{ nom: 'EDF', logo: '/images/clients/edf.png' },
+	{ nom: 'CEA', logo: '/images/clients/cea.png' },
+	{ nom: 'Faiveley Transport', logo: '/images/clients/faiveley-transport.png' },
+	{ nom: 'Filtratech', logo: '/images/clients/filtratech.png' },
+	{ nom: 'Yoteq', logo: '/images/clients/yoteq.png' },
 ];
 
 // Conservé pour les maquettes A, B et C (premières propositions). La maquette finale

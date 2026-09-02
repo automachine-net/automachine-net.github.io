@@ -156,27 +156,44 @@ export function monterScene(canvas: HTMLCanvasElement, modele: Modele, options: 
 		ctx.globalAlpha = 1;
 	};
 
+	// La boucle ne tourne que s'il y a quelque chose à animer : manipulation en cours,
+	// inertie résiduelle, rotation automatique, ou changement de modèle. Sinon l'image est
+	// figée et le processeur ne fait rien.
 	let visible = true;
+	let anime = false;
+	const besoinDAnimer = () =>
+		visible && (drag || auto || transition < 1 || Math.abs(vx) > 0.0001 || Math.abs(vy) > 0.0001);
 	const boucle = () => {
-		if (visible) {
-			if (!drag) {
-				ay += vy + (auto ? 0.003 : 0);
-				ax = Math.max(-1.2, Math.min(1.2, ax + vx));
-				vx *= 0.92;
-				vy *= 0.92;
-			}
-			if (transition < 1) {
-				transition = Math.min(1, transition + 0.08);
-				if (transition >= 0.5) volumes = cible;
-			}
-			rendu();
+		if (!drag) {
+			ay += vy + (auto ? 0.003 : 0);
+			ax = Math.max(-1.2, Math.min(1.2, ax + vx));
+			vx *= 0.92;
+			vy *= 0.92;
 		}
-		requestAnimationFrame(boucle);
+		if (transition < 1) {
+			transition = Math.min(1, transition + 0.08);
+			if (transition >= 0.5) volumes = cible;
+		}
+		rendu();
+		if (besoinDAnimer()) requestAnimationFrame(boucle);
+		else anime = false;
 	};
-	// Pas de rendu hors écran.
-	new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(canvas);
+	const relancer = () => {
+		if (!anime && besoinDAnimer()) {
+			anime = true;
+			requestAnimationFrame(boucle);
+		}
+	};
+	// Pas de rendu hors écran ; premier dessin dès que le volume entre dans la vue.
+	new IntersectionObserver((e) => {
+		visible = e[0].isIntersecting;
+		if (visible) {
+			rendu();
+			relancer();
+		}
+	}).observe(canvas);
 
-	const debut = (x: number, y: number) => { drag = true; lx = x; ly = y; canvas.classList.add('actif'); };
+	const debut = (x: number, y: number) => { drag = true; lx = x; ly = y; canvas.classList.add('actif'); relancer(); };
 	const mouvement = (x: number, y: number) => {
 		if (!drag) return;
 		vy = (x - lx) * 0.008;
@@ -184,8 +201,9 @@ export function monterScene(canvas: HTMLCanvasElement, modele: Modele, options: 
 		ay += vy;
 		ax = Math.max(-1.2, Math.min(1.2, ax + vx));
 		lx = x; ly = y;
+		relancer();
 	};
-	const fin = () => { drag = false; canvas.classList.remove('actif'); };
+	const fin = () => { drag = false; canvas.classList.remove('actif'); relancer(); };
 	canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); debut(e.clientX, e.clientY); });
 	canvas.addEventListener('pointermove', (e) => mouvement(e.clientX, e.clientY));
 	canvas.addEventListener('pointerup', fin);
@@ -197,14 +215,17 @@ export function monterScene(canvas: HTMLCanvasElement, modele: Modele, options: 
 		else if (e.key === 'ArrowUp') ax = Math.max(-1.2, ax - pas); else if (e.key === 'ArrowDown') ax = Math.min(1.2, ax + pas);
 		else return;
 		e.preventDefault();
+		rendu();
 	});
-	boucle();
+	rendu();
+	relancer();
 
 	return {
 		changer(m: Modele) {
 			if (m.volumes === cible) return;
 			cible = m.volumes;
 			transition = 0;
+			relancer();
 		},
 	};
 }
