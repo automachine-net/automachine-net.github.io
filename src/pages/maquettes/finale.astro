@@ -1,0 +1,530 @@
+---
+// Maquette finale — synthèse des retours du 2 septembre 2026.
+// Base B (interactive, contrastée) + bandeau et sommaire latéral de C + section Outils
+// élargie avec trois vraies questions du quiz jouables + deux variantes de la section
+// Machines (à départager, l'une sera supprimée).
+import Maquette from '../../layouts/Maquette.astro';
+import { navigation, machines, secteurs, chiffres, dateReglement } from '../../data/maquette';
+import quiz from '../../../content/quiz/reglement-machines.json';
+
+const sommaire = [
+	{ id: 'machines', num: '1', label: 'Machines' },
+	{ id: 'mouvement', num: '2', label: 'Mouvement' },
+	{ id: 'machines-v2', num: '3', label: 'Machines (v2)' },
+	{ id: 'outils', num: '4', label: 'Outils' },
+	{ id: 'secteurs', num: '5', label: 'Secteurs' },
+	{ id: 'entreprise', num: '6', label: 'Entreprise' },
+	{ id: 'contact', num: '7', label: 'Contact' },
+];
+
+// Trois questions courtes, de thèmes différents, prises dans le vrai jeu de 64.
+const questionsAccueil = [1, 21, 56].map((id) => quiz.questions.find((q) => q.id === id)!);
+const lettres = ['a', 'b', 'c', 'd'] as const;
+---
+
+<Maquette titre="Maquette finale">
+	<a class="evitement" href="#contenu">Aller au contenu</a>
+
+	<header class="entete">
+		<a href="/" class="marque" aria-label="Automachine, accueil">
+			<img src="/images/logo/avec-texte.svg" alt="Automachine, machines spéciales" width="157" height="59" />
+		</a>
+		<nav aria-label="Navigation principale">
+			<ul>
+				{navigation.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+			</ul>
+		</nav>
+	</header>
+
+	<div class="page">
+		<aside class="sommaire">
+			<p class="sommaire__titre">Sommaire</p>
+			<ol>
+				{sommaire.map((s) => <li><a href={`#${s.id}`}><span class="num">{s.num}</span>{s.label}</a></li>)}
+			</ol>
+		</aside>
+
+		<main id="contenu">
+			<!-- ===== 1. Ouverture + Machines, variante 1 : un visualiseur unique ===== -->
+			<section class="partie ouverture" id="machines">
+				<div class="ouverture__texte">
+					<p class="surtitre">Conception et fabrication de machines spéciales</p>
+					<h1><span class="a-rediger">[À RÉDIGER]</span> une phrase courte, au présent.</h1>
+					<p class="chapeau">
+						<span class="a-rediger">[À RÉDIGER]</span> ce que le visiteur peut faire ici : tourner
+						autour des machines, suivre leur mouvement, tester ses connaissances.
+					</p>
+					<p class="actions"><a class="bouton" href="/contact">Décrire un besoin</a></p>
+				</div>
+
+				<div class="visualiseur" data-visualiseur>
+					<p class="etiquette">Variante 1 · un seul visualiseur, la bande change la machine</p>
+					<canvas width="900" height="620" tabindex="0" aria-label="Volume 3D de la machine sélectionnée, flèches du clavier pour tourner"></canvas>
+					<p class="visualiseur__nom" data-nom aria-live="polite">{machines[0].nom}</p>
+					<p class="consigne">Faites tourner avec la souris ou le doigt. Faites défiler la bande pour changer de machine.</p>
+					<div class="bande" role="tablist" aria-label="Machines">
+						{
+							machines.map((m, i) => (
+								<button class="bande__item" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-slug={m.slug} data-index={i}>
+									<span class="bande__index">{String(i + 1).padStart(2, '0')}</span>
+									<span class="bande__nom">{m.nom}</span>
+									<span class="bande__secteur">{m.secteur}</span>
+								</button>
+							))
+						}
+					</div>
+					<p class="visualiseur__lien"><a href="/machines/bobineuse" data-lien-fiche>Voir la fiche et le vrai modèle 3D</a></p>
+					<p class="a-rediger note">[MODÈLES 3D À PRODUIRE] volumes neutres en attendant les six machines.</p>
+				</div>
+			</section>
+
+			<!-- ===== 2. Mouvement piloté par le défilement ===== -->
+			<section class="cinematique" id="mouvement" data-cinematique>
+				<div class="cinematique__colle">
+					<div class="cinematique__texte">
+						<p class="surtitre">Ce que fait la machine</p>
+						<h2>Le défilement pilote le mouvement</h2>
+						<p>
+							<span class="a-rediger">[À RÉDIGER]</span> trois étapes d’un cycle machine. L’axe avance
+							quand vous descendez, revient quand vous remontez.
+						</p>
+						<ol class="etapes">
+							<li data-etape="0"><strong>Étape 1</strong> <span class="a-rediger">[À RÉDIGER]</span></li>
+							<li data-etape="1"><strong>Étape 2</strong> <span class="a-rediger">[À RÉDIGER]</span></li>
+							<li data-etape="2"><strong>Étape 3</strong> <span class="a-rediger">[À RÉDIGER]</span></li>
+						</ol>
+					</div>
+					<div class="banc" aria-hidden="true">
+						<svg viewBox="0 0 600 320" class="banc__svg">
+							<rect x="20" y="230" width="560" height="14" rx="2" class="bati" />
+							<rect x="60" y="60" width="16" height="170" class="bati" />
+							<rect x="524" y="60" width="16" height="170" class="bati" />
+							<rect x="60" y="60" width="480" height="16" class="rail" />
+							<g class="chariot" style="--x: 0">
+								<rect x="0" y="40" width="70" height="56" rx="3" class="chariot__corps" />
+								<rect x="28" y="96" width="14" height="70" class="chariot__tige" />
+								<path d="M14 166 h42 l-6 30 h-30 z" class="chariot__pince" />
+							</g>
+							<rect x="200" y="196" width="200" height="34" rx="2" class="piece" />
+						</svg>
+						<div class="jauge"><span class="jauge__curseur"></span></div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ===== 3. Machines, variante 2 : cartes indépendantes à faire défiler ===== -->
+			<section class="partie" id="machines-v2">
+				<header class="partie__tete">
+					<span class="num">3</span>
+					<h2>Machines</h2>
+					<p class="partie__note">Variante 2 · des cartes indépendantes, chacune avec son aperçu 3D. Faites défiler latéralement.</p>
+				</header>
+				<ul class="cartes" data-cartes>
+					{
+						machines.map((m, i) => (
+							<li class="carte">
+								<canvas width="480" height="340" data-slug={m.slug} tabindex="0" aria-label={`Volume 3D : ${m.nom}`}></canvas>
+								<div class="carte__corps">
+									<p class="carte__index">{String(i + 1).padStart(2, '0')}</p>
+									<h3><a href={`/machines/${m.slug}`}>{m.nom}</a></h3>
+									<table class="fiche">
+										<tbody>
+											<tr><th scope="row">Secteur</th><td>{m.secteur}</td></tr>
+											<tr><th scope="row">Fonction</th><td><span class="a-rediger">{m.fonction}</span></td></tr>
+										</tbody>
+									</table>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<!-- ===== 4. Outils, en grand ===== -->
+			<section class="partie outils" id="outils">
+				<header class="partie__tete">
+					<span class="num">4</span>
+					<h2>Outils</h2>
+					<p class="partie__note">Des modules à manipuler, partageables. Aucune donnée personnelle collectée.</p>
+				</header>
+
+				<div class="compte" data-echeance={dateReglement}>
+					<p class="compte__valeur"><span data-jours>—</span></p>
+					<p class="compte__legende">
+						jours avant le <strong>20 janvier 2027</strong>, date d’application du règlement (UE) 2023/1230
+						qui remplace la directive 2006/42/CE.
+					</p>
+				</div>
+
+				<div class="quiz" data-quiz>
+					<div class="quiz__tete">
+						<h3>Quiz règlement machines · parcours Pro</h3>
+						<p>Trois questions parmi les 64, retour immédiat. <span class="quiz__score" data-score hidden></span></p>
+					</div>
+					<ol class="quiz__liste">
+						{
+							questionsAccueil.map((q) => (
+								<li class="question" data-bonne={q.bonne_reponse}>
+									<p class="question__theme">{q.theme} · <span>art. {q.reference.replace(/^art\.\s*/i, '')}</span></p>
+									<p class="question__texte">{q.question}</p>
+									<div class="question__options" role="group" aria-label="Réponses">
+										{lettres.map((l) => (
+											<button type="button" class="option" data-lettre={l}>
+												<span class="option__lettre">{l.toUpperCase()}</span>
+												<span>{q.options[l]}</span>
+											</button>
+										))}
+									</div>
+									<p class="question__explication" hidden><strong data-verdict></strong> {q.explication}</p>
+								</li>
+							))
+						}
+					</ol>
+					<p class="quiz__pied">
+						<a class="bouton" href="/outils/quiz-reglement-machines">Faire le quiz complet, 64 questions</a>
+						<span class="note">{quiz.mention}</span>
+					</p>
+				</div>
+
+				<div class="modules">
+					<article class="module">
+						<h3>Le principe de réversibilité</h3>
+						<p>Une explication interactive, à construire ensemble. Le fil conducteur :</p>
+						<ol>
+							<li>Réverser, c’est ramener à l’état antérieur.</li>
+							<li>Une transformation est réversible si on peut l’annuler.</li>
+							<li>Deux critères pour juger un choix de conception : des émissions inférieures ou égales à ce que la biosphère peut réverser, et une matière préservée, apte au même usage après usage.</li>
+						</ol>
+						<div class="visuel visuel--module"><span>[MODULE À CONSTRUIRE ENSEMBLE] animation interactive</span></div>
+					</article>
+					<article class="module">
+						<h3>Quiz découverte</h3>
+						<p>Un parcours court sur la sécurité machine, pour le grand public. <span class="a-rediger">[À RÉDIGER ENSEMBLE]</span></p>
+						<div class="visuel visuel--module"><span>[MODULE À PRODUIRE] parcours découverte</span></div>
+					</article>
+				</div>
+			</section>
+
+			<!-- ===== 5. Secteurs ===== -->
+			<section class="partie" id="secteurs">
+				<header class="partie__tete">
+					<span class="num">5</span>
+					<h2>Secteurs</h2>
+					<p class="partie__note">Une entrée par domaine d’activité, jamais par nom de client.</p>
+				</header>
+				<ul class="secteurs">
+					{secteurs.map((s) => <li><a href={`/secteurs#${s.slug}`}>{s.nom}<span class="a-rediger">[À RÉDIGER] besoins types</span></a></li>)}
+				</ul>
+			</section>
+
+			<!-- ===== 6. Entreprise ===== -->
+			<section class="partie partie--sombre" id="entreprise">
+				<div class="partie--sombre__interieur">
+					<header class="partie__tete">
+						<span class="num">6</span>
+						<h2>Entreprise</h2>
+					</header>
+					<div class="deux">
+						<div>
+							<p>
+								<span class="a-rediger">[À RÉDIGER]</span> 2011, création de Sourcitem. 2017, l’entreprise
+								devient Automachine. Équipe, valeurs, certifications
+								<span class="a-rediger">[À CONFIRMER : ISO 9001, ISO 14001]</span>.
+							</p>
+							<p><a class="lien-clair" href="/entreprise">Découvrir l’entreprise</a></p>
+						</div>
+						<dl class="chiffres">
+							{chiffres.map((c) => (
+								<div>
+									<dt class={c.valeur.startsWith('[') ? 'a-rediger' : ''}>{c.valeur}</dt>
+									<dd>{c.legende}</dd>
+								</div>
+							))}
+						</dl>
+					</div>
+				</div>
+			</section>
+
+			<!-- ===== 7. Contact ===== -->
+			<section class="partie partie--contact" id="contact">
+				<header class="partie__tete">
+					<span class="num">7</span>
+					<h2>Un besoin de machine ?</h2>
+				</header>
+				<p><span class="a-rediger">[À RÉDIGER]</span> comment se passe un premier échange.</p>
+				<p><a class="bouton" href="/contact">Nous contacter</a></p>
+			</section>
+		</main>
+	</div>
+
+	<footer class="pied">
+		<p>Automachine — <span class="a-rediger">[À RÉDIGER] adresse, téléphone</span></p>
+		<ul>
+			<li><a href="/mentions-legales">Mentions légales</a></li>
+			<li><a href="/confidentialite">Confidentialité</a></li>
+		</ul>
+	</footer>
+
+	<script>
+		import { modeles, monterScene } from '../../scripts/filaire';
+
+		// --- Variante 1 : visualiseur unique + bande de sélection ---
+		const vis = document.querySelector<HTMLElement>('[data-visualiseur]');
+		if (vis) {
+			const canvas = vis.querySelector('canvas')!;
+			const nom = vis.querySelector<HTMLElement>('[data-nom]')!;
+			const lien = vis.querySelector<HTMLAnchorElement>('[data-lien-fiche]')!;
+			const items = [...vis.querySelectorAll<HTMLButtonElement>('.bande__item')];
+			const scene = monterScene(canvas, modeles[0]);
+			const selectionner = (i: number, defiler: boolean) => {
+				const m = modeles[i];
+				scene.changer(m);
+				nom.textContent = m.nom;
+				lien.href = `/machines/${m.slug}`;
+				items.forEach((b, j) => b.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+				if (defiler) items[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+			};
+			items.forEach((b, i) => b.addEventListener('click', () => selectionner(i, true)));
+			// Sur mobile, l'élément le plus proche du centre de la bande devient la machine affichée.
+			const bande = vis.querySelector<HTMLElement>('.bande')!;
+			let t = 0;
+			bande.addEventListener('scroll', () => {
+				clearTimeout(t);
+				t = setTimeout(() => {
+					const c = bande.getBoundingClientRect();
+					const centre = c.left + c.width / 2;
+					let best = 0, d = Infinity;
+					items.forEach((b, i) => {
+						const r = b.getBoundingClientRect();
+						const dist = Math.abs(r.left + r.width / 2 - centre);
+						if (dist < d) { d = dist; best = i; }
+					});
+					if (items[best].getAttribute('aria-selected') !== 'true') selectionner(best, false);
+				}, 120);
+			}, { passive: true });
+		}
+
+		// --- Variante 2 : une scène par carte ---
+		document.querySelectorAll<HTMLCanvasElement>('[data-cartes] canvas').forEach((c) => {
+			const m = modeles.find((x) => x.slug === c.dataset.slug);
+			if (m) monterScene(c, m, { echelle: 0.2, trait: 1.5 });
+		});
+
+		// --- Cinématique au défilement ---
+		const section = document.querySelector<HTMLElement>('[data-cinematique]');
+		if (section) {
+			const chariot = section.querySelector<SVGGElement>('.chariot');
+			const curseur = section.querySelector<HTMLElement>('.jauge__curseur');
+			const etapes = section.querySelectorAll<HTMLElement>('[data-etape]');
+			const maj = () => {
+				const r = section.getBoundingClientRect();
+				const course = r.height - innerHeight;
+				const p = course > 0 ? Math.min(1, Math.max(0, -r.top / course)) : 0;
+				chariot?.style.setProperty('--x', String(p * 410));
+				if (curseur) curseur.style.width = `${p * 100}%`;
+				etapes.forEach((e, i) => e.classList.toggle('active', p >= i / 3 && (i === 2 || p < (i + 1) / 3)));
+			};
+			addEventListener('scroll', maj, { passive: true });
+			addEventListener('resize', maj);
+			maj();
+		}
+
+		// --- Compte à rebours ---
+		for (const el of document.querySelectorAll<HTMLElement>('[data-echeance]')) {
+			const jours = Math.ceil((new Date(el.dataset.echeance + 'T00:00:00').getTime() - Date.now()) / 86_400_000);
+			const s = el.querySelector('[data-jours]');
+			if (s && jours > 0) s.textContent = String(jours);
+		}
+
+		// --- Quiz : retour immédiat coloré au clic ---
+		const quiz = document.querySelector<HTMLElement>('[data-quiz]');
+		if (quiz) {
+			const score = quiz.querySelector<HTMLElement>('[data-score]')!;
+			let bonnes = 0, repondues = 0;
+			const total = quiz.querySelectorAll('.question').length;
+			quiz.querySelectorAll<HTMLElement>('.question').forEach((q) => {
+				const bonne = q.dataset.bonne;
+				const options = q.querySelectorAll<HTMLButtonElement>('.option');
+				const expl = q.querySelector<HTMLElement>('.question__explication')!;
+				const verdict = expl.querySelector<HTMLElement>('[data-verdict]')!;
+				options.forEach((o) => o.addEventListener('click', () => {
+					if (q.classList.contains('repondue')) return;
+					q.classList.add('repondue');
+					const juste = o.dataset.lettre === bonne;
+					options.forEach((x) => {
+						x.disabled = true;
+						if (x.dataset.lettre === bonne) x.classList.add('option--bonne');
+						else if (x === o) x.classList.add('option--fausse');
+					});
+					verdict.textContent = juste ? 'Exact.' : `Non, la bonne réponse est ${bonne!.toUpperCase()}.`;
+					expl.hidden = false;
+					repondues++;
+					if (juste) bonnes++;
+					score.textContent = `Score : ${bonnes} / ${repondues}${repondues === total ? ' · terminé' : ''}`;
+					score.hidden = false;
+				}));
+			});
+		}
+
+		// --- Sommaire : la partie visible est soulignée ---
+		const liens = [...document.querySelectorAll<HTMLAnchorElement>('.sommaire a')];
+		const obs = new IntersectionObserver((entries) => {
+			for (const e of entries) if (e.isIntersecting) liens.forEach((l) => l.classList.toggle('actif', l.hash === '#' + e.target.id));
+		}, { rootMargin: '-35% 0px -55% 0px' });
+		document.querySelectorAll('main > section[id]').forEach((p) => obs.observe(p));
+	</script>
+</Maquette>
+
+<style>
+	.evitement { position: absolute; left: -999px; top: 0; background: var(--bleu-nuit); color: var(--blanc); padding: 0.5rem 1rem; }
+	.evitement:focus { left: 1rem; z-index: 10; }
+
+	/* Bandeau (C) */
+	.entete {
+		position: sticky; top: 0; z-index: 5;
+		background: var(--blanc);
+		display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+		padding: 0.75rem clamp(1rem, 4vw, 3rem);
+		border-bottom: 2px solid var(--bleu-nuit);
+	}
+	.marque img { width: 104px; height: auto; }
+	.entete nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(0.75rem, 2vw, 1.75rem); flex-wrap: wrap; }
+	.entete nav a { text-decoration: none; color: var(--bleu-nuit); font-family: var(--titres); font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; }
+	.entete nav a:hover { color: var(--bleu); }
+
+	/* Sommaire latéral (C) */
+	.page { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 2.5rem; padding: 0 clamp(1rem, 4vw, 3rem); max-width: 90rem; margin: 0 auto; }
+	@media (max-width: 1000px) { .page { grid-template-columns: 1fr; gap: 0; } .sommaire { display: none; } }
+	.sommaire { position: sticky; top: 5rem; align-self: start; padding: 2rem 0; font-size: 0.9rem; }
+	.sommaire__titre { font-family: var(--titres); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; color: var(--gris-leger); margin-bottom: 0.75rem; }
+	.sommaire ol { list-style: none; margin: 0; padding: 0; }
+	.sommaire a { display: flex; gap: 0.6rem; padding: 0.4rem 0; text-decoration: none; color: var(--gris); border-top: 1px solid var(--gris-moyen); }
+	.sommaire a.actif { color: var(--bleu-nuit); font-weight: 600; }
+	.sommaire a.actif .num { color: var(--orange); }
+	.num { font-family: var(--titres); font-weight: 700; color: var(--bleu); }
+
+	main { min-width: 0; }
+	.partie { padding: clamp(2.5rem, 6vw, 4rem) 0; border-bottom: 1px solid var(--gris-moyen); }
+	.partie__tete { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 0 1rem; align-items: baseline; margin-bottom: 1.5rem; }
+	.partie__tete .num { font-size: 2rem; grid-row: 1 / 3; }
+	.partie__tete h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 0; }
+	.partie__note { grid-column: 2; margin: 0.25rem 0 0; color: var(--gris-leger); font-size: 0.95rem; }
+	.surtitre { font-family: var(--titres); font-weight: 500; color: var(--bleu); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; margin-bottom: 1rem; }
+	.etiquette { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--bleu-nuit); background: var(--gris-clair); border: 1px solid var(--gris-moyen); padding: 0.2rem 0.5rem; margin: 0 0 0.5rem; }
+	.note { font-size: 0.85rem; color: var(--gris-leger); }
+	.bouton { display: inline-block; background: var(--bleu-nuit); color: var(--blanc); text-decoration: none; font-weight: 500; padding: 0.8rem 1.4rem; border-radius: var(--rayon); }
+	.bouton:hover { background: var(--bleu); color: var(--blanc); }
+
+	/* Ouverture + variante 1 */
+	.ouverture { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 2.5rem; align-items: start; }
+	@media (max-width: 900px) { .ouverture { grid-template-columns: 1fr; } }
+	.ouverture h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); }
+	.chapeau { font-size: 1.15rem; }
+	.actions { margin-top: 1.5rem; }
+	.visualiseur canvas { width: 100%; aspect-ratio: 900 / 620; cursor: grab; touch-action: none; background: var(--gris-clair); border: 1px solid var(--gris-moyen); border-radius: var(--rayon); }
+	.visualiseur canvas.actif { cursor: grabbing; }
+	.visualiseur__nom { font-family: var(--titres); font-weight: 700; font-size: 1.5rem; color: var(--bleu-nuit); margin: 0.75rem 0 0; }
+	.consigne { font-size: 0.85rem; color: var(--bleu); font-weight: 500; margin: 0.25rem 0 0.75rem; }
+	.bande { display: flex; gap: 0.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0.25rem 0 0.75rem; scrollbar-width: thin; }
+	.bande__item { scroll-snap-align: center; flex: 0 0 auto; min-width: 11rem; text-align: left; display: grid; gap: 0.1rem; background: var(--blanc); border: 1px solid var(--gris-moyen); border-radius: var(--rayon); padding: 0.75rem 0.9rem; cursor: pointer; color: var(--gris); }
+	.bande__item:hover { border-color: var(--bleu); }
+	.bande__item[aria-selected='true'] { border-color: var(--bleu-nuit); box-shadow: inset 0 -3px 0 var(--orange); color: var(--bleu-nuit); }
+	.bande__index { font-family: var(--titres); font-weight: 700; color: var(--bleu-clair); font-size: 0.8rem; }
+	.bande__item[aria-selected='true'] .bande__index { color: var(--bleu); }
+	.bande__nom { font-family: var(--titres); font-weight: 600; font-size: 1.05rem; }
+	.bande__secteur { font-size: 0.8rem; color: var(--gris-leger); }
+	.visualiseur__lien { margin: 0.25rem 0 0.5rem; font-weight: 500; }
+
+	/* Cinématique (B) */
+	.cinematique { background: var(--bleu-nuit); color: var(--blanc); margin: 0 calc(-1 * clamp(1rem, 4vw, 3rem)); }
+	@media (min-width: 1001px) { .cinematique { margin-left: calc(-11rem - 2.5rem - clamp(1rem, 4vw, 3rem)); } }
+	.cinematique__colle { position: sticky; top: 0; min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 2rem; align-items: center; padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 3rem); max-width: 80rem; margin: 0 auto; }
+	@media (max-width: 800px) { .cinematique__colle { grid-template-columns: 1fr; align-content: start; } }
+	@supports (position: sticky) { .cinematique { min-height: 300vh; } }
+	.cinematique h2 { color: var(--blanc); }
+	.cinematique .surtitre { color: var(--bleu-clair); }
+	.cinematique .a-rediger { color: var(--bleu-clair); }
+	.etapes { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 0.5rem; }
+	.etapes li { padding: 0.6rem 0.9rem; border-left: 3px solid rgba(255, 255, 255, 0.2); transition: border-color 0.2s, background 0.2s; }
+	.etapes li.active { border-color: var(--orange); background: rgba(255, 255, 255, 0.06); }
+	.banc__svg { width: 100%; }
+	.bati { fill: #3b587a; }
+	.rail { fill: var(--bleu-clair); }
+	.chariot { transform: translateX(calc(var(--x, 0) * 1px)); }
+	.chariot__corps { fill: var(--orange); }
+	.chariot__tige, .chariot__pince { fill: var(--bleu-clair); }
+	.piece { fill: none; stroke: var(--bleu-clair); stroke-dasharray: 6 4; }
+	.jauge { height: 4px; background: rgba(255, 255, 255, 0.15); margin-top: 0.5rem; }
+	.jauge__curseur { display: block; height: 100%; width: 0; background: var(--orange); }
+
+	/* Variante 2 : cartes à faire défiler */
+	.cartes { list-style: none; margin: 0; padding: 0 0 1rem; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+	.carte { scroll-snap-align: start; flex: 0 0 min(22rem, 85vw); border: 1px solid var(--gris-moyen); border-radius: var(--rayon); background: var(--blanc); }
+	.carte canvas { width: 100%; aspect-ratio: 480 / 340; background: var(--gris-clair); cursor: grab; touch-action: pan-x; border-bottom: 1px solid var(--gris-moyen); }
+	.carte canvas.actif { cursor: grabbing; }
+	.carte__corps { padding: 1rem 1.1rem 1.1rem; }
+	.carte__index { font-family: var(--titres); color: var(--bleu-clair); font-weight: 700; font-size: 0.85rem; margin: 0; }
+	.carte h3 { font-size: 1.3rem; margin: 0 0 0.5rem; }
+	.carte h3 a { text-decoration: none; }
+	.carte h3 a:hover { text-decoration: underline; }
+	.fiche { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+	.fiche th { text-align: left; font-weight: 500; color: var(--gris-leger); padding: 0.35rem 1rem 0.35rem 0; width: 6rem; border-top: 1px solid var(--gris-moyen); vertical-align: top; }
+	.fiche td { padding: 0.35rem 0; border-top: 1px solid var(--gris-moyen); }
+
+	/* Outils, en grand */
+	.compte { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5rem; align-items: center; background: var(--bleu-nuit); color: var(--blanc); padding: 1.5rem 2rem; border-radius: var(--rayon); margin-bottom: 2rem; }
+	@media (max-width: 600px) { .compte { grid-template-columns: 1fr; } }
+	.compte__valeur { font-family: var(--titres); font-weight: 700; font-size: clamp(3.5rem, 9vw, 6rem); line-height: 1; color: var(--orange); margin: 0; }
+	.compte__legende { margin: 0; font-size: 1.05rem; color: var(--blanc); }
+	.compte__legende strong { color: var(--bleu-clair); }
+	.quiz { border: 1px solid var(--gris-moyen); border-radius: var(--rayon); padding: clamp(1rem, 3vw, 2rem); margin-bottom: 2rem; }
+	.quiz__tete h3 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+	.quiz__score { font-weight: 600; color: var(--bleu); }
+	.quiz__liste { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 2rem; }
+	.question__theme { font-family: var(--titres); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; color: var(--gris-leger); margin-bottom: 0.4rem; }
+	.question__texte { font-size: 1.1rem; font-weight: 500; color: var(--bleu-nuit); max-width: none; }
+	.question__options { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0.6rem; }
+	.option { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); gap: 0.6rem; align-items: start; text-align: left; background: var(--blanc); border: 1px solid var(--gris-moyen); border-radius: var(--rayon); padding: 0.7rem 0.9rem; cursor: pointer; color: var(--gris); line-height: 1.4; transition: border-color 0.15s, background 0.15s; }
+	.option:hover:not(:disabled) { border-color: var(--bleu); }
+	.option:disabled { cursor: default; }
+	.option__lettre { font-family: var(--titres); font-weight: 700; color: var(--bleu); }
+	.option--bonne { background: var(--bleu); border-color: var(--bleu); color: var(--blanc); }
+	.option--bonne .option__lettre { color: var(--blanc); }
+	.option--fausse { background: var(--orange); border-color: var(--orange); color: var(--bleu-nuit); }
+	.option--fausse .option__lettre { color: var(--bleu-nuit); }
+	.question__explication { margin: 0.9rem 0 0; padding: 0.9rem 1rem; background: var(--gris-clair); border-left: 3px solid var(--bleu); max-width: none; }
+	.quiz__pied { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; margin: 1.5rem 0 0; max-width: none; }
+	.modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem; }
+	.module { border: 1px solid var(--gris-moyen); border-radius: var(--rayon); padding: 1.5rem; }
+	.module h3 { font-size: 1.35rem; }
+	.module ol { padding-left: 1.2rem; }
+	.module li { margin-bottom: 0.4rem; }
+	.visuel--module { aspect-ratio: 16 / 7; margin-top: 1rem; }
+
+	/* Secteurs */
+	.secteurs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.75rem; }
+	.secteurs a { display: grid; gap: 0.25rem; background: var(--gris-clair); border: 1px solid var(--gris-moyen); border-radius: var(--rayon); padding: 1rem; text-decoration: none; color: var(--bleu-nuit); font-family: var(--titres); font-size: 1.15rem; font-weight: 600; }
+	.secteurs a:hover { border-color: var(--bleu); color: var(--bleu); }
+	.secteurs .a-rediger { font-family: var(--texte); font-size: 0.85rem; font-weight: 400; }
+
+	/* Entreprise */
+	.partie--sombre { background: var(--bleu-sombre); color: var(--blanc); margin: 0 calc(-1 * clamp(1rem, 4vw, 3rem)); padding-left: clamp(1rem, 4vw, 3rem); padding-right: clamp(1rem, 4vw, 3rem); border-bottom: 0; }
+	@media (min-width: 1001px) { .partie--sombre { margin-left: calc(-11rem - 2.5rem - clamp(1rem, 4vw, 3rem)); padding-left: calc(11rem + 2.5rem + clamp(1rem, 4vw, 3rem)); } }
+	.partie--sombre h2 { color: var(--blanc); }
+	.partie--sombre .num { color: var(--bleu-clair); }
+	.partie--sombre .a-rediger { color: var(--bleu-clair); }
+	.lien-clair { color: var(--blanc); }
+	.lien-clair:hover { color: var(--orange); }
+	.deux { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
+	@media (max-width: 800px) { .deux { grid-template-columns: 1fr; } }
+	.chiffres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: 0; }
+	.chiffres dt { font-family: var(--titres); font-size: 2.25rem; font-weight: 700; color: var(--blanc); line-height: 1; }
+	.chiffres dt.a-rediger { font-size: 1rem; font-weight: 400; font-family: var(--texte); }
+	.chiffres dd { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--bleu-clair); }
+
+	.partie--contact { border-bottom: 0; }
+
+	.pied { border-top: 2px solid var(--bleu-nuit); padding: 2rem clamp(1rem, 4vw, 3rem); display: flex; flex-wrap: wrap; gap: 1rem 3rem; font-size: 0.9rem; color: var(--gris-leger); }
+	.pied p { margin: 0; }
+	.pied ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
+</style>
