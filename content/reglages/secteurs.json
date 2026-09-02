@@ -1,0 +1,29 @@
+{
+  "secteurs": [
+    {
+      "slug": "industrie",
+      "nom": "Industrie",
+      "description": "[à relire] Lignes de production, postes d'assemblage, manutention et conditionnement. Nous intervenons là où aucune machine du commerce ne répond au besoin."
+    },
+    {
+      "slug": "agriculture",
+      "nom": "Agriculture",
+      "description": "[à relire] Équipements de traitement et de manipulation adaptés aux contraintes du terrain et des matières vivantes."
+    },
+    {
+      "slug": "recherche",
+      "nom": "Recherche",
+      "description": "[à relire] Bancs et machines de laboratoire construits à l'unité, pour des protocoles que rien d'existant ne permet de mener."
+    },
+    {
+      "slug": "bancs-de-test",
+      "nom": "Bancs de test",
+      "description": "[à relire] Bancs d'essai instrumentés : mise en charge, mesure, acquisition et restitution des résultats."
+    },
+    {
+      "slug": "tertiaire",
+      "nom": "Tertiaire et grand public",
+      "description": "[à relire] Bornes, distributeurs et dispositifs interactifs destinés à un public non formé, donc à toute épreuve."
+    }
+  ]
+}

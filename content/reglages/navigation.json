@@ -1,0 +1,12 @@
+{
+  "principale": [
+    { "label": "Entreprise", "href": "/entreprise" },
+    { "label": "Machines", "href": "/machines" },
+    { "label": "Outils", "href": "/outils/quiz-reglement-machines" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "pied": [
+    { "label": "Mentions légales", "href": "/mentions-legales" },
+    { "label": "Confidentialité", "href": "/confidentialite" }
+  ]
+}

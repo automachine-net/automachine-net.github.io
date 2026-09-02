@@ -1,0 +1,12 @@
+{
+  "titre": "Ils nous ont fait confiance",
+  "clients": [
+    { "nom": "Airbus", "logo": "/images/clients/airbus.png" },
+    { "nom": "SNCF", "logo": "/images/clients/sncf.png" },
+    { "nom": "EDF", "logo": "/images/clients/edf.png" },
+    { "nom": "CEA", "logo": "/images/clients/cea.png" },
+    { "nom": "Faiveley Transport", "logo": "/images/clients/faiveley-transport.png" },
+    { "nom": "Filtratech", "logo": "/images/clients/filtratech.png" },
+    { "nom": "Yoteq", "logo": "/images/clients/yoteq.png" }
+  ]
+}
