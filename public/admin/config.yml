@@ -1,0 +1,23 @@
+# Configuration de Sveltia CMS.
+# Chaque collection décrit un type de contenu et les champs que l'éditeur voit.
+
+backend:
+  name: github
+  repo: automachine-net/automachine-net.github.io
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: content/pages
+    create: false
+    delete: false
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: body, label: Texte, widget: markdown }

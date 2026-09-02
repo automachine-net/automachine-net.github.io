@@ -1,5 +1,9 @@
 ---
-const titre = 'Automachine — site en construction';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'accueil');
+if (!page) throw new Error('content/pages/accueil.md est introuvable');
+const { Content } = await render(page);
 ---
 
 <html lang="fr">
@@ -8,7 +12,7 @@ const titre = 'Automachine — site en construction';
 		<meta name="viewport" content="width=device-width" />
 		<meta name="robots" content="noindex, nofollow" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{titre}</title>
+		<title>{page.data.titre} — site en construction</title>
 		<style>
 			body {
 				margin: 0;
@@ -31,8 +35,8 @@ const titre = 'Automachine — site en construction';
 	</head>
 	<body>
 		<main>
-			<h1>Automachine</h1>
-			<p>Nouveau site en construction.</p>
+			<h1>{page.data.titre}</h1>
+			<Content />
 		</main>
 	</body>
 </html>

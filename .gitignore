@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# copié depuis node_modules par « npm run cms »
+public/admin/sveltia-cms.js
