@@ -224,9 +224,27 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 						<div>
 							<p>
 								<span class="a-rediger">[À RÉDIGER]</span> 2011, création de Sourcitem. 2017, l’entreprise
-								devient Automachine. Équipe, valeurs, certifications
-								<span class="a-rediger">[À CONFIRMER : ISO 9001, ISO 14001]</span>.
+								devient Automachine. Équipe, valeurs, secteurs servis.
 							</p>
+							<div class="encart">
+								<h3>Qualité et environnement</h3>
+								<p>
+									Automachine a été certifiée ISO 9001 et ISO 14001{' '}
+									<span class="a-rediger">[À COMPLÉTER : de quelle année à quelle année]</span>.
+									Nous n’avons pas reconduit ces certifications : à notre taille, le coût des audits
+									et la charge documentaire annuelle ne se justifiaient plus.
+								</p>
+								<p>
+									Les méthodes de travail mises en place à cette occasion sont restées les nôtres :
+									<span class="a-rediger">[À COMPLÉTER : revue de conception, traçabilité des achats,
+									gestion documentaire, traitement des non-conformités, tri et suivi des déchets d’atelier]</span>.
+								</p>
+								<p>
+									Nous ne revendiquons donc aucune certification en cours. Si votre organisation
+									s’appuie sur l’un de ces référentiels, nous vous présentons nos procédures et les
+									documents correspondants.
+								</p>
+							</div>
 							<p><a class="lien-clair" href="/entreprise">Découvrir l’entreprise</a></p>
 						</div>
 						<dl class="chiffres">
@@ -415,6 +433,10 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 	.partie--sombre .a-rediger { color: var(--bleu-clair); }
 	.lien-clair { color: var(--blanc); }
 	.lien-clair:hover { color: var(--orange); }
+	.encart { border-left: 3px solid var(--bleu-clair); padding: 0.25rem 0 0.25rem 1.25rem; margin: 1.5rem 0; }
+	.encart h3 { font-size: 1.1rem; color: var(--bleu-clair); margin-bottom: 0.5rem; }
+	.encart p { font-size: 0.95rem; }
+	.encart p:last-child { margin-bottom: 0; }
 	.deux { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
 	@media (max-width: 800px) { .deux { grid-template-columns: 1fr; } }
 	.chiffres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: 0; }

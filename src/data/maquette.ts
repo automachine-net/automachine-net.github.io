@@ -2,10 +2,12 @@
 // Tout texte non rédigé est marqué [À RÉDIGER]. Aucun chiffre inventé.
 // Les types de machines viennent des dossiers de photos fournis (noms de machines, pas de clients).
 
+// « Secteurs » retiré du menu et de l'arborescence le 2026-09-02 : pas assez de matière pour
+// une page dédiée. Les secteurs sont annoncés dans l'introduction de l'accueil, rappelés par
+// des pictogrammes, et repris à l'intérieur des pages Entreprise et Machines.
 export const navigation = [
 	{ label: 'Entreprise', href: '/entreprise' },
 	{ label: 'Machines', href: '/machines' },
-	{ label: 'Secteurs', href: '/secteurs' },
 	{ label: 'Outils', href: '/outils/quiz-reglement-machines' },
 	{ label: 'Contact', href: '/contact' },
 ];

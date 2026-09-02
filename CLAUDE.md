@@ -69,14 +69,30 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
 
 - Arborescence : `/`, `/entreprise`, `/machines` (5–6 réalisations, page unique déroulante,
   grandes images pleine largeur, ni grille ni filtres), `/machines/[slug]` (fiche + visionneuse
-  3D ; nom du client seulement avec accord écrit, sinon secteur), `/secteurs` (par domaine
-  d'activité, pas par client), `/outils/quiz-reglement-machines`, `/outils/simulateur-carbone`,
-  `/outils/reversibilite`, `/contact`, `/mentions-legales`, `/confidentialite`.
+  3D ; nom du client seulement avec accord écrit, sinon secteur),
+  `/outils/quiz-reglement-machines`, `/outils/simulateur-carbone`, `/outils/reversibilite`,
+  `/contact`, `/mentions-legales`, `/confidentialite`.
+- **`/secteurs` supprimé (2026-09-02)** : pas assez de matière pour une page par secteur.
+  Les secteurs servis sont annoncés dans l'introduction de l'accueil, rappelés par cinq
+  pictogrammes dessinés au trait, et repris à l'intérieur des pages Entreprise et Machines.
+  Retiré aussi du menu principal.
 - Pages composées de blocs prédéfinis éditables dans le CMS : hero, texte, texte + image,
   galerie, chiffres clés, fiche machine, visionneuse 3D, citation, appel à l'action, FAQ,
   module. Critère : créer une page complète depuis le CMS sans développeur.
 - Textes : tout réécrit, rien repris de l'ancien site. Non rédigé = `[À RÉDIGER]`.
   Jamais de lorem ipsum, de texte inventé, de chiffre ou de client fictif.
+- **Certifications (2026-09-02)** : ISO 9001 et ISO 14001 ont été obtenues puis **non
+  reconduites**, la charge étant disproportionnée pour une TPE. Le site le dit franchement :
+  aucune certification en cours n'est revendiquée, les méthodes de travail issues de ces
+  référentiels sont restées, et Automachine présente ses procédures aux organisations qui
+  s'appuient sur ces référentiels. Ne jamais laisser entendre que les certifications sont
+  encore valides. Années d'obtention et d'arrêt à compléter par le dirigeant.
+- **Logos clients (2026-09-02)** : droit d'usage confirmé par le dirigeant pour Airbus, SNCF,
+  EDF, CEA, Faiveley Transport, Filtratech et Yoteq. Section « Ils nous ont fait confiance ».
+- **Illustrations de secteurs fournies : écartées.** Vectoriels d'aspect banque d'images,
+  vingt à quarante couleurs hors palette, correspondant à l'anti-référence du brief.
+  Remplacées par cinq pictogrammes au trait dessinés dans la palette
+  (`src/components/IconeSecteur.astro`).
 
 ## Modèles 3D
 
@@ -110,6 +126,16 @@ via le bloc « module ». Aucune donnée personnelle collectée.
    dans un JSON séparé sourcé ligne par ligne. Aucun qualificatif environnemental
    (« bas carbone », « vert », « neutre »…) : directive (UE) 2024/825 dès le 27/09/2026.
 3. Animation réversibilité : module et emplacement prévus, scénario à construire ensemble.
+4. **Estimateur d'ordre de prix (idée du dirigeant, 2026-09-02)** : donner un ordre de grandeur
+   avant un premier contact. Pistes d'entrées évoquées : encombrement de la machine, nombre de
+   robots, niveau de sécurité demandé. Méthode, bornes et avertissements à arrêter avec le
+   dirigeant avant toute mise en ligne. Rien n'est développé tant que la méthode n'est pas
+   validée : un ordre de prix public engage l'entreprise.
+- Pas de « quiz découverte » : idée abandonnée par le dirigeant, remplacée par des outils
+  réellement utiles au client (empreinte carbone, ordre de prix).
+- **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc
+  parapluie « Outils ». Pas de texte parasite (score, thème de question, mentions de nombre
+  de questions qui peuvent décourager).
 
 ## Qualité
 
@@ -145,3 +171,10 @@ via le bloc « module ». Aucune donnée personnelle collectée.
   est apparue sur `https://automachine-net.github.io/` sans intervention, en moins de trois
   minutes. Reste à faire à la souscription Infomaniak : relais OAuth PHP, compte mail
   d'envoi, déploiement rsync, passage du dépôt en privé.
+- 2026-09-02 : **lot 1 en cours.** Trois maquettes proposées (`/maquettes/a`, `b`, `c`), puis
+  une maquette de synthèse (`/maquettes/finale`) retenue par le dirigeant : base interactive
+  et contrastée de la B, bandeau et sommaire latéral de la C, cartes machines à faire défiler
+  (plusieurs machines visibles d'un coup), un bloc par outil, section clients.
+  La section « le défilement pilote le mouvement » a été retirée : trop de travail pour le
+  résultat, et elle cassait le rythme de navigation.
+  Les 64 questions du quiz sont importées dans `content/quiz/reglement-machines.json`.
