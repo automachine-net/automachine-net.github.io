@@ -43,37 +43,28 @@ const titre = bloc.titre ?? reglagesClients.titre;
 		color: var(--bleu-clair);
 	}
 
-	/* Pas de grille ni de cadres : une simple rangée de logos, régulièrement espacés,
-	   qui passe à la ligne quand il le faut. */
+	/* Colonnes de largeur égale, qui se répartissent d'elles-mêmes quel que soit le nombre de
+	   logos. Pas de cadres : c'est l'alignement qui structure la rangée. */
 	.clients {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
 		align-items: center;
-		justify-content: center;
-		gap: clamp(1.5rem, 3.5vw, 3rem);
+		gap: 2.5rem 1.5rem;
 	}
-	/* Chaque logo occupe la même case : leurs formes très différentes ne déséquilibrent pas
-	   la rangée. La case réserve aussi la place avant le chargement de l'image. */
 	.clients li {
-		flex: 0 0 auto;
-		width: 6.5rem;
-		height: 3rem;
 		display: grid;
 		place-items: center;
 	}
+	/* La hauteur du logo est donnée en valeur absolue, jamais en pourcentage : dans une case
+	   centrée, une hauteur en pourcentage ne se résout pas et le navigateur retombe sur la
+	   taille d'origine de l'image, qui déborde. « contain » conserve les proportions.
+	   Cette hauteur fixe réserve aussi la place avant le chargement : rien ne saute. */
 	.clients img {
-		max-width: 100%;
-		max-height: 100%;
-		width: auto;
-		height: auto;
+		width: 100%;
+		height: 3rem;
 		object-fit: contain;
-		opacity: 0.85;
-		transition: opacity 0.2s;
-	}
-	.clients img:hover {
-		opacity: 1;
 	}
 </style>
