@@ -179,3 +179,9 @@ via le bloc « module ». Aucune donnée personnelle collectée.
   La section « le défilement pilote le mouvement » a été retirée : trop de travail pour le
   résultat, et elle cassait le rythme de navigation.
   Les 64 questions du quiz sont importées dans `content/quiz/reglement-machines.json`.
+- 2026-09-02 : **lot 2a livré** (blocs, CMS, pages fixes, pages légales, documentation).
+- **Décision du dirigeant (2026-09-02) : l'hébergement Infomaniak ne sera pas souscrit tant
+  que toutes les autres fonctions n'auront pas été testées et approuvées.** Le lot 2b
+  (formulaire de contact en PHP, compte mail d'envoi, Matomo et son rapport mensuel) reste
+  donc en attente, ainsi que le relais OAuth PHP, le déploiement rsync et le passage du dépôt
+  en privé. Ne pas relancer sur ce point : c'est au dirigeant de dire quand.
