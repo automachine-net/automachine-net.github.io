@@ -1,7 +1,6 @@
-// Données partagées par les trois maquettes du lot 1.
+// Données partagées par les maquettes du lot 1.
 // Tout texte non rédigé est marqué [À RÉDIGER]. Aucun chiffre inventé.
 // Les types de machines viennent des dossiers de photos fournis (noms de machines, pas de clients).
-// Les secteurs viennent des icônes de l'ancien site. Les deux listes sont à confirmer.
 
 export const navigation = [
 	{ label: 'Entreprise', href: '/entreprise' },
@@ -33,13 +32,21 @@ export const secteurs = [
 	{ slug: 'tertiaire', nom: 'Tertiaire et grand public' },
 ];
 
-export const chiffres = [
-	{ valeur: '2011', legende: 'création de Sourcitem' },
-	{ valeur: '2017', legende: 'Sourcitem devient Automachine' },
-	{ valeur: '[À RÉDIGER]', legende: 'machines livrées' },
-	{ valeur: '[À RÉDIGER]', legende: 'personnes dans l’équipe' },
+// Logos présents dans le dossier ressources fourni par le dirigeant.
+// Aucun logo n'est publié tant que l'accord d'usage de la marque n'est pas confirmé :
+// la maquette affiche des cadres à la bonne taille portant le nom en texte.
+export const clients = [
+	{ nom: 'Airbus', logo: null },
+	{ nom: 'SNCF', logo: null },
+	{ nom: 'EDF', logo: null },
+	{ nom: 'CEA', logo: null },
+	{ nom: 'Siemens', logo: null },
+	{ nom: 'Faiveley Transport', logo: null },
+	{ nom: 'YOTEQ', logo: null },
 ];
 
+// Conservé pour les maquettes A, B et C (premières propositions). La maquette finale
+// n'utilise plus de bloc parapluie « Outils » : un bloc par outil, titré par ce qu'il fait.
 export const outils = [
 	{
 		slug: 'quiz-reglement-machines',
@@ -53,6 +60,13 @@ export const outils = [
 		accroche: 'Une explication interactive, à manipuler.',
 		note: '[À RÉDIGER]',
 	},
+];
+
+export const chiffres = [
+	{ valeur: '2011', legende: 'création de Sourcitem' },
+	{ valeur: '2017', legende: 'Sourcitem devient Automachine' },
+	{ valeur: '[À RÉDIGER]', legende: 'machines livrées' },
+	{ valeur: '[À RÉDIGER]', legende: 'personnes dans l’équipe' },
 ];
 
 // Date d'application du règlement (UE) 2023/1230.
