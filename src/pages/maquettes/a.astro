@@ -1,0 +1,452 @@
+---
+// Maquette A — « Revue technique »
+// Parti pris : mise en page éditoriale. Une colonne de lecture, chapitres numérotés,
+// grands visuels pleine largeur entre les chapitres, beaucoup de blanc. Le plus sobre.
+import Maquette from '../../layouts/Maquette.astro';
+import { navigation, machines, secteurs, chiffres, outils, dateReglement } from '../../data/maquette';
+---
+
+<Maquette titre="Maquette A — Revue technique">
+	<a class="evitement" href="#contenu">Aller au contenu</a>
+
+	<header class="entete">
+		<a href="/" class="marque" aria-label="Automachine, accueil">
+			<img src="/images/logo/avec-texte.svg" alt="Automachine, machines spéciales" width="157" height="59" />
+		</a>
+		<nav aria-label="Navigation principale">
+			<ul>
+				{navigation.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+			</ul>
+		</nav>
+	</header>
+
+	<main id="contenu">
+		<section class="ouverture">
+			<p class="surtitre">Conception et fabrication de machines spéciales</p>
+			<h1>
+				<span class="a-rediger">[À RÉDIGER]</span> une phrase qui dit ce que nous faisons et pour qui.
+			</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[À RÉDIGER]</span> deux ou trois phrases : le besoin du client, notre
+				méthode, ce que reçoit le client à la fin.
+			</p>
+			<p class="actions">
+				<a class="bouton" href="/machines">Voir les machines</a>
+				<a class="lien" href="/contact">Nous décrire votre besoin</a>
+			</p>
+		</section>
+
+		<figure class="pleine-largeur">
+			<div class="visuel visuel--hero">
+				<span>[VISUEL 3D À PRODUIRE] rendu CAO d’une machine, pleine largeur</span>
+			</div>
+			<figcaption><span class="a-rediger">[À RÉDIGER]</span> légende du visuel.</figcaption>
+		</figure>
+
+		<section class="chapitre" id="machines">
+			<p class="numero">01</p>
+			<h2>Machines</h2>
+			<p class="chapeau">
+				<span class="a-rediger">[À RÉDIGER]</span> quelques réalisations, chacune avec son modèle 3D
+				manipulable sur sa fiche.
+			</p>
+			<ol class="liste-machines">
+				{
+					machines.map((m) => (
+						<li>
+							<a href={`/machines/${m.slug}`}>
+								<div class="visuel visuel--machine">
+									<span>[RENDU 3D À PRODUIRE] {m.nom}</span>
+								</div>
+								<h3>{m.nom}</h3>
+								<p class="meta">{m.secteur}</p>
+								<p class="a-rediger">{m.fonction}</p>
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<section class="chapitre chapitre--sombre" id="secteurs">
+			<div class="interieur">
+				<p class="numero">02</p>
+				<h2>Secteurs</h2>
+				<p class="chapeau">
+					<span class="a-rediger">[À RÉDIGER]</span> une entrée par domaine d’activité, pas par nom de
+					client.
+				</p>
+				<ul class="secteurs">
+					{
+						secteurs.map((s) => (
+							<li>
+								<a href={`/secteurs#${s.slug}`}>{s.nom}</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</section>
+
+		<section class="chapitre" id="entreprise">
+			<p class="numero">03</p>
+			<h2>Entreprise</h2>
+			<dl class="chiffres">
+				{
+					chiffres.map((c) => (
+						<div>
+							<dt class={c.valeur.startsWith('[') ? 'a-rediger' : ''}>{c.valeur}</dt>
+							<dd>{c.legende}</dd>
+						</div>
+					))
+				}
+			</dl>
+			<p>
+				<span class="a-rediger">[À RÉDIGER]</span> l’histoire en quelques lignes : 2011, création de
+				Sourcitem ; 2017, l’entreprise devient Automachine. L’équipe, les valeurs, les
+				certifications <span class="a-rediger">[À CONFIRMER : ISO 9001, ISO 14001]</span>.
+			</p>
+			<p><a class="lien" href="/entreprise">Lire la présentation complète</a></p>
+		</section>
+
+		<figure class="pleine-largeur">
+			<div class="visuel visuel--hero">
+				<span>[ANIMATION CAO À PRODUIRE] cinématique en boucle muette, pleine largeur</span>
+			</div>
+		</figure>
+
+		<section class="chapitre" id="outils">
+			<p class="numero">04</p>
+			<h2>Outils</h2>
+			<p class="chapeau">
+				<span class="a-rediger">[À RÉDIGER]</span> des modules à manipuler, partageables, sans
+				collecte de données.
+			</p>
+			<div class="outils">
+				{
+					outils.map((o) => (
+						<article>
+							<h3>
+								<a href={`/outils/${o.slug}`}>{o.nom}</a>
+							</h3>
+							<p>{o.accroche}</p>
+							{o.slug === 'quiz-reglement-machines' && (
+								<p class="compte" data-echeance={dateReglement}>
+									Application du règlement le 20 janvier 2027<span class="jours" hidden>
+										, dans <strong data-jours>…</strong> jours
+									</span>.
+								</p>
+							)}
+							<p class={o.note.startsWith('[') ? 'a-rediger' : 'note'}>{o.note}</p>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="chapitre appel">
+			<h2>Un besoin de machine ?</h2>
+			<p><span class="a-rediger">[À RÉDIGER]</span> comment se passe un premier échange.</p>
+			<p><a class="bouton" href="/contact">Nous contacter</a></p>
+		</section>
+	</main>
+
+	<footer class="pied">
+		<img src="/images/logo/fond-noir.svg" alt="" width="118" height="44" />
+		<p>Automachine — <span class="a-rediger">[À RÉDIGER] adresse, téléphone</span></p>
+		<ul>
+			<li><a href="/mentions-legales">Mentions légales</a></li>
+			<li><a href="/confidentialite">Confidentialité</a></li>
+		</ul>
+	</footer>
+
+	<script>
+		// Compte à rebours vers la date d'application du règlement. Sans JS, la date reste lisible.
+		for (const el of document.querySelectorAll<HTMLElement>('[data-echeance]')) {
+			const cible = new Date(el.dataset.echeance + 'T00:00:00');
+			const jours = Math.ceil((cible.getTime() - Date.now()) / 86_400_000);
+			const sortie = el.querySelector<HTMLElement>('[data-jours]');
+			const bloc = el.querySelector<HTMLElement>('.jours');
+			if (sortie && bloc && jours > 0) {
+				sortie.textContent = String(jours);
+				bloc.hidden = false;
+			}
+		}
+	</script>
+</Maquette>
+
+<style>
+	.evitement {
+		position: absolute;
+		left: -999px;
+		top: 0;
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.5rem 1rem;
+	}
+	.evitement:focus {
+		left: 1rem;
+		z-index: 10;
+	}
+
+	.entete {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		padding: 1.25rem clamp(1rem, 4vw, 3rem);
+		max-width: 80rem;
+		margin: 0 auto;
+	}
+	.marque img {
+		width: 118px;
+		height: auto;
+	}
+	.entete nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		gap: clamp(0.75rem, 2vw, 1.75rem);
+		flex-wrap: wrap;
+	}
+	.entete nav a {
+		text-decoration: none;
+		color: var(--gris);
+		font-weight: 500;
+		font-size: 0.95rem;
+	}
+	.entete nav a:hover {
+		color: var(--bleu);
+	}
+
+	main {
+		padding: 0 clamp(1rem, 4vw, 3rem);
+	}
+
+	.ouverture,
+	.chapitre {
+		max-width: 44rem;
+		margin: 0 auto;
+		padding: clamp(3rem, 8vw, 6rem) 0;
+	}
+	.ouverture h1 {
+		font-size: clamp(2rem, 5vw, 3.25rem);
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 1.5rem;
+	}
+	.chapeau {
+		font-size: 1.2rem;
+		line-height: 1.55;
+	}
+	.actions {
+		display: flex;
+		gap: 1.5rem;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-top: 2rem;
+	}
+	.bouton {
+		display: inline-block;
+		background: var(--bleu);
+		color: var(--blanc);
+		text-decoration: none;
+		font-weight: 500;
+		padding: 0.8rem 1.4rem;
+		border-radius: var(--rayon);
+	}
+	.bouton:hover {
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+	}
+	.lien {
+		font-weight: 500;
+	}
+
+	.pleine-largeur {
+		margin: 0 calc(-1 * clamp(1rem, 4vw, 3rem));
+	}
+	.pleine-largeur figcaption {
+		max-width: 44rem;
+		margin: 0.75rem auto 0;
+		padding: 0 clamp(1rem, 4vw, 3rem);
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+	.visuel--hero {
+		aspect-ratio: 21 / 9;
+		min-height: 260px;
+	}
+
+	.numero {
+		font-family: var(--titres);
+		color: var(--bleu-clair);
+		font-size: 3rem;
+		font-weight: 700;
+		line-height: 1;
+		margin-bottom: 0.25rem;
+	}
+	.chapitre h2 {
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+	}
+
+	.liste-machines {
+		list-style: none;
+		padding: 0;
+		margin: 2rem 0 0;
+		display: grid;
+		gap: 3rem;
+	}
+	.liste-machines a {
+		text-decoration: none;
+		color: inherit;
+		display: block;
+	}
+	.liste-machines h3 {
+		font-size: 1.5rem;
+		margin: 1rem 0 0.25rem;
+	}
+	.liste-machines a:hover h3 {
+		color: var(--bleu);
+	}
+	.visuel--machine {
+		aspect-ratio: 16 / 9;
+	}
+	.meta {
+		color: var(--bleu);
+		font-size: 0.9rem;
+		font-weight: 500;
+		margin-bottom: 0.25rem;
+	}
+
+	.chapitre--sombre {
+		max-width: none;
+		margin: 0 calc(-1 * clamp(1rem, 4vw, 3rem));
+		padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 3rem);
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+	}
+	.chapitre--sombre .interieur {
+		max-width: 44rem;
+		margin: 0 auto;
+	}
+	.chapitre--sombre h2 {
+		color: var(--blanc);
+	}
+	.chapitre--sombre .numero {
+		color: var(--bleu-clair);
+	}
+	.chapitre--sombre .a-rediger {
+		color: var(--bleu-clair);
+	}
+	.secteurs {
+		list-style: none;
+		padding: 0;
+		margin: 2rem 0 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 0.5rem 2rem;
+	}
+	.secteurs a {
+		display: block;
+		color: var(--blanc);
+		text-decoration: none;
+		font-family: var(--titres);
+		font-size: 1.35rem;
+		padding: 0.9rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	}
+	.secteurs a:hover {
+		color: var(--orange);
+	}
+
+	.chiffres {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+		gap: 1.5rem;
+		margin: 2rem 0;
+	}
+	.chiffres dt {
+		font-family: var(--titres);
+		font-size: 2.25rem;
+		font-weight: 600;
+		color: var(--bleu);
+		line-height: 1;
+	}
+	.chiffres dt.a-rediger {
+		font-size: 1rem;
+		font-weight: 400;
+		font-family: var(--texte);
+	}
+	.chiffres dd {
+		margin: 0.35rem 0 0;
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+
+	.outils {
+		display: grid;
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+	.outils article {
+		border-top: 2px solid var(--bleu-clair);
+		padding-top: 1rem;
+	}
+	.outils h3 {
+		font-size: 1.4rem;
+	}
+	.outils h3 a {
+		text-decoration: none;
+	}
+	.compte strong {
+		color: var(--bleu);
+	}
+	.note {
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+
+	.appel {
+		text-align: center;
+		border-top: 1px solid var(--gris-moyen);
+	}
+	.appel p {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.pied {
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 3rem clamp(1rem, 4vw, 3rem);
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem 3rem;
+		align-items: center;
+		font-size: 0.9rem;
+	}
+	.pied p {
+		margin: 0;
+	}
+	.pied ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		gap: 1.5rem;
+	}
+	.pied a {
+		color: var(--bleu-clair);
+	}
+	.pied .a-rediger {
+		color: var(--bleu-clair);
+	}
+</style>

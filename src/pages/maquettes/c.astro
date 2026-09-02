@@ -1,0 +1,331 @@
+---
+// Maquette C — « Dossier machine »
+// Parti pris : documentation technique haut de gamme. Grille serrée, filets, typographie très
+// présente, sommaire latéral, fiches en tableaux « libellé / valeur ». Le plus dense.
+import Maquette from '../../layouts/Maquette.astro';
+import { navigation, machines, secteurs, chiffres, outils, dateReglement } from '../../data/maquette';
+
+const sommaire = [
+	{ id: 'machines', num: '1', label: 'Machines' },
+	{ id: 'secteurs', num: '2', label: 'Secteurs' },
+	{ id: 'entreprise', num: '3', label: 'Entreprise' },
+	{ id: 'outils', num: '4', label: 'Outils' },
+	{ id: 'contact', num: '5', label: 'Contact' },
+];
+---
+
+<Maquette titre="Maquette C — Dossier machine">
+	<a class="evitement" href="#contenu">Aller au contenu</a>
+
+	<header class="entete">
+		<a href="/" class="marque" aria-label="Automachine, accueil">
+			<img src="/images/logo/avec-texte.svg" alt="Automachine, machines spéciales" width="157" height="59" />
+		</a>
+		<nav aria-label="Navigation principale">
+			<ul>
+				{navigation.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+			</ul>
+		</nav>
+	</header>
+
+	<div class="page">
+		<aside class="sommaire">
+			<p class="sommaire__titre">Sommaire</p>
+			<ol>
+				{
+					sommaire.map((s) => (
+						<li>
+							<a href={`#${s.id}`}>
+								<span class="num">{s.num}</span>
+								{s.label}
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</aside>
+
+		<main id="contenu">
+			<section class="couverture">
+				<p class="reference">Dossier <span class="a-rediger">[À RÉDIGER : accroche courte]</span></p>
+				<h1>
+					Machines<br />spéciales
+				</h1>
+				<table class="fiche fiche--couverture">
+					<tbody>
+						<tr><th scope="row">Métier</th><td>Conception et fabrication de machines spéciales</td></tr>
+						<tr><th scope="row">Depuis</th><td>2011 (Sourcitem), Automachine depuis 2017</td></tr>
+						<tr><th scope="row">Pour qui</th><td><span class="a-rediger">[À RÉDIGER]</span></td></tr>
+						<tr><th scope="row">Livrable</th><td><span class="a-rediger">[À RÉDIGER]</span></td></tr>
+					</tbody>
+				</table>
+				<div class="visuel visuel--couverture">
+					<span>[VISUEL 3D À PRODUIRE] vue de la machine phare, fond clair</span>
+				</div>
+			</section>
+
+			<section class="partie" id="machines">
+				<header class="partie__tete">
+					<span class="num">1</span>
+					<h2>Machines</h2>
+					<p class="partie__note"><span class="a-rediger">[À RÉDIGER]</span> une ligne de contexte.</p>
+				</header>
+				<div class="grille-machines">
+					{
+						machines.map((m, i) => (
+							<article class="carte">
+								<div class="visuel">
+									<span>[RENDU 3D] {m.nom}</span>
+								</div>
+								<div class="carte__corps">
+									<p class="carte__index">{String(i + 1).padStart(2, '0')}</p>
+									<h3>
+										<a href={`/machines/${m.slug}`}>{m.nom}</a>
+									</h3>
+									<table class="fiche fiche--compacte">
+										<tbody>
+											<tr><th scope="row">Secteur</th><td>{m.secteur}</td></tr>
+											<tr><th scope="row">Fonction</th><td><span class="a-rediger">{m.fonction}</span></td></tr>
+											<tr><th scope="row">Modèle 3D</th><td>Sur la fiche</td></tr>
+										</tbody>
+									</table>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="partie" id="secteurs">
+				<header class="partie__tete">
+					<span class="num">2</span>
+					<h2>Secteurs</h2>
+					<p class="partie__note">Une entrée par domaine d’activité, jamais par nom de client.</p>
+				</header>
+				<table class="tableau">
+					<thead>
+						<tr><th scope="col">Secteur</th><th scope="col">Besoins types</th><th scope="col">Exemples</th></tr>
+					</thead>
+					<tbody>
+						{
+							secteurs.map((s) => (
+								<tr>
+									<th scope="row"><a href={`/secteurs#${s.slug}`}>{s.nom}</a></th>
+									<td><span class="a-rediger">[À RÉDIGER]</span></td>
+									<td><span class="a-rediger">[À RÉDIGER]</span></td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</section>
+
+			<section class="partie" id="entreprise">
+				<header class="partie__tete">
+					<span class="num">3</span>
+					<h2>Entreprise</h2>
+				</header>
+				<div class="deux">
+					<dl class="chiffres">
+						{
+							chiffres.map((c) => (
+								<div>
+									<dt class={c.valeur.startsWith('[') ? 'a-rediger' : ''}>{c.valeur}</dt>
+									<dd>{c.legende}</dd>
+								</div>
+							))
+						}
+					</dl>
+					<div>
+						<p>
+							<span class="a-rediger">[À RÉDIGER]</span> présentation, équipe, valeurs. Certifications
+							<span class="a-rediger">[À CONFIRMER : ISO 9001, ISO 14001]</span>.
+						</p>
+						<p><a href="/entreprise">Présentation complète</a></p>
+					</div>
+				</div>
+				<div class="visuel visuel--large">
+					<span>[ANIMATION CAO À PRODUIRE] cinématique en boucle muette</span>
+				</div>
+			</section>
+
+			<section class="partie" id="outils">
+				<header class="partie__tete">
+					<span class="num">4</span>
+					<h2>Outils</h2>
+					<p class="partie__note">Modules à manipuler, partageables. Aucune donnée personnelle collectée.</p>
+				</header>
+				<div class="grille-outils">
+					{
+						outils.map((o) => (
+							<article class="outil">
+								<h3>
+									<a href={`/outils/${o.slug}`}>{o.nom}</a>
+								</h3>
+								<p>{o.accroche}</p>
+								{o.slug === 'quiz-reglement-machines' && (
+									<table class="fiche fiche--compacte" data-echeance={dateReglement}>
+										<tbody>
+											<tr><th scope="row">Application</th><td>20 janvier 2027</td></tr>
+											<tr class="jours" hidden><th scope="row">Reste</th><td><strong data-jours>…</strong> jours</td></tr>
+										</tbody>
+									</table>
+								)}
+								<p class={o.note.startsWith('[') ? 'a-rediger' : 'note'}>{o.note}</p>
+							</article>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="partie partie--contact" id="contact">
+				<header class="partie__tete">
+					<span class="num">5</span>
+					<h2>Contact</h2>
+				</header>
+				<p><span class="a-rediger">[À RÉDIGER]</span> comment se passe un premier échange.</p>
+				<p><a class="bouton" href="/contact">Décrire un besoin</a></p>
+			</section>
+		</main>
+	</div>
+
+	<footer class="pied">
+		<p>Automachine — <span class="a-rediger">[À RÉDIGER] adresse, téléphone</span></p>
+		<ul>
+			<li><a href="/mentions-legales">Mentions légales</a></li>
+			<li><a href="/confidentialite">Confidentialité</a></li>
+		</ul>
+	</footer>
+
+	<script>
+		for (const el of document.querySelectorAll<HTMLElement>('[data-echeance]')) {
+			const jours = Math.ceil((new Date(el.dataset.echeance + 'T00:00:00').getTime() - Date.now()) / 86_400_000);
+			const s = el.querySelector<HTMLElement>('[data-jours]');
+			const ligne = el.querySelector<HTMLElement>('.jours');
+			if (s && ligne && jours > 0) {
+				s.textContent = String(jours);
+				ligne.hidden = false;
+			}
+		}
+		// Sommaire : la partie visible est soulignée.
+		const liens = [...document.querySelectorAll<HTMLAnchorElement>('.sommaire a')];
+		const obs = new IntersectionObserver(
+			(entries) => {
+				for (const e of entries) {
+					if (e.isIntersecting) {
+						liens.forEach((l) => l.classList.toggle('actif', l.hash === '#' + e.target.id));
+					}
+				}
+			},
+			{ rootMargin: '-40% 0px -55% 0px' }
+		);
+		document.querySelectorAll('.partie').forEach((p) => obs.observe(p));
+	</script>
+</Maquette>
+
+<style>
+	.evitement { position: absolute; left: -999px; top: 0; background: var(--bleu-nuit); color: var(--blanc); padding: 0.5rem 1rem; }
+	.evitement:focus { left: 1rem; z-index: 10; }
+
+	.entete {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		padding: 1rem clamp(1rem, 4vw, 3rem);
+		border-bottom: 2px solid var(--bleu-nuit);
+	}
+	.marque img { width: 110px; height: auto; }
+	.entete nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(0.75rem, 2vw, 1.75rem); flex-wrap: wrap; }
+	.entete nav a { text-decoration: none; color: var(--bleu-nuit); font-family: var(--titres); font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; }
+	.entete nav a:hover { color: var(--bleu); }
+
+	.page {
+		display: grid;
+		grid-template-columns: 12rem minmax(0, 1fr);
+		gap: 3rem;
+		padding: 0 clamp(1rem, 4vw, 3rem);
+		max-width: 90rem;
+		margin: 0 auto;
+	}
+	@media (max-width: 900px) {
+		.page { grid-template-columns: 1fr; gap: 0; }
+		.sommaire { display: none; }
+	}
+	.sommaire {
+		position: sticky;
+		top: 0;
+		align-self: start;
+		padding: 2.5rem 0;
+		font-size: 0.9rem;
+	}
+	.sommaire__titre { font-family: var(--titres); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; color: var(--gris-leger); margin-bottom: 0.75rem; }
+	.sommaire ol { list-style: none; margin: 0; padding: 0; }
+	.sommaire a { display: flex; gap: 0.6rem; padding: 0.4rem 0; text-decoration: none; color: var(--gris); border-top: 1px solid var(--gris-moyen); }
+	.sommaire a.actif { color: var(--bleu-nuit); font-weight: 600; }
+	.sommaire a.actif .num { color: var(--orange); }
+	.num { font-family: var(--titres); font-weight: 700; color: var(--bleu); }
+
+	.couverture {
+		padding: 2.5rem 0 3rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 1.5rem 3rem;
+		border-bottom: 1px solid var(--gris-moyen);
+	}
+	@media (max-width: 900px) { .couverture { grid-template-columns: 1fr; } }
+	.reference { grid-column: 1 / -1; font-family: var(--titres); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; color: var(--bleu); margin: 0; }
+	.couverture h1 { font-size: clamp(3rem, 9vw, 6.5rem); line-height: 0.95; letter-spacing: -0.03em; margin: 0; }
+	.visuel--couverture { grid-column: 1 / -1; aspect-ratio: 21 / 9; min-height: 220px; }
+
+	.fiche { border-collapse: collapse; width: 100%; font-size: 0.95rem; align-self: end; }
+	.fiche th { text-align: left; font-weight: 500; color: var(--gris-leger); padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; width: 8rem; vertical-align: top; border-top: 1px solid var(--gris-moyen); }
+	.fiche td { padding: 0.5rem 0; border-top: 1px solid var(--gris-moyen); vertical-align: top; }
+	.fiche--compacte { font-size: 0.875rem; }
+	.fiche--compacte th { width: 6rem; padding-top: 0.35rem; padding-bottom: 0.35rem; }
+	.fiche--compacte td { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+
+	.partie { padding: 3rem 0; border-bottom: 1px solid var(--gris-moyen); }
+	.partie__tete { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 0 1rem; align-items: baseline; margin-bottom: 1.5rem; }
+	.partie__tete .num { font-size: 2rem; grid-row: 1 / 3; }
+	.partie__tete h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 0; }
+	.partie__note { grid-column: 2; margin: 0.25rem 0 0; color: var(--gris-leger); font-size: 0.95rem; }
+
+	.grille-machines { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1px; background: var(--gris-moyen); border: 1px solid var(--gris-moyen); }
+	.carte { background: var(--blanc); display: grid; grid-template-rows: auto 1fr; }
+	.carte .visuel { aspect-ratio: 3 / 2; border: 0; border-bottom: 1px solid var(--gris-moyen); }
+	.carte__corps { padding: 1rem 1.25rem 1.25rem; }
+	.carte__index { font-family: var(--titres); color: var(--bleu-clair); font-weight: 700; font-size: 0.9rem; margin: 0; }
+	.carte h3 { font-size: 1.35rem; margin: 0 0 0.5rem; }
+	.carte h3 a { text-decoration: none; }
+	.carte h3 a:hover { text-decoration: underline; }
+
+	.tableau { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+	.tableau th, .tableau td { text-align: left; padding: 0.75rem 1rem 0.75rem 0; border-bottom: 1px solid var(--gris-moyen); vertical-align: top; }
+	.tableau thead th { font-family: var(--titres); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; color: var(--gris-leger); border-bottom: 2px solid var(--bleu-nuit); }
+	.tableau tbody th { font-weight: 600; }
+	.tableau tbody th a { text-decoration: none; color: var(--bleu-nuit); }
+	.tableau tbody th a:hover { color: var(--bleu); }
+
+	.deux { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 3rem; align-items: start; margin-bottom: 2rem; }
+	@media (max-width: 900px) { .deux { grid-template-columns: 1fr; } }
+	.chiffres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: 0; }
+	.chiffres dt { font-family: var(--titres); font-size: 2.5rem; font-weight: 700; color: var(--bleu-nuit); line-height: 1; letter-spacing: -0.02em; }
+	.chiffres dt.a-rediger { font-size: 1rem; font-weight: 400; font-family: var(--texte); }
+	.chiffres dd { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--gris-leger); border-top: 1px solid var(--gris-moyen); padding-top: 0.35rem; }
+	.visuel--large { aspect-ratio: 21 / 9; min-height: 200px; }
+
+	.grille-outils { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 2rem; }
+	.outil h3 { font-size: 1.35rem; }
+	.outil h3 a { text-decoration: none; }
+	.note { font-size: 0.85rem; color: var(--gris-leger); }
+	strong[data-jours] { color: var(--bleu); font-family: var(--titres); font-size: 1.2rem; }
+
+	.partie--contact { border-bottom: 0; }
+	.bouton { display: inline-block; background: var(--bleu-nuit); color: var(--blanc); text-decoration: none; font-weight: 500; padding: 0.8rem 1.4rem; border-radius: var(--rayon); }
+	.bouton:hover { background: var(--bleu); color: var(--blanc); }
+
+	.pied { border-top: 2px solid var(--bleu-nuit); padding: 2rem clamp(1rem, 4vw, 3rem); display: flex; flex-wrap: wrap; gap: 1rem 3rem; font-size: 0.9rem; color: var(--gris-leger); }
+	.pied p { margin: 0; }
+	.pied ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
+</style>
