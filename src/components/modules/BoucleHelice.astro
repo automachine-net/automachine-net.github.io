@@ -762,7 +762,8 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		display: flex;
 		flex-direction: row-reverse;
 		align-items: center;
-		justify-content: flex-start;
+		/* En sens inversé, « flex-end » est le bord gauche. */
+		justify-content: flex-end;
 		gap: 1.25rem;
 	}
 	.helice__aide {
