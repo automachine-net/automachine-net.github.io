@@ -148,10 +148,14 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      publiées reprises telles quelles, écart de bouclage d'environ 20 Mt signalé, non
      corrigé). Dessin original, seules les valeurs sont reprises. Textes d'étapes à relire.
      Le cumul « perdu » calculé donne 36 % (5,5 + 30,7) ; le dirigeant dit 35 % à l'oral.
-   - **Boucle contre hélice** (à faire) : cycle piloté par les quatre critères de
-     réversibilité (coût, qualité, délai, pertes par cycle). Seuils réglables en direct,
-     validé par le dirigeant. Quand les critères tiennent, la boucle se ferme ; sinon elle
-     dérive en hélice descendante (Bréchet : « économie hélicoïdale »).
+   - **Boucle ou hélice** (`/outils/reversibilite`, livré 2026-09-03) : cycle de dix tours
+     en perspective, piloté par quatre curseurs, un par critère de réversibilité (coût,
+     qualité, délai, pertes par cycle). Critères tenus, les tours se superposent en une
+     boucle ; critère dépassé, chaque tour descend vers le sol « déchet » (Bréchet :
+     « économie hélicoïdale »). Seuils : coût ≤ fabrication, qualité = fonction initiale,
+     délai < temps d'usage (fixes, ceux du dirigeant) ; pertes réglable, 1 % par défaut.
+     Le lien entre dépassement et descente est un choix de dessin, pas une mesure. Libellés,
+     bornes et verdicts dans `content/donnees/reversibilite.json`, à relire.
 4. **Estimateur d'ordre de prix (idée du dirigeant, 2026-09-02)** : donner un ordre de grandeur
    avant un premier contact. Pistes d'entrées évoquées : encombrement de la machine, nombre de
    robots, niveau de sécurité demandé. Méthode, bornes et avertissements à arrêter avec le

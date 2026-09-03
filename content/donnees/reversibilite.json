@@ -1,0 +1,75 @@
+{
+  "titre": "Boucle ou hélice ?",
+  "sous_titre": "Quatre critères décident si un cycle se referme sur lui-même ou dérive vers le déchet.",
+
+  "criteres": [
+    {
+      "cle": "cout",
+      "libelle": "Coût de réversion",
+      "unite": "% du coût de fabrication",
+      "min": 0,
+      "max": 300,
+      "pas": 5,
+      "defaut": 60,
+      "seuil": 100,
+      "sens": "max",
+      "seuil_reglable": false,
+      "regle": "Réverser ne doit pas coûter plus cher que fabriquer.",
+      "echec": "Réverser coûte plus cher que fabriquer : personne ne le fera."
+    },
+    {
+      "cle": "qualite",
+      "libelle": "Qualité après réversion",
+      "unite": "% de la fonction initiale",
+      "min": 0,
+      "max": 100,
+      "pas": 5,
+      "defaut": 100,
+      "seuil": 100,
+      "sens": "min",
+      "seuil_reglable": false,
+      "regle": "La matière doit retrouver sa fonction initiale, sinon c'est du recyclage.",
+      "echec": "La matière ne retrouve pas sa fonction : elle descend d'un niveau à chaque tour. C'est du recyclage, pas de la réversion."
+    },
+    {
+      "cle": "delai",
+      "libelle": "Délai de réversion",
+      "unite": "% du temps d'usage",
+      "min": 0,
+      "max": 300,
+      "pas": 5,
+      "defaut": 50,
+      "seuil": 100,
+      "sens": "max",
+      "seuil_reglable": false,
+      "regle": "Réverser doit prendre moins de temps que l'usage.",
+      "echec": "La réversion arrive après la fin de l'usage : le produit suivant est déjà fabriqué avec de la matière neuve."
+    },
+    {
+      "cle": "pertes",
+      "libelle": "Pertes à chaque cycle",
+      "unite": "% de la matière",
+      "min": 0,
+      "max": 30,
+      "pas": 0.5,
+      "defaut": 1,
+      "seuil": 1,
+      "sens": "max",
+      "seuil_reglable": true,
+      "seuil_min": 0,
+      "seuil_max": 10,
+      "seuil_pas": 0.5,
+      "regle": "Les pertes de chaque tour restent sous le seuil que l'on accepte.",
+      "echec": "Les pertes dépassent le seuil accepté : la boucle se vide tour après tour."
+    }
+  ],
+
+  "verdicts": {
+    "boucle": "La boucle se referme sur elle-même : le cycle est réversible.",
+    "helice": "La boucle ne se referme pas : c'est une hélice, et elle descend vers le déchet."
+  },
+
+  "etapes_cycle": ["Fabrication", "Usage", "Réversion"],
+  "sol": "Déchet",
+  "tours": 10
+}

@@ -1,9 +1,10 @@
 ---
 // Module « Réversibilité » — emplacement et fil conducteur.
 //
-// Le scénario interactif reste à construire avec le dirigeant. La page pose les trois idées
-// et réserve la place de l'animation. Non indexée tant qu'elle n'a pas de contenu propre.
+// La page pose le fil conducteur, puis le module « Boucle ou hélice » que le dirigeant
+// manipule en conférence. Non indexée tant que les textes ne sont pas validés.
 import Base from '../../layouts/Base.astro';
+import BoucleHelice from '../../components/modules/BoucleHelice.astro';
 ---
 
 <Base
@@ -48,16 +49,12 @@ import Base from '../../layouts/Base.astro';
 	</section>
 
 	<section class="bloc bloc--blanc">
-		<div class="bloc__interieur fil-conducteur">
-			<h2>Ce qui reste à construire</h2>
-			<div class="visuel visuel--module">
-				<span>[ANIMATION À CONSTRUIRE ENSEMBLE] scénario interactif du principe de réversibilité</span>
-			</div>
-			<p>
-				<span class="a-rediger">[À DÉCIDER ENSEMBLE]</span> ce que le visiteur manipule, sur quel
-				exemple, et ce qu’il doit avoir compris à la fin. Tant que ce point n’est pas tranché,
-				la page reste à l’écart des moteurs de recherche.
+		<div class="bloc__interieur">
+			<p class="note">
+				<span class="a-rediger">[à relire]</span> Les libellés, seuils et phrases de verdict se
+				modifient dans <code>content/donnees/reversibilite.json</code>.
 			</p>
+			<BoucleHelice />
 		</div>
 	</section>
 </Base>
@@ -116,8 +113,12 @@ import Base from '../../layouts/Base.astro';
 	.etapes p {
 		margin: 0;
 	}
-	.visuel--module {
-		height: clamp(9rem, 18vw, 13rem);
-		margin: 1.5rem 0;
+	.note {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin: 0 0 1rem;
+	}
+	.note code {
+		font-size: 0.85em;
 	}
 </style>

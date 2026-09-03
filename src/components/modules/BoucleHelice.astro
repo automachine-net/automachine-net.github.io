@@ -1,0 +1,792 @@
+---
+// Module « Boucle ou hélice » — le principe de réversibilité, à manipuler.
+//
+// Un cycle de matière est dessiné sur dix tours, en perspective. Quatre curseurs, un par
+// critère de réversibilité, commandent sa forme : tant que les critères tiennent, les tours
+// se superposent en une boucle unique ; dès qu'un critère est dépassé, chaque tour descend
+// d'un cran vers le sol « déchet », et la boucle devient une hélice. Les pertes rétrécissent
+// la boucle à chaque tour.
+//
+// L'image vient de la conférence du dirigeant, d'après Yves Bréchet : « l'économie circulaire
+// est en réalité une économie hélicoïdale ». Les seuils sont ceux qu'il énonce ; celui des
+// pertes est réglable en direct, pour ouvrir le débat.
+//
+// Le dessin est calculé chez le visiteur (rien à charger, rien d'envoyé). Les libellés,
+// bornes, valeurs par défaut et seuils vivent dans `content/donnees/reversibilite.json`.
+import donnees from '../../../content/donnees/reversibilite.json';
+import { typo, typoProfond } from '../../scripts/typographie';
+
+const d = typoProfond(donnees);
+const criteres = d.criteres;
+
+const nombre = (v: number) => v.toLocaleString('fr-FR');
+---
+
+<figure class="helice" data-helice-module>
+	<header class="helice__entete">
+		<p class="helice__quoi">{d.titre}</p>
+		<p class="helice__sous-titre">{d.sous_titre}</p>
+	</header>
+
+	<div class="helice__cadre">
+		<div class="helice__scene">
+			<svg class="helice__dessin" viewBox="0 0 1200 820" aria-hidden="true">
+				<!-- Le sol : ce vers quoi descend l'hélice. -->
+				<line class="helice__sol" x1="120" y1="740" x2="1080" y2="740" />
+				<text class="helice__sol-nom" x="1080" y="775" text-anchor="end">{d.sol}</text>
+
+				<!-- Le cycle, un chemin par tour, remplis par le script. Des chemins séparés et
+				     translucides : superposés, ils foncent d'eux-mêmes quand la boucle se referme. -->
+				<g class="helice__trace" data-trace />
+				<circle class="helice__contact" data-contact r="0" cx="0" cy="0" />
+
+				<!-- Les étapes du cycle, autour du premier tour. -->
+				<g class="helice__etapes" data-etapes>
+					{d.etapes_cycle.map((e) => <text data-etape-nom text-anchor="middle">{e}</text>)}
+				</g>
+
+				<!-- La matière en mouvement, et ce qu'elle perd en route. -->
+				<g class="helice__pertes" data-pertes />
+				<circle class="helice__point" data-point r="13" cx="0" cy="0" />
+			</svg>
+		</div>
+
+		<div class="helice__panneau">
+			<ol class="helice__criteres">
+				{
+					criteres.map((c, i) => (
+						<li class="critere" data-critere={c.cle} data-sens={c.sens}>
+							<div class="critere__tete">
+								<label for={`critere-${c.cle}`}>
+									<span class="critere__touche" aria-hidden="true">
+										{i + 1}
+									</span>
+									{c.libelle}
+								</label>
+								<span class="critere__etat" data-etat aria-live="polite" />
+							</div>
+							<div class="critere__ligne">
+								<input
+									type="range"
+									id={`critere-${c.cle}`}
+									data-curseur
+									min={c.min}
+									max={c.max}
+									step={c.pas}
+									value={c.defaut}
+									aria-describedby={`regle-${c.cle}`}
+								/>
+								<output for={`critere-${c.cle}`} class="critere__valeur">
+									<span data-valeur>{nombre(c.defaut)}</span>
+									<span class="critere__unite">{c.unite}</span>
+								</output>
+							</div>
+							<p class="critere__regle" id={`regle-${c.cle}`}>
+								{c.regle}
+								{c.seuil_reglable ? (
+									<span class="critere__seuil">
+										{typo('Seuil : ')}
+										<input
+											type="range"
+											data-seuil
+											min={c.seuil_min}
+											max={c.seuil_max}
+											step={c.seuil_pas}
+											value={c.seuil}
+											aria-label={typo(`Seuil accepté pour ${c.libelle.toLowerCase()}`)}
+										/>
+										<span data-seuil-valeur>{nombre(c.seuil)}</span>
+										{' %'}
+									</span>
+								) : (
+									<span class="critere__seuil">
+										{typo(`Seuil : ${c.sens === 'max' ? 'au plus' : 'au moins'} ${nombre(c.seuil)} %`)}
+									</span>
+								)}
+							</p>
+						</li>
+					))
+				}
+			</ol>
+
+			<div class="helice__verdict" data-verdict data-forme="boucle">
+				<p class="helice__verdict-titre" data-verdict-titre>Boucle</p>
+				<p class="helice__verdict-texte" data-verdict-texte>{d.verdicts.boucle}</p>
+				<ul class="helice__echecs" data-echecs />
+			</div>
+		</div>
+	</div>
+
+	<div class="helice__coin">
+		<span class="helice__aide" tabindex="0" aria-describedby="helice-aide-texte">
+			<span class="helice__aide-rond" aria-hidden="true">?</span>
+			<span class="helice__aide-texte" id="helice-aide-texte" role="tooltip">
+				{typo('Touches 1 à 4 : choisir un critère, puis flèches ← → pour le régler. R : revenir aux valeurs de départ.')}
+			</span>
+		</span>
+		<button type="button" class="helice__bouton" data-reinitialiser>Valeurs de départ</button>
+		<button type="button" class="helice__bouton" data-plein-ecran>
+			<span data-plein-ecran-texte>Plein écran</span>
+		</button>
+	</div>
+</figure>
+
+<script is:inline define:vars={{ criteres, verdicts: d.verdicts, tours: d.tours }}>
+	(() => {
+		const module = document.querySelector('[data-helice-module]');
+		if (!module) return;
+
+		// ── Géométrie du dessin ──────────────────────────────────────────────────────
+		const CX = 600; // centre horizontal
+		const CY0 = 230; // centre du premier tour
+		const RX0 = 320; // demi-axes du premier tour (perspective)
+		const RY0 = 115;
+		const SOL = 740;
+		const TOURS = tours;
+		const DEPART = -Math.PI / 2; // la matière part du haut, « Fabrication »
+
+		const svg = module.querySelector('.helice__dessin');
+		const trace = module.querySelector('[data-trace]');
+		const contact = module.querySelector('[data-contact]');
+		const point = module.querySelector('[data-point]');
+		const pertesG = module.querySelector('[data-pertes]');
+		const nomsEtapes = [...module.querySelectorAll('[data-etape-nom]')];
+
+		// ── État ─────────────────────────────────────────────────────────────────────
+		const valeurs = {};
+		const seuils = {};
+		criteres.forEach((c) => {
+			valeurs[c.cle] = c.defaut;
+			seuils[c.cle] = c.seuil;
+		});
+
+		/** Dépassement d'un critère, de 0 (tenu) à 1 et plus (franchement dépassé). */
+		function depassement(c) {
+			const v = valeurs[c.cle];
+			const s = seuils[c.cle];
+			if (c.sens === 'max') return Math.max(0, (v - s) / Math.max(s, 1));
+			return Math.max(0, (s - v) / Math.max(s, 1));
+		}
+		const tenu = (c) => depassement(c) === 0;
+
+		/** Descente par tour (le pas de l'hélice) et rétrécissement par tour. */
+		function forme() {
+			let pas = 0;
+			criteres.forEach((c) => {
+				if (c.cle === 'pertes') return;
+				// Chaque critère dépassé fait descendre d'une fraction de la hauteur du tour.
+				pas += 0.5 * RY0 * Math.min(depassement(c), 2);
+			});
+			const retrait = 1 - valeurs.pertes / 100;
+			return { pas, retrait };
+		}
+
+		/** Position sur le cycle à l'angle θ (0 = départ), selon la forme courante. */
+		function position(theta, f) {
+			const n = theta / (2 * Math.PI);
+			const k = Math.pow(f.retrait, n);
+			const a = theta + DEPART;
+			return {
+				x: CX + RX0 * k * Math.cos(a),
+				y: CY0 + f.pas * n + RY0 * k * Math.sin(a),
+				k,
+			};
+		}
+
+		// ── Tracé ────────────────────────────────────────────────────────────────────
+		let thetaMax = 2 * Math.PI * TOURS; // fin du tracé (le sol peut l'interrompre)
+
+		function dessiner() {
+			const f = forme();
+			const pasAngle = Math.PI / 36;
+			const chemins = [];
+			let dAttr = '';
+			let touche = null;
+			thetaMax = 2 * Math.PI * TOURS;
+			const PAR_TOUR = 72; // pas d'angle par tour, en entier : pas d'arrondi qui dérive
+			for (let i = 0; i <= PAR_TOUR * TOURS; i++) {
+				const theta = i * pasAngle;
+				const p = position(theta, f);
+				if (p.y >= SOL) {
+					touche = p;
+					thetaMax = theta;
+					break;
+				}
+				const debutDeTour = i % PAR_TOUR === 0;
+				if (debutDeTour && dAttr) {
+					// Le tour précédent se termine sur le point où commence celui-ci.
+					chemins.push(dAttr + ' L ' + p.x.toFixed(1) + ',' + p.y.toFixed(1));
+					dAttr = '';
+				}
+				dAttr += (dAttr ? ' L ' : 'M ') + p.x.toFixed(1) + ',' + p.y.toFixed(1);
+			}
+			// Le dernier fragment peut se réduire au point de départ d'un tour jamais tracé.
+			if (dAttr.includes(' L ')) chemins.push(dAttr);
+			trace.innerHTML = chemins.map((c) => `<path d="${c}" />`).join('');
+			if (touche) {
+				contact.setAttribute('r', '14');
+				contact.setAttribute('cx', touche.x.toFixed(1));
+				contact.setAttribute('cy', String(SOL));
+			} else {
+				contact.setAttribute('r', '0');
+			}
+
+			// Les étapes se placent autour du premier tour, à 120° l'une de l'autre.
+			nomsEtapes.forEach((t, i) => {
+				const theta = (i * 2 * Math.PI) / nomsEtapes.length;
+				const p = position(theta, { pas: 0, retrait: 1 });
+				const a = theta + DEPART;
+				// Poussé vers l'extérieur du tour, un peu plus en bas (plus proche du regard).
+				const dx = Math.cos(a) * 58;
+				const dy = Math.sin(a) * 46 + (Math.sin(a) > 0 ? 16 : -8);
+				t.setAttribute('x', (p.x + dx).toFixed(1));
+				t.setAttribute('y', (p.y + dy).toFixed(1));
+			});
+		}
+
+		// ── Verdict et états ─────────────────────────────────────────────────────────
+		const verdict = module.querySelector('[data-verdict]');
+		const verdictTitre = module.querySelector('[data-verdict-titre]');
+		const verdictTexte = module.querySelector('[data-verdict-texte]');
+		const echecs = module.querySelector('[data-echecs]');
+
+		function juger() {
+			const rates = criteres.filter((c) => !tenu(c));
+			criteres.forEach((c) => {
+				const li = module.querySelector(`[data-critere="${c.cle}"]`);
+				const ok = tenu(c);
+				li.dataset.tenu = ok ? 'oui' : 'non';
+				li.querySelector('[data-etat]').textContent = ok ? 'tenu' : 'dépassé';
+			});
+			const boucle = rates.length === 0;
+			verdict.dataset.forme = boucle ? 'boucle' : 'helice';
+			verdictTitre.textContent = boucle ? 'Boucle' : 'Hélice';
+			verdictTexte.textContent = boucle ? verdicts.boucle : verdicts.helice;
+			echecs.innerHTML = '';
+			rates.forEach((c) => {
+				const li = document.createElement('li');
+				li.textContent = c.echec;
+				echecs.appendChild(li);
+			});
+		}
+
+		// ── Curseurs ─────────────────────────────────────────────────────────────────
+		const fmt = (v) => Number(v).toLocaleString('fr-FR');
+		criteres.forEach((c) => {
+			const li = module.querySelector(`[data-critere="${c.cle}"]`);
+			const curseur = li.querySelector('[data-curseur]');
+			const affiche = li.querySelector('[data-valeur]');
+			curseur.addEventListener('input', () => {
+				valeurs[c.cle] = Number(curseur.value);
+				affiche.textContent = fmt(curseur.value);
+				dessiner();
+				juger();
+			});
+			const seuil = li.querySelector('[data-seuil]');
+			if (seuil) {
+				const afficheSeuil = li.querySelector('[data-seuil-valeur]');
+				seuil.addEventListener('input', () => {
+					seuils[c.cle] = Number(seuil.value);
+					afficheSeuil.textContent = fmt(seuil.value);
+					dessiner();
+					juger();
+				});
+			}
+		});
+
+		function reinitialiser() {
+			criteres.forEach((c) => {
+				const li = module.querySelector(`[data-critere="${c.cle}"]`);
+				const curseur = li.querySelector('[data-curseur]');
+				curseur.value = String(c.defaut);
+				valeurs[c.cle] = c.defaut;
+				li.querySelector('[data-valeur]').textContent = fmt(c.defaut);
+				const seuil = li.querySelector('[data-seuil]');
+				if (seuil) {
+					seuil.value = String(c.seuil);
+					seuils[c.cle] = c.seuil;
+					li.querySelector('[data-seuil-valeur]').textContent = fmt(c.seuil);
+				}
+			});
+			dessiner();
+			juger();
+		}
+		module.querySelector('[data-reinitialiser]').addEventListener('click', reinitialiser);
+
+		// ── Clavier : 1 à 4 choisissent un critère, R remet à zéro ───────────────────
+		addEventListener('keydown', (ev) => {
+			const cible = ev.target;
+			const dansTexte = cible instanceof HTMLElement && cible.closest('input:not([type=range]), textarea, select');
+			if (dansTexte) return;
+			const i = ['1', '2', '3', '4'].indexOf(ev.key);
+			if (i >= 0 && criteres[i]) {
+				ev.preventDefault();
+				module.querySelector(`[data-critere="${criteres[i].cle}"] [data-curseur]`).focus();
+			} else if (ev.key === 'r' || ev.key === 'R') {
+				ev.preventDefault();
+				reinitialiser();
+			}
+		});
+
+		// ── Plein écran ──────────────────────────────────────────────────────────────
+		const boutonPlein = module.querySelector('[data-plein-ecran]');
+		const textePlein = module.querySelector('[data-plein-ecran-texte]');
+		if (document.fullscreenEnabled) {
+			boutonPlein.addEventListener('click', () => {
+				if (document.fullscreenElement) document.exitFullscreen();
+				else module.requestFullscreen();
+			});
+			document.addEventListener('fullscreenchange', () => {
+				textePlein.textContent =
+					document.fullscreenElement === module ? 'Quitter le plein écran' : 'Plein écran';
+			});
+		} else {
+			boutonPlein.hidden = true;
+		}
+
+		// ── Animation : la matière parcourt le cycle, et perd en route ───────────────
+		const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		let theta = 0;
+		let dernierTour = 0;
+		let precedent = null;
+		const particules = [];
+
+		function animer(t) {
+			if (precedent === null) precedent = t;
+			const dt = Math.min((t - precedent) / 1000, 0.1);
+			precedent = t;
+			theta += dt * 1.1;
+			if (theta > thetaMax) {
+				theta = 0;
+				dernierTour = 0;
+			}
+			const f = forme();
+			const p = position(theta, f);
+			point.setAttribute('cx', p.x.toFixed(1));
+			point.setAttribute('cy', p.y.toFixed(1));
+			point.setAttribute('r', (13 * Math.max(p.k, 0.3)).toFixed(1));
+
+			// À chaque tour bouclé, une part de la matière tombe : autant de grains que de
+			// pourcents perdus, au plus une dizaine.
+			const tour = Math.floor(theta / (2 * Math.PI));
+			if (tour > dernierTour) {
+				dernierTour = tour;
+				const n = Math.min(10, Math.round(valeurs.pertes));
+				for (let i = 0; i < n; i++) {
+					particules.push({
+						x: p.x + (Math.random() - 0.5) * 24,
+						y: p.y,
+						vx: (Math.random() - 0.5) * 40,
+						vy: 40 + Math.random() * 60,
+						vie: 1.4,
+					});
+				}
+			}
+			for (const q of particules) {
+				q.x += q.vx * dt;
+				q.y += q.vy * dt;
+				q.vy += 160 * dt;
+				q.vie -= dt;
+			}
+			for (let i = particules.length - 1; i >= 0; i--) {
+				if (particules[i].vie <= 0 || particules[i].y > SOL) particules.splice(i, 1);
+			}
+			pertesG.innerHTML = particules
+				.map(
+					(q) =>
+						`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="4" opacity="${Math.max(q.vie / 1.4, 0).toFixed(2)}" />`
+				)
+				.join('');
+
+			requestAnimationFrame(animer);
+		}
+
+		dessiner();
+		juger();
+		if (!reduit) requestAnimationFrame(animer);
+		else {
+			const p = position(0, forme());
+			point.setAttribute('cx', p.x.toFixed(1));
+			point.setAttribute('cy', p.y.toFixed(1));
+		}
+	})();
+</script>
+
+<style>
+	.helice {
+		margin: 0;
+		display: grid;
+		gap: 1rem;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 1.25rem 1.5rem 1rem;
+		position: relative;
+	}
+
+	/* ── Bandeau ──────────────────────────────────────────────────────────────── */
+	.helice__entete {
+		text-align: center;
+	}
+	.helice__quoi {
+		margin: 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		color: var(--bleu-nuit);
+		font-size: 1.15rem;
+	}
+	.helice__sous-titre {
+		margin: 0.15rem 0 0;
+		font-size: 0.95rem;
+		color: var(--gris-leger);
+	}
+
+	/* ── Cadre : dessin à gauche, curseurs à droite ───────────────────────────── */
+	.helice__cadre {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 24rem;
+		gap: 2rem;
+		align-items: center;
+	}
+	@media (max-width: 60rem) {
+		.helice__cadre {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	.helice__scene {
+		min-width: 0;
+	}
+	.helice__dessin {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 62vh;
+	}
+
+	/* ── Dessin ───────────────────────────────────────────────────────────────── */
+	.helice__sol {
+		stroke: var(--gris-moyen);
+		stroke-width: 3;
+	}
+	.helice__sol-nom {
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 26px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		fill: var(--gris-leger);
+	}
+	/* Les tours se superposent quand la boucle se referme : le trait, translucide, s'y
+	   assombrit de lui-même. */
+	.helice__trace :global(path) {
+		fill: none;
+		stroke: var(--bleu);
+		stroke-width: 9;
+		stroke-opacity: 0.35;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+	.helice__contact {
+		fill: var(--orange);
+	}
+	.helice__etapes text {
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 28px;
+		fill: var(--bleu-nuit);
+	}
+	.helice__point {
+		fill: var(--orange);
+		stroke: var(--blanc);
+		stroke-width: 3;
+	}
+	.helice__pertes :global(circle) {
+		fill: var(--orange);
+	}
+
+	/* ── Critères ─────────────────────────────────────────────────────────────── */
+	.helice__criteres {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1rem;
+	}
+	.critere {
+		border-left: 3px solid var(--gris-moyen);
+		padding-left: 0.9rem;
+		transition: border-color 0.25s;
+	}
+	.critere[data-tenu='non'] {
+		border-color: var(--orange);
+	}
+	.critere__tete {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.75rem;
+	}
+	.critere__tete label {
+		font-family: var(--titres);
+		font-weight: 600;
+		color: var(--bleu-nuit);
+		font-size: 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.critere__touche {
+		display: inline-grid;
+		place-items: center;
+		width: 1.3rem;
+		height: 1.3rem;
+		border: 1px solid var(--gris-moyen);
+		border-radius: 3px;
+		font-size: 0.7rem;
+		font-weight: 700;
+		color: var(--gris-leger);
+		padding-top: 0.1em;
+	}
+	.critere__etat {
+		font-family: var(--titres);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--gris-leger);
+	}
+	.critere[data-tenu='non'] .critere__etat {
+		color: var(--bleu-nuit);
+		font-weight: 700;
+	}
+	.critere__ligne {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 0.35rem;
+	}
+	.critere__valeur {
+		font-family: var(--titres);
+		font-weight: 700;
+		color: var(--bleu-nuit);
+		font-size: 1.15rem;
+		white-space: nowrap;
+		display: flex;
+		align-items: baseline;
+		gap: 0.3rem;
+	}
+	.critere__unite {
+		font-weight: 500;
+		font-size: 0.72rem;
+		color: var(--gris-leger);
+	}
+	.critere__regle {
+		margin: 0.35rem 0 0;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.critere__seuil {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-left: 0.4rem;
+		color: var(--gris);
+		white-space: nowrap;
+	}
+	.critere__seuil input {
+		width: 5.5rem;
+	}
+
+	/* Curseurs : un trait fin, un bouton rond, dans la palette. */
+	input[type='range'] {
+		-webkit-appearance: none;
+		appearance: none;
+		width: 100%;
+		height: 1.5rem;
+		background: none;
+		margin: 0;
+		cursor: pointer;
+	}
+	input[type='range']::-webkit-slider-runnable-track {
+		height: 3px;
+		background: var(--gris-moyen);
+		border-radius: 2px;
+	}
+	input[type='range']::-moz-range-track {
+		height: 3px;
+		background: var(--gris-moyen);
+		border-radius: 2px;
+	}
+	input[type='range']::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		width: 1.1rem;
+		height: 1.1rem;
+		margin-top: calc(-0.55rem + 1.5px);
+		border-radius: 50%;
+		background: var(--bleu);
+		border: 2px solid var(--blanc);
+		box-shadow: 0 0 0 1px var(--bleu);
+	}
+	input[type='range']::-moz-range-thumb {
+		width: 1.1rem;
+		height: 1.1rem;
+		border-radius: 50%;
+		background: var(--bleu);
+		border: 2px solid var(--blanc);
+		box-shadow: 0 0 0 1px var(--bleu);
+	}
+	input[type='range']:focus-visible {
+		outline: 2px solid var(--orange);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	/* ── Verdict ──────────────────────────────────────────────────────────────── */
+	.helice__verdict {
+		margin-top: 1.25rem;
+		padding: 0.9rem 1rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--bleu);
+		transition: border-color 0.25s;
+	}
+	.helice__verdict[data-forme='helice'] {
+		border-color: var(--orange);
+	}
+	.helice__verdict-titre {
+		margin: 0;
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: 1.5rem;
+		color: var(--bleu-nuit);
+	}
+	.helice__verdict-texte {
+		margin: 0.25rem 0 0;
+		font-size: 0.95rem;
+	}
+	.helice__echecs {
+		margin: 0.5rem 0 0;
+		padding-left: 1.1rem;
+		font-size: 0.9rem;
+	}
+	.helice__echecs:empty {
+		display: none;
+	}
+	.helice__echecs :global(li) {
+		margin-top: 0.25rem;
+	}
+
+	/* ── Coin : aide, commandes ───────────────────────────────────────────────── */
+	.helice__coin {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 1.25rem;
+	}
+	.helice__aide {
+		position: relative;
+		display: inline-block;
+		cursor: help;
+		border-radius: 50%;
+	}
+	.helice__aide-rond {
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 50%;
+		border: 1px solid var(--gris-moyen);
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: 0.95rem;
+		line-height: 1;
+		padding-top: 0.15em;
+		color: var(--bleu-nuit);
+	}
+	.helice__aide:hover .helice__aide-rond,
+	.helice__aide:focus-visible .helice__aide-rond {
+		border-color: var(--bleu);
+		background: var(--gris-clair);
+	}
+	.helice__aide-texte {
+		position: absolute;
+		bottom: calc(100% + 0.6rem);
+		right: 0;
+		width: max-content;
+		max-width: min(24rem, 80vw);
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.6rem 0.85rem;
+		border-radius: var(--rayon);
+		font-family: var(--texte);
+		font-size: 0.85rem;
+		line-height: 1.4;
+		z-index: 10;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.15s,
+			visibility 0.15s;
+	}
+	.helice__aide:hover .helice__aide-texte,
+	.helice__aide:focus-visible .helice__aide-texte {
+		opacity: 1;
+		visibility: visible;
+	}
+	.helice__bouton {
+		border: 0;
+		background: none;
+		padding: 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 0.8rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--bleu);
+		border-bottom: 2px solid var(--orange);
+		cursor: pointer;
+	}
+
+	/* ── Plein écran ──────────────────────────────────────────────────────────── */
+	.helice:fullscreen {
+		border: 0;
+		border-radius: 0;
+		padding: 1.5rem 3rem 1.25rem;
+		grid-template-rows: auto minmax(0, 1fr);
+	}
+	.helice:fullscreen .helice__quoi {
+		font-size: 1.5rem;
+	}
+	.helice:fullscreen .helice__sous-titre {
+		font-size: 1.1rem;
+	}
+	.helice:fullscreen .helice__cadre {
+		grid-template-columns: minmax(0, 1fr) 30rem;
+		gap: 3rem;
+		min-height: 0;
+	}
+	.helice:fullscreen .helice__dessin {
+		max-height: calc(100vh - 9rem);
+	}
+	.helice:fullscreen .critere__tete label {
+		font-size: 1.2rem;
+	}
+	.helice:fullscreen .critere__valeur {
+		font-size: 1.5rem;
+	}
+	.helice:fullscreen .critere__regle {
+		font-size: 1rem;
+	}
+	.helice:fullscreen .helice__verdict-titre {
+		font-size: 2rem;
+	}
+	.helice:fullscreen .helice__verdict-texte,
+	.helice:fullscreen .helice__echecs {
+		font-size: 1.1rem;
+	}
+	.helice:fullscreen .helice__coin {
+		position: absolute;
+		right: 3rem;
+		bottom: 1.25rem;
+	}
+</style>
