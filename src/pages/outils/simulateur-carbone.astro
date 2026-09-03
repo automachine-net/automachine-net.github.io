@@ -1,0 +1,160 @@
+---
+// Module « Simulateur d'empreinte carbone » — version 1 : méthode seulement.
+//
+// La page est volontairement non indexée tant que les facteurs d'émission et les ratios de
+// calage sur machines livrées ne sont pas réunis. Publier un chiffre non calé engagerait
+// l'entreprise.
+//
+// Aucun qualificatif environnemental n'est employé ici (« bas carbone », « vert »,
+// « neutre »…) : la directive (UE) 2024/825 s'applique depuis le 27 septembre 2026.
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+	titre="Simulateur d’empreinte carbone"
+	description="Méthode de calcul d’un ordre de grandeur des émissions d’une machine spéciale, sur son cycle de vie."
+	noindex={true}
+>
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur entete">
+			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> Outils</p>
+			<p class="surtitre">Outil en préparation</p>
+			<h1>Quelle sera l’empreinte carbone de votre machine ?</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[à relire]</span> Cet outil donnera un ordre de grandeur des
+				émissions d’une machine spéciale sur son cycle de vie. Il n’est pas encore en service :
+				la méthode est arrêtée, les données de référence ne le sont pas. Elle est décrite
+				ci-dessous pour que vous puissiez la discuter avant qu’il ne soit publié.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--clair">
+		<div class="bloc__interieur methode">
+			<h2>Ce que l’outil demandera</h2>
+			<ul>
+				<li>la masse totale de la machine ;</li>
+				<li>
+					sa répartition par famille de matériaux : acier et inox, aluminium, composants
+					électriques, plastiques ;
+				</li>
+				<li>la puissance installée ;</li>
+				<li>le nombre d’heures de fonctionnement par an ;</li>
+				<li>la durée de vie attendue.</li>
+			</ul>
+			<p>
+				Des entrées volontairement grossières. Demander davantage donnerait l’illusion d’une
+				précision que la méthode n’a pas.
+			</p>
+
+			<h2>Ce qu’il rendra</h2>
+			<ul>
+				<li>
+					<strong>Une fourchette, jamais un chiffre unique.</strong> Un résultat unique serait
+					faux, et le laisserait croire exact.
+				</li>
+				<li>
+					Une décomposition en quatre postes : fabrication, transport, usage, fin de vie.
+				</li>
+				<li>La liste des hypothèses retenues, affichée en clair avec le résultat.</li>
+			</ul>
+			<p>Usage en France uniquement : le calcul s’appuie sur le mix électrique français.</p>
+
+			<h2>D’où viendront les facteurs d’émission</h2>
+			<ul>
+				<li>la Base Empreinte de l’ADEME, pour les matériaux et l’électricité ;</li>
+				<li>les déclarations PEP ecopassport, pour les composants électriques.</li>
+			</ul>
+			<p>
+				Ces facteurs vivront dans un fichier séparé, sourcé ligne par ligne, consultable et
+				modifiable sans toucher au calcul.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur methode">
+			<h2>Ce qui manque avant la mise en ligne</h2>
+			<ol>
+				<li>
+					<span class="a-rediger">[À FOURNIR PAR AUTOMACHINE]</span> les ratios de calage sur des
+					machines réellement livrées, sans lesquels la fourchette n’est pas vérifiable.
+				</li>
+				<li>
+					<span class="a-rediger">[À CONSTITUER]</span> le fichier de facteurs d’émission, chaque
+					ligne accompagnée de sa source et de sa date.
+				</li>
+				<li><span class="a-rediger">[À VALIDER]</span> les bornes de la fourchette et leur justification.</li>
+			</ol>
+			<p class="avertissement">
+				Tant que ces trois points ne sont pas réglés, cette page reste à l’écart des moteurs de
+				recherche et aucun résultat n’est calculé.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--sombre">
+		<div class="bloc__interieur appel">
+			<h2>Une question sur la méthode ?</h2>
+			<p>
+				<span class="a-rediger">[à relire]</span> Elle est faite pour être discutée. Dites-nous ce
+				qui vous paraît juste ou faux.
+			</p>
+			<p><a class="bouton bouton--clair" href="/contact">Nous écrire</a></p>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.entete {
+		max-width: 46rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+	}
+	.methode {
+		max-width: 46rem;
+	}
+	.methode h2 {
+		font-size: clamp(1.3rem, 3vw, 1.7rem);
+		margin-top: 2.5rem;
+	}
+	.methode h2:first-child {
+		margin-top: 0;
+	}
+	.methode ul,
+	.methode ol {
+		padding-left: 1.3rem;
+	}
+	.methode li {
+		margin-bottom: 0.5rem;
+	}
+	.avertissement {
+		margin-top: 1.5rem;
+		padding: 1rem 1.25rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+	}
+	.appel {
+		max-width: 42rem;
+		text-align: center;
+	}
+	.appel p {
+		margin-left: auto;
+		margin-right: auto;
+	}
+</style>

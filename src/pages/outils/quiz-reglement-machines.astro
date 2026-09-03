@@ -1,0 +1,80 @@
+---
+// Module « Quiz règlement machines », parcours professionnel.
+// Les questions vivent dans content/quiz/reglement-machines.json, éditable dans le CMS.
+import Base from '../../layouts/Base.astro';
+import CompteARebours from '../../components/modules/CompteARebours.astro';
+import QuizComplet from '../../components/modules/QuizComplet.astro';
+---
+
+<Base
+	titre="Quiz règlement machines"
+	description="Le règlement (UE) 2023/1230 remplace la directive 2006/42/CE le 20 janvier 2027. Testez vos réflexes, thème par thème, avec l'explication et la référence d'article à chaque réponse."
+>
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur entete">
+			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> Outils</p>
+			<p class="surtitre">Outil</p>
+			<h1>Le règlement machines change le 20 janvier 2027</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[à relire]</span> Le règlement (UE) 2023/1230 remplace la directive
+				2006/42/CE. Il change ce qui doit figurer dans votre dossier technique, qui porte la
+				responsabilité, et comment se déroule l’évaluation de conformité. Choisissez un thème,
+				répondez, et lisez l’explication : chaque réponse renvoie à l’article correspondant.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur">
+			<CompteARebours />
+		</div>
+	</section>
+
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur">
+			<QuizComplet />
+		</div>
+	</section>
+
+	<section class="bloc bloc--sombre">
+		<div class="bloc__interieur appel">
+			<h2>Une machine à concevoir dans ce cadre ?</h2>
+			<p>
+				<span class="a-rediger">[à relire]</span> Nous concevons et fabriquons des machines
+				spéciales, dossier de conformité compris. Décrivez-nous votre besoin.
+			</p>
+			<p><a class="bouton bouton--clair" href="/contact">Nous contacter</a></p>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.entete {
+		max-width: 46rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+	}
+	.appel {
+		max-width: 42rem;
+		text-align: center;
+	}
+	.appel p {
+		margin-left: auto;
+		margin-right: auto;
+	}
+</style>

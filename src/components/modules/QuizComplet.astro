@@ -1,0 +1,304 @@
+---
+// Quiz complet sur le règlement machines, rangé par thème.
+//
+// Aucun compteur global n'est affiché : annoncer « 64 questions » décourage avant même
+// d'avoir commencé. Le visiteur choisit un thème et avance à son rythme ; son score
+// n'apparaît qu'au fur et à mesure de ses réponses.
+//
+// Sans JavaScript, tout reste utilisable : les questions et leurs réponses possibles sont
+// dans la page, et l'explication se déplie à la demande grâce à la balise <details>.
+import quiz from '../../../content/quiz/reglement-machines.json';
+import { typo } from '../../scripts/typographie';
+
+const lettres = ['a', 'b', 'c', 'd'] as const;
+const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
+
+/** Identifiant utilisable dans une adresse, pour les liens vers un thème. */
+const identifiant = (theme: string) =>
+	theme
+		.normalize('NFD')
+		.replace(/[̀-ͯ]/g, '')
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-|-$/g, '');
+
+// Les thèmes sont pris dans l'ordre d'apparition des questions.
+const themes: { nom: string; id: string; questions: typeof quiz.questions }[] = [];
+for (const question of quiz.questions) {
+	let theme = themes.find((t) => t.nom === question.theme);
+	if (!theme) {
+		theme = { nom: question.theme, id: identifiant(question.theme), questions: [] };
+		themes.push(theme);
+	}
+	theme.questions.push(question);
+}
+---
+
+<nav class="themes" aria-label="Thèmes du quiz">
+	<p class="themes__titre">Thèmes</p>
+	<ol>
+		{
+			themes.map((t) => (
+				<li>
+					<a href={`#${t.id}`}>{typo(t.nom)}</a>
+				</li>
+			))
+		}
+	</ol>
+</nav>
+
+<div class="quiz" data-quiz>
+	{
+		themes.map((theme) => (
+			<section class="theme" id={theme.id} data-theme>
+				<header class="theme__tete">
+					<h2>{typo(theme.nom)}</h2>
+					<p class="theme__score" data-score hidden />
+				</header>
+
+				<ol class="questions">
+					{theme.questions.map((q) => (
+						<li class="question" data-bonne={q.bonne_reponse}>
+							<p class="question__texte">{typo(q.question)}</p>
+
+							<div class="question__options" role="group" aria-label="Réponses possibles">
+								{lettres.map((l) => (
+									<button type="button" class="option" data-lettre={l}>
+										<span class="option__lettre">{l.toUpperCase()}</span>
+										<span>{typo(q.options[l])}</span>
+									</button>
+								))}
+							</div>
+
+							{/* Repli sans JavaScript : l'explication se déplie à la demande.
+							    Avec JavaScript, elle s'ouvre toute seule dès qu'on répond. */}
+							<details class="question__reponse" data-reponse>
+								<summary>Voir la réponse</summary>
+								<p>
+									<strong data-verdict />
+									{typo(q.explication)}
+									<span class="reference">Règlement (UE) 2023/1230, {article(q.reference)}.</span>
+								</p>
+							</details>
+						</li>
+					))}
+				</ol>
+			</section>
+		))
+	}
+</div>
+
+<p class="mention">{quiz.mention}</p>
+
+<script>
+	const quiz = document.querySelector<HTMLElement>('[data-quiz]');
+	if (quiz) {
+		// Avec JavaScript, l'explication n'est plus dépliable à la main : elle apparaît quand
+		// on répond. Le résumé « Voir la réponse » n'aurait plus de sens.
+		quiz.classList.add('quiz--interactif');
+
+		quiz.querySelectorAll<HTMLElement>('[data-theme]').forEach((theme) => {
+			const affichageScore = theme.querySelector<HTMLElement>('[data-score]')!;
+			let justes = 0;
+			let repondues = 0;
+
+			theme.querySelectorAll<HTMLElement>('.question').forEach((question) => {
+				const bonne = question.dataset.bonne;
+				const options = question.querySelectorAll<HTMLButtonElement>('.option');
+				const reponse = question.querySelector<HTMLDetailsElement>('[data-reponse]')!;
+				const verdict = reponse.querySelector<HTMLElement>('[data-verdict]')!;
+
+				options.forEach((choix) =>
+					choix.addEventListener('click', () => {
+						if (question.classList.contains('repondue')) return;
+						question.classList.add('repondue');
+
+						const juste = choix.dataset.lettre === bonne;
+						options.forEach((autre) => {
+							autre.disabled = true;
+							if (autre.dataset.lettre === bonne) autre.classList.add('option--bonne');
+							else if (autre === choix) autre.classList.add('option--fausse');
+						});
+
+						verdict.textContent = juste
+							? 'Exact. '
+							: `Non, la bonne réponse est ${bonne!.toUpperCase()}. `;
+						reponse.open = true;
+
+						repondues++;
+						if (juste) justes++;
+						affichageScore.textContent = `${justes} sur ${repondues}`;
+						affichageScore.hidden = false;
+					})
+				);
+			});
+		});
+	}
+</script>
+
+<style>
+	/* Sommaire des thèmes */
+	.themes {
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 1.25rem 1.5rem;
+		margin-bottom: clamp(2rem, 5vw, 3rem);
+	}
+	.themes__titre {
+		font-family: var(--titres);
+		text-transform: uppercase;
+		letter-spacing: 0.09em;
+		font-size: 0.78rem;
+		color: var(--gris-leger);
+		font-weight: 600;
+		margin: 0 0 0.75rem;
+	}
+	.themes ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 0.4rem 1.5rem;
+	}
+	.themes a {
+		font-weight: 500;
+		text-decoration: none;
+	}
+	.themes a:hover {
+		text-decoration: underline;
+	}
+
+	/* Thèmes et questions */
+	.theme {
+		padding-top: clamp(2rem, 4vw, 3rem);
+		scroll-margin-top: 6rem;
+	}
+	.theme__tete {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+		border-bottom: 2px solid var(--bleu-nuit);
+		padding-bottom: 0.6rem;
+		margin-bottom: 2rem;
+	}
+	.theme__tete h2 {
+		font-size: clamp(1.4rem, 3vw, 1.9rem);
+		margin: 0;
+	}
+	.theme__score {
+		margin: 0;
+		font-family: var(--titres);
+		font-weight: 700;
+		color: var(--bleu);
+		white-space: nowrap;
+	}
+
+	.questions {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 2.5rem;
+	}
+	.question__texte {
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: var(--bleu-nuit);
+		max-width: 70ch;
+	}
+	.question__options {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.6rem;
+	}
+	@media (min-width: 680px) {
+		.question__options {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	.option {
+		display: grid;
+		grid-template-columns: 1.75rem minmax(0, 1fr);
+		gap: 0.6rem;
+		align-items: start;
+		text-align: left;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.7rem 0.9rem;
+		cursor: pointer;
+		color: var(--gris);
+		line-height: 1.4;
+		transition:
+			border-color 0.15s,
+			background 0.15s;
+	}
+	.option:hover:not(:disabled) {
+		border-color: var(--bleu);
+	}
+	.option:disabled {
+		cursor: default;
+	}
+	.option__lettre {
+		font-family: var(--titres);
+		font-weight: 700;
+		color: var(--bleu);
+	}
+	.option--bonne {
+		background: var(--bleu);
+		border-color: var(--bleu);
+		color: var(--blanc);
+	}
+	.option--bonne .option__lettre {
+		color: var(--blanc);
+	}
+	.option--fausse {
+		background: var(--orange);
+		border-color: var(--orange);
+		color: var(--bleu-nuit);
+	}
+	.option--fausse .option__lettre {
+		color: var(--bleu-nuit);
+	}
+
+	.question__reponse {
+		margin-top: 0.9rem;
+	}
+	.question__reponse summary {
+		cursor: pointer;
+		font-size: 0.9rem;
+		color: var(--bleu);
+		font-weight: 500;
+	}
+	/* Avec JavaScript, l'explication s'ouvre d'elle-même : le bouton de dépliage disparaît. */
+	.quiz--interactif .question__reponse summary {
+		display: none;
+	}
+	.question__reponse p {
+		margin: 0.6rem 0 0;
+		padding: 0.9rem 1rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--bleu);
+		max-width: 75ch;
+	}
+	.quiz--interactif .question__reponse p {
+		margin-top: 0;
+	}
+	.reference {
+		display: block;
+		margin-top: 0.4rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+
+	.mention {
+		margin: 3rem 0 0;
+		padding-top: 1rem;
+		border-top: 1px solid var(--gris-moyen);
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+</style>
