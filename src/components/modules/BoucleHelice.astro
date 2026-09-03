@@ -30,10 +30,16 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 
 	<div class="helice__cadre">
 		<div class="helice__scene">
-			<svg class="helice__dessin" viewBox="0 -160 1200 980" aria-hidden="true" data-forme="boucle">
-				<!-- Le verdict, en grand, dans l'espace au-dessus du cycle. -->
-				<text class="helice__forme" data-forme-nom x="600" y="-70" text-anchor="middle">Boucle</text>
-				<rect class="helice__forme-barre" x="570" y="-50" width="60" height="6" rx="3" />
+			<svg class="helice__dessin" viewBox="0 -340 1200 1160" data-forme="boucle" role="img" aria-labelledby="helice-verdict-titre helice-verdict-texte">
+				<!-- Le verdict, au-dessus du cycle : le mot en grand, la phrase, puis les critères
+				     fautifs. En HTML dans le dessin, pour que le texte passe à la ligne. -->
+				<foreignObject class="helice__verdict-zone" x="100" y="-340" width="1000" height="300">
+					<div xmlns="http://www.w3.org/1999/xhtml" class="helice__verdict" data-verdict data-forme="boucle">
+						<p class="helice__verdict-titre" id="helice-verdict-titre" data-verdict-titre>Boucle</p>
+						<p class="helice__verdict-texte" id="helice-verdict-texte" data-verdict-texte>{d.verdicts.boucle}</p>
+						<ul class="helice__echecs" data-echecs />
+					</div>
+				</foreignObject>
 
 				<!-- Le sol : ce vers quoi descend l'hélice. -->
 				<line class="helice__sol" x1="120" y1="740" x2="1080" y2="740" />
@@ -115,12 +121,6 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 					))
 				}
 			</ol>
-
-			<div class="helice__verdict" data-verdict data-forme="boucle">
-				<p class="helice__verdict-titre" data-verdict-titre>Boucle</p>
-				<p class="helice__verdict-texte" data-verdict-texte>{d.verdicts.boucle}</p>
-				<ul class="helice__echecs" data-echecs />
-			</div>
 		</div>
 	</div>
 
@@ -269,7 +269,6 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 			verdict.dataset.forme = boucle ? 'boucle' : 'helice';
 			verdictTitre.textContent = boucle ? 'Boucle' : 'Hélice';
 			svg.dataset.forme = boucle ? 'boucle' : 'helice';
-			module.querySelector('[data-forme-nom]').textContent = boucle ? 'Boucle' : 'Hélice';
 			verdictTexte.textContent = boucle ? verdicts.boucle : verdicts.helice;
 			echecs.innerHTML = '';
 			rates.forEach((c) => {
@@ -505,18 +504,57 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Dessin ───────────────────────────────────────────────────────────────── */
-	.helice__forme {
+	/* Le verdict vit dans le dessin : ses tailles sont en unités du dessin, et grandissent
+	   avec lui. */
+	.helice__verdict {
+		text-align: center;
+		color: var(--gris);
+		font-family: var(--texte);
+	}
+	.helice__verdict-titre {
+		margin: 0;
 		font-family: var(--titres);
 		font-weight: 700;
 		font-size: 76px;
-		fill: var(--bleu-nuit);
+		line-height: 1;
+		color: var(--bleu-nuit);
 	}
-	.helice__forme-barre {
-		fill: var(--bleu);
-		transition: fill 0.25s;
+	.helice__verdict-titre::after {
+		content: '';
+		display: block;
+		width: 60px;
+		height: 6px;
+		border-radius: 3px;
+		margin: 14px auto 16px;
+		background: var(--bleu);
+		transition: background 0.25s;
 	}
-	.helice__dessin[data-forme='helice'] .helice__forme-barre {
-		fill: var(--orange);
+	.helice__dessin[data-forme='helice'] .helice__verdict-titre::after {
+		background: var(--orange);
+	}
+	.helice__verdict-texte {
+		margin: 0;
+		font-size: 28px;
+		line-height: 1.35;
+	}
+	/* Le texte peut déborder de sa zone si les critères fautifs s'accumulent : mieux vaut
+	   un léger empiètement qu'une ligne coupée. */
+	.helice__verdict-zone {
+		overflow: visible;
+	}
+	.helice__echecs {
+		list-style: none;
+		margin: 10px 0 0;
+		padding: 0;
+		font-size: 23px;
+		line-height: 1.3;
+		color: var(--bleu-nuit);
+	}
+	.helice__echecs:empty {
+		display: none;
+	}
+	.helice__echecs :global(li) {
+		margin-top: 6px;
 	}
 	.helice__sol {
 		stroke: var(--gris-moyen);
@@ -701,40 +739,6 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		border-radius: 2px;
 	}
 
-	/* ── Verdict ──────────────────────────────────────────────────────────────── */
-	.helice__verdict {
-		margin-top: 1.25rem;
-		padding: 0.9rem 1rem;
-		background: var(--gris-clair);
-		border-left: 3px solid var(--bleu);
-		transition: border-color 0.25s;
-	}
-	.helice__verdict[data-forme='helice'] {
-		border-color: var(--orange);
-	}
-	.helice__verdict-titre {
-		margin: 0;
-		font-family: var(--titres);
-		font-weight: 700;
-		font-size: 1.5rem;
-		color: var(--bleu-nuit);
-	}
-	.helice__verdict-texte {
-		margin: 0.25rem 0 0;
-		font-size: 0.95rem;
-	}
-	.helice__echecs {
-		margin: 0.5rem 0 0;
-		padding-left: 1.1rem;
-		font-size: 0.9rem;
-	}
-	.helice__echecs:empty {
-		display: none;
-	}
-	.helice__echecs :global(li) {
-		margin-top: 0.25rem;
-	}
-
 	/* ── Coin : aide, commandes ───────────────────────────────────────────────── */
 	.helice__coin {
 		display: flex;
@@ -874,22 +878,11 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		font-size: 0.9rem;
 		line-height: 1.4;
 	}
-	.helice:fullscreen .helice__verdict {
-		margin-top: 0.75rem;
-		padding: 0.7rem 1rem;
-	}
 	.helice:fullscreen .critere__tete label {
 		font-size: 1.05rem;
 	}
 	.helice:fullscreen .critere__valeur {
 		font-size: 1.25rem;
-	}
-	.helice:fullscreen .helice__verdict-titre {
-		font-size: 1.5rem;
-	}
-	.helice:fullscreen .helice__verdict-texte,
-	.helice:fullscreen .helice__echecs {
-		font-size: 1rem;
 	}
 	/* Sous le dessin, à gauche : la seule zone libre quel que soit l'état des curseurs. */
 	.helice:fullscreen .helice__coin {
