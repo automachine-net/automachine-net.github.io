@@ -9,6 +9,7 @@
 // Sans détail, la fourchette est volontairement large — c'est ce qui rend visible le gain
 // qu'apporte une saisie plus fine.
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
+import { typo } from '../../scripts/typographie';
 
 /** Valeurs d'exemple, affichées en filigrane et reprises si le champ reste vide. */
 const exemples = {
@@ -31,7 +32,7 @@ const aides: Record<string, string> = {
 		'La catégorie la plus incertaine. À masse égale, l’électronique de commande émet 12 fois un moteur. Séparer les moteurs de l’armoire resserre nettement la fourchette.',
 	masse: 'Sert à convertir les pourcentages en kilogrammes. Ne change rien à la répartition.',
 	puissance:
-		'Détermine la consommation, donc tout le poste « usage ». Si la machine est alimentée en air comprimé, ajoutez ici la puissance électrique du compresseur qui la dessert : l’air comprimé n’est pas une énergie, c’est de l’électricité transformée.',
+		'Détermine la consommation, donc tout le poste « usage ». Si la machine est alimentée en air comprimé, ajoutez ici la puissance électrique du compresseur qui la dessert.',
 	charge:
 		'Une machine tourne rarement à pleine puissance. Ce taux multiplie directement la consommation : le passer de 50 à 100 % double le poste « usage ».',
 	heures:
@@ -71,22 +72,29 @@ const parametres = [
 			<div class="champ champ--masse" data-champ-masse hidden>
 				<div class="champ__tete">
 					<label for="masse">Masse totale</label>
-					<span class="aide">
+					<span class="aide" data-aide>
 						<button type="button" class="aide-bouton" aria-describedby="aide-masse">
 							<span aria-hidden="true">?</span>
 							<span class="sr-only">Que change ce paramètre ?</span>
 						</button>
-						<span class="bulle" role="tooltip" id="aide-masse">{aides.masse}</span>
+						<span class="bulle" role="tooltip" id="aide-masse">{typo(aides.masse)}</span>
 					</span>
 				</div>
 				<div class="saisie">
-					<input type="number" id="masse" data-valeur="masse" placeholder={String(exemples.masse)} min="1" step="10" />
+					<input
+						type="number"
+						id="masse"
+						data-valeur="masse"
+						placeholder={String(exemples.masse)}
+						min="1"
+						step="10"
+					/>
 					<span class="unite">kg</span>
 				</div>
 			</div>
 
 			<div class="champ champ--ajustement" data-champ-ajustement hidden>
-				<label for="ajustee">Variable d’ajustement</label>
+				<label for="ajustee">Catégorie qui complète à 100 %</label>
 				<select id="ajustee" data-ajustee>
 					{
 						facteurs.categories.map((c) => (
@@ -97,7 +105,9 @@ const parametres = [
 					}
 					<option value="">Aucune, je saisis les trois</option>
 				</select>
-				<p class="aide-inline">Cette catégorie absorbe le reste, pour atteindre 100 %.</p>
+				<p class="aide-inline">
+					Vous saisissez les deux autres, celle-ci est calculée pour que le total fasse 100 %.
+				</p>
 			</div>
 		</div>
 
@@ -106,17 +116,19 @@ const parametres = [
 				facteurs.categories.map((c) => (
 					<div class="categorie" data-categorie={c.cle}>
 						<div class="categorie__tete">
-							<label for={`cat-${c.cle}`}>{c.libelle}</label>
-							<span class="aide">
-								<button type="button" class="aide-bouton" aria-describedby={`aide-${c.cle}`}>
-									<span aria-hidden="true">?</span>
-									<span class="sr-only">Que change ce paramètre ?</span>
-								</button>
-								<span class="bulle" role="tooltip" id={`aide-${c.cle}`}>
-									{aides[c.cle]}
+							<span class="categorie__nom">
+								<label for={`cat-${c.cle}`}>{c.libelle}</label>
+								<span class="aide" data-aide>
+									<button type="button" class="aide-bouton" aria-describedby={`aide-${c.cle}`}>
+										<span aria-hidden="true">?</span>
+										<span class="sr-only">Que change ce paramètre ?</span>
+									</button>
+									<span class="bulle" role="tooltip" id={`aide-${c.cle}`}>
+										{typo(aides[c.cle])}
+									</span>
 								</span>
 							</span>
-							<div class="saisie">
+							<div class="saisie saisie--categorie">
 								<input
 									type="number"
 									id={`cat-${c.cle}`}
@@ -128,11 +140,11 @@ const parametres = [
 								<span class="unite" data-unite-libelle>kg</span>
 							</div>
 							<button type="button" class="detailler" data-detailler={c.cle} aria-expanded="false">
-								Détailler
+								Afficher le détail
 							</button>
 						</div>
 
-						<p class="exemples">{c.aide}</p>
+						<p class="exemples">{typo(c.aide)}</p>
 
 						<div class="detail" data-detail={c.cle} hidden>
 							<p class="detail__consigne">
@@ -141,19 +153,25 @@ const parametres = [
 							<div class="detail__lignes">
 								{c.sous.map((s) => (
 									<div class="champ champ--sous">
-										<label for={`sous-${c.cle}-${s.cle}`}>
-											{s.libelle}
-											{s.approche && (
-												<span class="aide aide--marque">
-													<button type="button" class="marque" aria-describedby={`note-${s.cle}`}>
-														approché
+										<span class="champ--sous__tete">
+											<label for={`sous-${c.cle}-${s.cle}`}>{s.libelle}</label>
+											{s.exemples && (
+												<span class="aide" data-aide>
+													<button
+														type="button"
+														class="aide-bouton aide-bouton--petit"
+														aria-describedby={`ex-${c.cle}-${s.cle}`}
+													>
+														<span aria-hidden="true">?</span>
+														<span class="sr-only">Exemples</span>
 													</button>
-													<span class="bulle" role="tooltip" id={`note-${s.cle}`}>
-														{s.note_courte}
+													<span class="bulle" role="tooltip" id={`ex-${c.cle}-${s.cle}`}>
+														{typo(s.exemples)}
+														{s.approche && <span class="bulle__note">{typo(s.note_courte)}</span>}
 													</span>
 												</span>
 											)}
-										</label>
+										</span>
 										<div class="saisie">
 											<input
 												type="number"
@@ -175,7 +193,7 @@ const parametres = [
 			}
 		</div>
 
-		<p class="bilan-masse" data-bilan-masse aria-live="polite"></p>
+		<p class="bilan" data-bilan aria-live="polite"></p>
 	</fieldset>
 
 	<fieldset class="section">
@@ -186,13 +204,13 @@ const parametres = [
 					<div class="champ">
 						<div class="champ__tete">
 							<label for={champ.cle}>{champ.libelle}</label>
-							<span class="aide">
+							<span class="aide" data-aide>
 								<button type="button" class="aide-bouton" aria-describedby={`aide-${champ.cle}`}>
 									<span aria-hidden="true">?</span>
 									<span class="sr-only">Que change ce paramètre ?</span>
 								</button>
 								<span class="bulle" role="tooltip" id={`aide-${champ.cle}`}>
-									{aides[champ.cle]}
+									{typo(aides[champ.cle])}
 								</span>
 							</span>
 						</div>
@@ -232,7 +250,7 @@ const parametres = [
 	{/* Reprise du détail sous forme de texte, pour les lecteurs d'écran. */}
 	<ul class="sr-only" data-detail-postes></ul>
 
-	<p class="note-fin-de-vie">{facteurs.fin_de_vie.remarque}</p>
+	<p class="note-fin-de-vie">{typo(facteurs.fin_de_vie.remarque)}</p>
 
 	<details class="hypotheses">
 		<summary>Hypothèses retenues pour ce calcul</summary>
@@ -242,6 +260,7 @@ const parametres = [
 
 <script>
 	import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
+	import { typo } from '../../scripts/typographie';
 
 	const form = document.querySelector<HTMLFormElement>('[data-simulateur]');
 	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
@@ -261,6 +280,25 @@ const parametres = [
 		const lire = (input: HTMLInputElement) =>
 			input.value.trim() === '' ? Number(input.placeholder) || 0 : Number(input.value) || 0;
 
+		// ---------------------------------------------------------- Infobulles
+		// Une bulle centrée sous son bouton sort de l'écran dès que le bouton est près d'un
+		// bord. On la recale donc à l'ouverture, en gardant une marge de 8 px avec les bords.
+		document.querySelectorAll<HTMLElement>('[data-aide]').forEach((aide) => {
+			const bulle = aide.querySelector<HTMLElement>('.bulle');
+			if (!bulle) return;
+			const recaler = () => {
+				bulle.style.setProperty('--decalage', '0px');
+				const r = bulle.getBoundingClientRect();
+				const marge = 8;
+				let decalage = 0;
+				if (r.left < marge) decalage = marge - r.left;
+				else if (r.right > innerWidth - marge) decalage = innerWidth - marge - r.right;
+				bulle.style.setProperty('--decalage', `${Math.round(decalage)}px`);
+			};
+			aide.addEventListener('mouseenter', recaler);
+			aide.addEventListener('focusin', recaler);
+		});
+
 		// ---------------------------------------------------------- Détail des catégories
 		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
 			const panneau = form.querySelector<HTMLElement>(`[data-detail="${bouton.dataset.detailler}"]`)!;
@@ -268,7 +306,7 @@ const parametres = [
 				const ouvert = panneau.hidden;
 				panneau.hidden = !ouvert;
 				bouton.setAttribute('aria-expanded', String(ouvert));
-				bouton.textContent = ouvert ? 'Masquer le détail' : 'Détailler';
+				bouton.textContent = ouvert ? 'Masquer le détail' : 'Afficher le détail';
 				recalculer();
 			});
 		});
@@ -299,7 +337,7 @@ const parametres = [
 		selectAjustee.addEventListener('change', recalculer);
 
 		// ---------------------------------------------------------- Calcul
-		const bilanMasse = form.querySelector<HTMLElement>('[data-bilan-masse]')!;
+		const bilan = form.querySelector<HTMLElement>('[data-bilan]')!;
 		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
 		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
 		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
@@ -316,7 +354,6 @@ const parametres = [
 			const masseSaisie = lire(champ('[data-valeur="masse"]'));
 			const ajustee = unite === 'pct' ? selectAjustee.value : '';
 
-			// Détails ouverts et renseignés
 			const details: Record<string, Record<string, number>> = {};
 			for (const c of CATEGORIES) {
 				const panneau = form.querySelector<HTMLElement>(`[data-detail="${c}"]`)!;
@@ -329,7 +366,6 @@ const parametres = [
 				if (Object.keys(lignes).length) details[c] = lignes;
 			}
 
-			// Valeur de chaque catégorie
 			const brutes: Record<string, number> = {};
 			for (const c of CATEGORIES) {
 				const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
@@ -347,7 +383,6 @@ const parametres = [
 				}
 			}
 
-			// La variable d'ajustement absorbe le reste, si elle n'est pas détaillée.
 			let ecart = 0;
 			if (unite === 'pct') {
 				if (ajustee && !details[ajustee]) {
@@ -360,7 +395,6 @@ const parametres = [
 				ecart = CATEGORIES.reduce((s, c) => s + (brutes[c] ?? 0), 0) - 100;
 			}
 
-			// Conversion en kilogrammes
 			const categories: Record<string, number> = {};
 			for (const c of CATEGORIES) {
 				categories[c] = unite === 'kg' ? (brutes[c] ?? 0) : ((brutes[c] ?? 0) / 100) * masseSaisie;
@@ -376,11 +410,15 @@ const parametres = [
 				distanceLivraison: lire(champ('[data-valeur="distance"]')),
 			});
 
-			const messages: string[] = [];
-			if (r.masseTotale > 0) messages.push(`Masse totale : ${Math.round(r.masseTotale).toLocaleString('fr-FR')} kg`);
-			if (unite === 'pct' && Math.abs(ecart) >= 1) messages.push(`Les parts font ${Math.round(100 + ecart)} %, il en faut 100`);
-			bilanMasse.textContent = messages.join(' · ');
-			bilanMasse.classList.toggle('bilan-masse--alerte', unite === 'pct' && Math.abs(ecart) >= 1);
+			// En kilogrammes, la masse totale est une information : elle est calculée.
+			// En pourcentage, elle a été saisie : la répéter n'apprendrait rien.
+			const tropOuPasAssez = unite === 'pct' && Math.abs(ecart) >= 1;
+			bilan.textContent = tropOuPasAssez
+				? typo(`Les parts saisies font ${Math.round(100 + ecart)} % au lieu de 100 %.`)
+				: unite === 'kg' && r.masseTotale > 0
+					? typo(`Masse totale : ${Math.round(r.masseTotale).toLocaleString('fr-FR')} kg`)
+					: '';
+			bilan.classList.toggle('bilan--alerte', tropOuPasAssez);
 
 			if (r.masseTotale <= 0) {
 				resultat.hidden = true;
@@ -393,13 +431,13 @@ const parametres = [
 			listeComparaisons.replaceChildren(
 				...r.comparaisons.map((c) => {
 					const li = document.createElement('li');
-					li.textContent =
-						'soit ' + c.gabarit.replace('{n}', `${arrondiParlant(c.bas)} à ${arrondiParlant(c.haut)}`);
+					li.textContent = typo(
+						'soit ' + c.gabarit.replace('{n}', `${arrondiParlant(c.bas)} à ${arrondiParlant(c.haut)}`)
+					);
 					return li;
 				})
 			);
 
-			// Barre des parts, calculée sur le milieu de chaque fourchette.
 			const chiffres = r.postes.filter((p) => p.bas !== null && p.haut !== null);
 			const milieu = (p: { bas: number | null; haut: number | null }) => (p.bas! + p.haut!) / 2;
 			const totalMilieu = chiffres.reduce((s, p) => s + milieu(p), 0);
@@ -414,13 +452,26 @@ const parametres = [
 						segment.className = 'barre__part';
 						segment.style.width = `${part}%`;
 						segment.style.background = couleurs[p.cle];
-						const texte = `${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${Math.round(part)} % du total`;
+						// Un poste minuscule garde une zone de survol utilisable, sans être
+						// dessiné plus large qu'il n'est.
+						if (part < 4) segment.classList.add('barre__part--menue');
+						const texte = typo(
+							`${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
+								part < 1 ? 'moins de 1' : Math.round(part)
+							} % du total`
+						);
 						segment.setAttribute('aria-label', texte);
 						const montrer = () => {
 							bulleBarre.textContent = texte;
 							bulleBarre.hidden = false;
-							const gauche = segment.offsetLeft + segment.offsetWidth / 2;
-							bulleBarre.style.left = `${gauche}px`;
+							bulleBarre.style.left = `${segment.offsetLeft + segment.offsetWidth / 2}px`;
+							bulleBarre.style.setProperty('--decalage', '0px');
+							const r2 = bulleBarre.getBoundingClientRect();
+							const marge = 8;
+							let d = 0;
+							if (r2.left < marge) d = marge - r2.left;
+							else if (r2.right > innerWidth - marge) d = innerWidth - marge - r2.right;
+							bulleBarre.style.setProperty('--decalage', `${Math.round(d)}px`);
 						};
 						segment.addEventListener('mouseenter', montrer);
 						segment.addEventListener('focus', montrer);
@@ -434,11 +485,12 @@ const parametres = [
 				...chiffres
 					.filter((p) => milieu(p) > 0)
 					.map((p) => {
+						const part = (milieu(p) / totalMilieu) * 100;
 						const li = document.createElement('li');
 						const pastille = document.createElement('span');
 						pastille.className = 'legende__pastille';
 						pastille.style.background = couleurs[p.cle];
-						li.append(pastille, `${p.libelle} ${Math.round((milieu(p) / totalMilieu) * 100)} %`);
+						li.append(pastille, typo(`${p.libelle} ${part < 1 ? 'moins de 1' : Math.round(part)} %`));
 						return li;
 					})
 			);
@@ -446,10 +498,11 @@ const parametres = [
 			detailPostes.replaceChildren(
 				...r.postes.map((p) => {
 					const li = document.createElement('li');
-					li.textContent =
+					li.textContent = typo(
 						p.bas === null
 							? `${p.libelle} : non chiffré.`
-							: `${p.libelle} : ${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}.`;
+							: `${p.libelle} : ${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}.`
+					);
 					return li;
 				})
 			);
@@ -536,7 +589,8 @@ const parametres = [
 		width: 11rem;
 	}
 	.champ--ajustement {
-		min-width: 15rem;
+		min-width: 17rem;
+		max-width: 24rem;
 	}
 	.aide-inline {
 		margin: 0.25rem 0 0;
@@ -587,8 +641,8 @@ const parametres = [
 		color: var(--gris-leger);
 		opacity: 0.75;
 	}
-	/* Les petites flèches des champs numériques n'apportent rien ici : on saisit des
-	   centaines de kilogrammes, pas des unités. */
+	/* Les petites flèches des champs numériques n'apportent rien : on saisit des centaines
+	   de kilogrammes, pas des unités. */
 	input[type='number'] {
 		appearance: textfield;
 		-moz-appearance: textfield;
@@ -604,7 +658,7 @@ const parametres = [
 		white-space: nowrap;
 	}
 
-	/* Aide au survol */
+	/* Infobulles */
 	.aide {
 		position: relative;
 		display: inline-flex;
@@ -623,6 +677,12 @@ const parametres = [
 		display: grid;
 		place-items: center;
 		padding: 0;
+		flex: 0 0 auto;
+	}
+	.aide-bouton--petit {
+		width: 1.05rem;
+		height: 1.05rem;
+		font-size: 0.68rem;
 	}
 	.aide-bouton:hover {
 		background: var(--bleu);
@@ -633,10 +693,11 @@ const parametres = [
 		position: absolute;
 		top: calc(100% + 0.5rem);
 		left: 50%;
-		transform: translateX(-50%);
-		z-index: 10;
+		/* --decalage est posé en JavaScript pour que la bulle reste dans la page. */
+		transform: translateX(calc(-50% + var(--decalage, 0px)));
+		z-index: 20;
 		width: max-content;
-		max-width: min(22rem, 70vw);
+		max-width: min(24rem, calc(100vw - 2rem));
 		background: var(--bleu-nuit);
 		color: var(--blanc);
 		padding: 0.65rem 0.85rem;
@@ -652,24 +713,17 @@ const parametres = [
 			visibility 0.15s;
 		pointer-events: none;
 	}
-	.bulle::before {
-		content: '';
-		position: absolute;
-		bottom: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-		border: 6px solid transparent;
-		border-bottom-color: var(--bleu-nuit);
+	.bulle__note {
+		display: block;
+		margin-top: 0.4rem;
+		padding-top: 0.4rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.25);
+		color: var(--bleu-clair);
 	}
 	.aide:hover .bulle,
 	.aide:focus-within .bulle {
 		opacity: 1;
 		visibility: visible;
-	}
-	.aide--marque .bulle {
-		font-weight: 400;
-		text-transform: none;
-		letter-spacing: normal;
 	}
 
 	/* Catégories */
@@ -681,28 +735,40 @@ const parametres = [
 		border-top: 1px solid var(--gris-moyen);
 		padding-top: 1.25rem;
 	}
+	/* Grille fixe : le bouton et le champ ne changent jamais de place quand on déplie. */
 	.categorie__tete {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 9rem 11.5rem;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	@media (max-width: 720px) {
+		.categorie__tete {
+			grid-template-columns: minmax(0, 1fr) 8rem;
+		}
+		.detailler {
+			grid-column: 1 / -1;
+			justify-self: start;
+		}
+	}
+	.categorie__nom {
 		display: flex;
 		align-items: center;
-		gap: 0.6rem;
-		flex-wrap: wrap;
+		gap: 0.4rem;
 	}
-	.categorie__tete label {
+	.categorie__nom label {
 		font-size: 1rem;
-	}
-	.categorie__tete .saisie {
-		width: 9rem;
-		margin-left: auto;
 	}
 	.detailler {
 		background: none;
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
-		padding: 0.45rem 0.8rem;
+		padding: 0.5rem 0.8rem;
 		font-size: 0.85rem;
 		color: var(--bleu);
 		cursor: pointer;
 		white-space: nowrap;
+		width: 100%;
 	}
 	.detailler:hover {
 		border-color: var(--bleu);
@@ -713,7 +779,7 @@ const parametres = [
 		color: var(--blanc);
 	}
 	.exemples {
-		margin: 0.4rem 0 0;
+		margin: 0.5rem 0 0;
 		font-size: 0.85rem;
 		color: var(--gris-leger);
 	}
@@ -725,48 +791,47 @@ const parametres = [
 		border-radius: var(--rayon);
 	}
 	.detail__consigne {
-		margin: 0 0 0.9rem;
+		margin: 0 0 1rem;
 		font-size: 0.85rem;
 		color: var(--gris-leger);
 	}
 	.detail__lignes {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-		gap: 0.9rem;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 1rem;
+		/* Les intitulés n'ont pas tous la même hauteur : les champs restent alignés en bas. */
+		align-items: end;
 	}
-	.champ--sous label {
-		font-size: 0.88rem;
-		font-weight: 400;
+	.champ--sous {
+		grid-template-rows: 1fr auto;
+	}
+	.champ--sous__tete {
 		display: flex;
 		align-items: center;
 		gap: 0.35rem;
 		flex-wrap: wrap;
 	}
-	.marque {
-		font-size: 0.66rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--gris-leger);
-		border: 1px solid var(--gris-moyen);
-		background: var(--blanc);
-		border-radius: 2px;
-		padding: 0.1rem 0.25rem;
-		cursor: help;
+	.champ--sous label {
+		font-size: 0.88rem;
+		font-weight: 400;
 	}
-	.bilan-masse {
-		margin: 1.25rem 0 0;
+
+	.bilan {
+		margin: 1.5rem 0 0;
 		padding-top: 1rem;
 		border-top: 1px solid var(--gris-moyen);
 		font-size: 0.9rem;
 		font-weight: 500;
 		color: var(--bleu-nuit);
 	}
-	.bilan-masse--alerte {
-		color: var(--bleu-nuit);
-		border-left: 3px solid var(--orange);
-		padding: 0.6rem 0 0.6rem 0.75rem;
+	.bilan:empty {
+		display: none;
+	}
+	.bilan--alerte {
 		border-top: 0;
+		border-left: 3px solid var(--orange);
 		background: var(--gris-clair);
+		padding: 0.7rem 0.9rem;
 	}
 
 	.grille {
@@ -812,47 +877,60 @@ const parametres = [
 		gap: 0.2rem;
 	}
 
-	/* Barre des parts */
+	/* Barre des parts : proportions réelles, sans bordure ni arrondi marqué. */
 	.barre-bloc {
 		position: relative;
 	}
 	.barre {
 		display: flex;
-		height: 1.75rem;
-		border-radius: var(--rayon);
-		overflow: hidden;
+		height: 1.25rem;
+		border-radius: 2px;
+		overflow: visible;
 		background: var(--gris-clair);
 	}
 	.barre__part {
+		position: relative;
 		display: block;
 		height: 100%;
 		border: 0;
 		padding: 0;
+		margin: 0;
 		cursor: pointer;
-		/* Un poste minuscule, comme le transport, doit rester survolable. */
-		min-width: 10px;
+		appearance: none;
+	}
+	.barre__part:first-child {
+		border-radius: 2px 0 0 2px;
+	}
+	.barre__part:last-child {
+		border-radius: 0 2px 2px 0;
+	}
+	/* Un poste minuscule reste survolable : sa zone de clic déborde, pas son dessin. */
+	.barre__part--menue::after {
+		content: '';
+		position: absolute;
+		inset: -0.5rem -0.6rem;
+		z-index: 2;
 	}
 	.barre__part:hover,
 	.barre__part:focus-visible {
-		filter: brightness(1.12);
+		filter: brightness(1.1);
 	}
 	.barre__bulle {
 		position: absolute;
 		top: calc(100% + 0.5rem);
-		transform: translateX(-50%);
-		z-index: 10;
+		transform: translateX(calc(-50% + var(--decalage, 0px)));
+		z-index: 20;
 		background: var(--bleu-nuit);
 		color: var(--blanc);
 		padding: 0.55rem 0.8rem;
 		border-radius: var(--rayon);
 		font-size: 0.85rem;
-		white-space: nowrap;
-		max-width: 90vw;
+		max-width: min(24rem, calc(100vw - 2rem));
 		pointer-events: none;
 	}
 	.legende {
 		list-style: none;
-		margin: 0.75rem 0 0;
+		margin: 0.85rem 0 0;
 		padding: 0;
 		display: flex;
 		flex-wrap: wrap;

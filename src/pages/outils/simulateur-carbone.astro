@@ -4,13 +4,14 @@
 // La page reste non indexée tant que les ratios de calage sur machines livrées ne sont pas
 // fournis : publier un chiffre non calé engagerait l'entreprise.
 //
+// Ce qui relève du suivi interne — approximations à lever, données manquantes, arbitrages
+// en attente — n'a pas sa place ici. C'est consigné dans CLAUDE.md.
+//
 // Aucun qualificatif environnemental n'est employé ici (« bas carbone », « vert »,
 // « neutre »…) : la directive (UE) 2024/825 s'applique depuis le 27 septembre 2026.
 import Base from '../../layouts/Base.astro';
 import SimulateurCarbone from '../../components/modules/SimulateurCarbone.astro';
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
-
-const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.approche);
 ---
 
 <Base
@@ -38,155 +39,129 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 
 	<section class="bloc bloc--clair">
 		<div class="bloc__interieur methode">
-			<h2>Comment il procède</h2>
-			<ul>
-				<li>
-					<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par son
-					facteur d’émission.
-				</li>
-				<li>
-					<strong>Transport</strong> : masse totale multipliée par la distance de livraison et par
-					le facteur du transport routier. Seule la livraison de la machine terminée est comptée.
-				</li>
-				<li>
-					<strong>Usage</strong> : puissance installée, taux de charge, heures par an et durée de
-					vie donnent une consommation, multipliée par le facteur du mix électrique français.
-					L’outil ne vaut donc que pour un usage en France continentale.
-				</li>
-				<li><strong>Fin de vie</strong> : non chiffrée, et donc absente du total.</li>
-			</ul>
-			<p>
-				Une catégorie renseignée sans détail est bornée par son matériau le moins émetteur et par
-				le plus émetteur. La fourchette est alors large, et se resserre dès qu’on détaille :
-				c’est voulu, l’imprécision de la saisie doit se voir dans le résultat.
-			</p>
-			<p>Le calcul se fait dans votre navigateur : rien de ce que vous saisissez ne nous parvient.</p>
+			<details class="methodologie">
+				<summary>Méthodologie et sources</summary>
 
-			<h2>Les facteurs d’émission employés</h2>
-			<p>
-				Tous proviennent de la <strong>Base Empreinte de l’ADEME</strong>, relevés le
-				{facteurs.date_releve.split('-').reverse().join('/')}. Chaque ligne porte son identifiant
-				d’élément, sa valeur et l’incertitude officielle publiée avec elle. Aucune valeur n’est
-				estimée.
-			</p>
-
-			<table class="facteurs">
-				<thead>
-					<tr>
-						<th scope="col">Matériau</th>
-						<th scope="col">Valeur</th>
-						<th scope="col">Incertitude</th>
-						<th scope="col">Élément ADEME</th>
-					</tr>
-				</thead>
-				<tbody>
-					{
-						facteurs.categories.map((c) => (
-							<>
-								<tr class="ligne-categorie">
-									<th scope="rowgroup" colspan="4">
-										{c.libelle}
-									</th>
-								</tr>
-								{c.sous.map((s) => (
-									<tr>
-										<th scope="row">
-											{s.libelle}
-											{s.approche && <span class="marque">approché</span>}
-										</th>
-										<td>{s.valeur.toLocaleString('fr-FR')} kgCO2e/tonne</td>
-										<td>{s.incertitude_pct} %</td>
-										<td>
-											n° {s.identifiant_ademe}
-											<span class="intitule">{s.intitule_ademe}</span>
-										</td>
-									</tr>
-								))}
-							</>
-						))
-					}
-					<tr class="ligne-categorie">
-						<th scope="rowgroup" colspan="4">Énergie, transport et repères de comparaison</th>
-					</tr>
-					<tr>
-						<th scope="row">Électricité</th>
-						<td>{facteurs.energie.valeur} {facteurs.energie.unite}</td>
-						<td>{facteurs.energie.incertitude_pct} %</td>
-						<td>
-							n° {facteurs.energie.identifiant_ademe}
-							<span class="intitule">{facteurs.energie.intitule_ademe}</span>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">Transport</th>
-						<td>{facteurs.transport.valeur} {facteurs.transport.unite}</td>
-						<td>{facteurs.transport.incertitude_pct} %</td>
-						<td>
-							n° {facteurs.transport.identifiant_ademe}
-							<span class="intitule">{facteurs.transport.intitule_ademe}</span>
-						</td>
-					</tr>
-					{
-						facteurs.comparaisons.map((c) => (
-							<tr>
-								<th scope="row">{c.libelle}</th>
-								<td>{c.valeur} {c.unite}</td>
-								<td>{c.incertitude_pct} %</td>
-								<td>
-									n° {c.identifiant_ademe}
-									<span class="intitule">{c.intitule_ademe}</span>
-								</td>
-							</tr>
-						))
-					}
-				</tbody>
-			</table>
-
-			<p class="avertissement">
-				<strong>Fin de vie : poste non chiffré.</strong> {facteurs.fin_de_vie.remarque}
-			</p>
-
-			<h2>Les approximations, à lever</h2>
-			<ul>
-				{
-					approches.map((s) => (
+				<div class="methodologie__corps">
+					<h2>Ce que fait le calcul</h2>
+					<ul>
 						<li>
-							<strong>{s.libelle}</strong> — {s.remarque}
+							<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par
+							son facteur d’émission.
 						</li>
-					))
-				}
-			</ul>
-			<p>
-				Les déclarations <strong>PEP ecopassport</strong> donneraient des facteurs propres aux
-				composants électriques réellement montés. Elles restent à dépouiller.
-			</p>
+						<li>
+							<strong>Transport</strong> : masse totale multipliée par la distance de livraison et
+							par le facteur du transport routier. Seule la livraison de la machine terminée est
+							comptée.
+						</li>
+						<li>
+							<strong>Usage</strong> : puissance installée, taux de charge, heures par an et durée
+							de vie donnent une consommation, multipliée par le facteur du mix électrique
+							français. L’outil ne vaut donc que pour un usage en France continentale.
+						</li>
+						<li><strong>Fin de vie</strong> : non chiffrée, et donc absente du total.</li>
+					</ul>
+					<p>
+						Une catégorie renseignée sans détail est bornée par son matériau le moins émetteur et
+						par le plus émetteur. La fourchette est alors large, et se resserre dès qu’on détaille.
+					</p>
+					<p>
+						Le calcul se fait dans votre navigateur : rien de ce que vous saisissez ne nous
+						parvient.
+					</p>
+
+					<h2>Les facteurs d’émission</h2>
+					<p>
+						Tous proviennent de la <strong>Base Empreinte de l’ADEME</strong>, relevés le
+						{facteurs.date_releve.split('-').reverse().join('/')}. Chaque ligne porte son
+						identifiant d’élément, sa valeur et l’incertitude officielle publiée avec elle. Aucune
+						valeur n’est estimée. Les lignes marquées « approché » emploient un facteur voisin,
+						faute de facteur exact dans la base.
+					</p>
+
+					<div class="tableau-defilant">
+						<table class="facteurs">
+							<thead>
+								<tr>
+									<th scope="col">Matériau</th>
+									<th scope="col">Valeur</th>
+									<th scope="col">Incertitude</th>
+									<th scope="col">Élément ADEME</th>
+								</tr>
+							</thead>
+							<tbody>
+								{
+									facteurs.categories.map((c) => (
+										<>
+											<tr class="ligne-categorie">
+												<th scope="rowgroup" colspan="4">
+													{c.libelle}
+												</th>
+											</tr>
+											{c.sous.map((s) => (
+												<tr>
+													<th scope="row">
+														{s.libelle}
+														{s.approche && <span class="marque">approché</span>}
+													</th>
+													<td>{s.valeur.toLocaleString('fr-FR')} kgCO2e/tonne</td>
+													<td>{s.incertitude_pct} %</td>
+													<td>
+														n° {s.identifiant_ademe}
+														<span class="intitule">{s.intitule_ademe}</span>
+													</td>
+												</tr>
+											))}
+										</>
+									))
+								}
+								<tr class="ligne-categorie">
+									<th scope="rowgroup" colspan="4">Énergie, transport et comparaison</th>
+								</tr>
+								<tr>
+									<th scope="row">Électricité</th>
+									<td>{facteurs.energie.valeur} {facteurs.energie.unite}</td>
+									<td>{facteurs.energie.incertitude_pct} %</td>
+									<td>
+										n° {facteurs.energie.identifiant_ademe}
+										<span class="intitule">{facteurs.energie.intitule_ademe}</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Transport</th>
+									<td>{facteurs.transport.valeur} {facteurs.transport.unite}</td>
+									<td>{facteurs.transport.incertitude_pct} %</td>
+									<td>
+										n° {facteurs.transport.identifiant_ademe}
+										<span class="intitule">{facteurs.transport.intitule_ademe}</span>
+									</td>
+								</tr>
+								{
+									facteurs.comparaisons.map((c) => (
+										<tr>
+											<th scope="row">{c.libelle}</th>
+											<td>
+												{c.valeur} {c.unite}
+											</td>
+											<td>{c.incertitude_pct} %</td>
+											<td>
+												n° {c.identifiant_ademe}
+												<span class="intitule">{c.intitule_ademe}</span>
+											</td>
+										</tr>
+									))
+								}
+							</tbody>
+						</table>
+					</div>
+
+					<p class="avertissement">
+						<strong>Fin de vie : poste non chiffré.</strong> {facteurs.fin_de_vie.remarque}
+					</p>
+				</div>
+			</details>
 		</div>
 	</section>
-
-	<section class="bloc bloc--blanc">
-		<div class="bloc__interieur methode">
-			<h2>Ce qui manque avant la mise en ligne publique</h2>
-			<ol>
-				<li>
-					<span class="a-rediger">[À FOURNIR PAR AUTOMACHINE]</span> les ratios de calage sur des
-					machines réellement livrées. Sans eux, la fourchette est cohérente mais invérifiable.
-				</li>
-				<li>
-					<span class="a-rediger">[À DÉPOUILLER]</span> les déclarations PEP ecopassport, pour
-					remplacer le facteur approché de l’armoire électrique par des facteurs propres.
-				</li>
-				<li>
-					<span class="a-rediger">[À TRANCHER]</span> le sort de la fin de vie : la laisser hors du
-					total, ou retenir une hypothèse et l’assumer comme telle.
-				</li>
-			</ol>
-			<p class="avertissement">
-				Tant que ces trois points ne sont pas réglés, cette page reste à l’écart des moteurs de
-				recherche.
-			</p>
-		</div>
-	</section>
-
 </Base>
 
 <style>
@@ -211,20 +186,51 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 		font-size: 1.15rem;
 	}
 	.methode {
-		max-width: 48rem;
+		max-width: 52rem;
 	}
-	.methode h2 {
-		font-size: clamp(1.3rem, 3vw, 1.7rem);
-		margin-top: 2.5rem;
+
+	/* La méthodologie est repliée : elle intéresse qui veut vérifier, pas qui veut estimer. */
+	.methodologie summary {
+		cursor: pointer;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.15rem;
+		color: var(--bleu-nuit);
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
 	}
-	.methode h2:first-child {
+	.methodologie summary::-webkit-details-marker {
+		display: none;
+	}
+	.methodologie summary::before {
+		content: '';
+		width: 0.55rem;
+		height: 0.55rem;
+		border-right: 2px solid var(--bleu);
+		border-bottom: 2px solid var(--bleu);
+		transform: rotate(-45deg);
+		transition: transform 0.2s;
+		flex: 0 0 auto;
+	}
+	.methodologie[open] summary::before {
+		transform: rotate(45deg);
+	}
+	.methodologie__corps {
+		padding-top: 1.5rem;
+	}
+	.methodologie h2 {
+		font-size: 1.2rem;
+		margin-top: 2rem;
+	}
+	.methodologie h2:first-child {
 		margin-top: 0;
 	}
-	.methode ul,
-	.methode ol {
+	.methodologie ul {
 		padding-left: 1.3rem;
 	}
-	.methode li {
+	.methodologie li {
 		margin-bottom: 0.5rem;
 	}
 	.avertissement {
@@ -233,11 +239,16 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 		background: var(--blanc);
 		border-left: 3px solid var(--orange);
 	}
+
+	.tableau-defilant {
+		overflow-x: auto;
+	}
 	.facteurs {
 		width: 100%;
 		border-collapse: collapse;
 		font-size: 0.9rem;
 		margin: 1.5rem 0;
+		min-width: 34rem;
 	}
 	.facteurs th,
 	.facteurs td {
@@ -285,13 +296,5 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 		padding: 0 0.25rem;
 		font-weight: 400;
 		vertical-align: middle;
-	}
-	.appel {
-		max-width: 42rem;
-		text-align: center;
-	}
-	.appel p {
-		margin-left: auto;
-		margin-right: auto;
 	}
 </style>

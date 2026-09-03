@@ -119,13 +119,26 @@ via le bloc « module ». Aucune donnée personnelle collectée.
    64 questions fournies en CSV → JSON éditable dans le CMS, retour immédiat coloré au clic.
    Parcours Découverte : court, grand public, à rédiger ensemble. Compte à rebours vers le
    20 janvier 2027. Mention obligatoire : contenu informatif, pas un conseil juridique.
-2. Simulateur d'empreinte carbone. V1 = squelette et méthode, non public (non indexé, non
-   lié) tant que les ratios de calage ne sont pas fournis. Entrées grossières (masse,
-   répartition matériaux, puissance, heures/an, durée de vie), France uniquement. Sortie en
-   fourchette, jamais un chiffre unique, décomposition fabrication / transport / usage /
-   fin de vie, hypothèses affichées. Facteurs : Base Empreinte (ADEME), PEP ecopassport,
-   dans un JSON séparé sourcé ligne par ligne. Aucun qualificatif environnemental
-   (« bas carbone », « vert », « neutre »…) : directive (UE) 2024/825 dès le 27/09/2026.
+2. Simulateur d'empreinte carbone. Non public (non indexé) tant que les ratios de calage ne
+   sont pas fournis. Entrées grossières (masse, répartition matériaux, puissance, heures/an,
+   durée de vie), France uniquement. Sortie en fourchette, jamais un chiffre unique,
+   décomposition fabrication / transport / usage / fin de vie, hypothèses affichées.
+   Facteurs : Base Empreinte (ADEME), PEP ecopassport, dans un JSON séparé sourcé ligne par
+   ligne. Aucun qualificatif environnemental (« bas carbone », « vert », « neutre »…) :
+   directive (UE) 2024/825 dès le 27/09/2026.
+   - **Rien de ce qui relève du suivi interne ne s'affiche sur le site** : approximations à
+     lever, données manquantes, arbitrages en attente. Ces points vivent ici.
+   - **Reste à faire avant publication** : (a) ratios de calage sur machines livrées, à
+     fournir par Automachine, sans quoi la fourchette est cohérente mais invérifiable ;
+     (b) dépouiller les PEP ecopassport pour remplacer le facteur approché de l'armoire
+     électrique (variateur employé comme substitut) ; (c) trancher le sort de la fin de vie,
+     aujourd'hui non chiffrée et hors du total.
+   - **Approximations en cours** : inox (aucun facteur générique dans la base, un fil de
+     palissage à 100 % d'incertitude en tient lieu), armoire électrique (variateur),
+     câblage (ramené à son cuivre).
+   - **Pas de facteur de robot industriel** dans la Base Empreinte, ni de machine
+     industrielle pour la comparaison : seule la voiture sert de repère. Le lave-linge,
+     essayé, a été écarté par le dirigeant comme non pertinent.
 3. Animation réversibilité : module et emplacement prévus, scénario à construire ensemble.
 4. **Estimateur d'ordre de prix (idée du dirigeant, 2026-09-02)** : donner un ordre de grandeur
    avant un premier contact. Pistes d'entrées évoquées : encombrement de la machine, nombre de

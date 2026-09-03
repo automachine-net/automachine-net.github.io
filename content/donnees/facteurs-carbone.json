@@ -17,7 +17,8 @@
           "identifiant_ademe": "26729",
           "intitule_ademe": "Acier ou fer blanc — neuf",
           "approche": false,
-          "remarque": "Acier neuf. L'acier recyclé vaut 938 kgCO2e/tonne (élément 26730)."
+          "remarque": "Acier neuf. L'acier recyclé vaut 938 kgCO2e/tonne (élément 26730).",
+          "exemples": "Châssis soudé, tôlerie, arbres, visserie, guidages."
         },
         {
           "cle": "inox",
@@ -28,7 +29,8 @@
           "intitule_ademe": "Fil de palissage inox neuf 18/8",
           "approche": true,
           "remarque": "Approché. La Base Empreinte ne contient aucun facteur générique pour l'inox : ce fil de palissage est le seul élément inox valide, et son incertitude officielle est de 100 %.",
-          "note_courte": "Facteur approché : la base publique ne contient aucun facteur d’inox."
+          "note_courte": "Facteur approché : la base publique ne contient aucun facteur d’inox.",
+          "exemples": "Pièces au contact de produits alimentaires ou en milieu humide, tôlerie inox."
         },
         {
           "cle": "aluminium",
@@ -38,7 +40,8 @@
           "identifiant_ademe": "26731",
           "intitule_ademe": "Aluminium — neuf",
           "approche": false,
-          "remarque": "Aluminium neuf. L'aluminium recyclé vaut 562 kgCO2e/tonne (élément 26732), soit quatorze fois moins."
+          "remarque": "Aluminium neuf. L'aluminium recyclé vaut 562 kgCO2e/tonne (élément 26732), soit quatorze fois moins.",
+          "exemples": "Profilés, plaques usinées, carters légers, bâtis démontables."
         },
         {
           "cle": "cuivre",
@@ -48,7 +51,8 @@
           "identifiant_ademe": "26733",
           "intitule_ademe": "Cuivre — neuf",
           "approche": false,
-          "remarque": "Cuivre neuf."
+          "remarque": "Cuivre neuf.",
+          "exemples": "Barres, bobinages, jeux de barres."
         }
       ]
     },
@@ -65,7 +69,8 @@
           "identifiant_ademe": "20836",
           "intitule_ademe": "Plastique — moyenne — neuf",
           "approche": false,
-          "remarque": "Moyenne des polymères, publiée comme telle par l'ADEME. À retenir quand la nature exacte du plastique est inconnue."
+          "remarque": "Moyenne des polymères, publiée comme telle par l'ADEME. À retenir quand la nature exacte du plastique est inconnue.",
+          "exemples": "À retenir quand la nature du plastique est inconnue."
         },
         {
           "cle": "pvc",
@@ -75,7 +80,8 @@
           "identifiant_ademe": "20834",
           "intitule_ademe": "Plastique — PVC — neuf",
           "approche": false,
-          "remarque": ""
+          "remarque": "",
+          "exemples": "Gaines, goulottes, profilés, tuyauteries."
         },
         {
           "cle": "pehd",
@@ -85,7 +91,8 @@
           "identifiant_ademe": "20830",
           "intitule_ademe": "Plastique — PEHD — neuf",
           "approche": false,
-          "remarque": ""
+          "remarque": "",
+          "exemples": "Guides, patins, roulettes, réservoirs."
         },
         {
           "cle": "pebd",
@@ -95,7 +102,8 @@
           "identifiant_ademe": "20831",
           "intitule_ademe": "Plastique — PEBD — neuf",
           "approche": false,
-          "remarque": ""
+          "remarque": "",
+          "exemples": "Films, gaines souples, joints souples."
         },
         {
           "cle": "ps",
@@ -105,7 +113,8 @@
           "identifiant_ademe": "20833",
           "intitule_ademe": "Plastique — PS — neuf",
           "approche": false,
-          "remarque": ""
+          "remarque": "",
+          "exemples": "Rare en machine : boîtiers légers, calages, isolants."
         },
         {
           "cle": "pet",
@@ -115,7 +124,8 @@
           "identifiant_ademe": "20832",
           "intitule_ademe": "Plastique — PET — neuf",
           "approche": false,
-          "remarque": ""
+          "remarque": "",
+          "exemples": "Films techniques, sangles, pièces transparentes."
         }
       ]
     },
@@ -132,7 +142,8 @@
           "identifiant_ademe": "20585",
           "intitule_ademe": "Moteur électrique (2,93 kgCO2e/kg)",
           "approche": false,
-          "remarque": "Beaucoup de masse, peu d'électronique : c'est le composant électrique le moins intense."
+          "remarque": "Beaucoup de masse, peu d'électronique : c'est le composant électrique le moins intense.",
+          "exemples": "Moteurs asynchrones, brushless, motoréducteurs, servomoteurs."
         },
         {
           "cle": "armoire",
@@ -143,7 +154,8 @@
           "intitule_ademe": "Variateur électrique",
           "approche": true,
           "remarque": "Approché. Le variateur tient lieu d'électronique de commande. C'est le poste le plus intense du simulateur, douze fois un moteur à masse égale.",
-          "note_courte": "Facteur approché : l’électronique de commande est représentée par un variateur."
+          "note_courte": "Facteur approché : l’électronique de commande est représentée par un variateur.",
+          "exemples": "Coffret, variateurs, automate, alimentations, écran opérateur."
         },
         {
           "cle": "cablage",
@@ -154,7 +166,8 @@
           "intitule_ademe": "Cuivre — neuf",
           "approche": true,
           "remarque": "Approché. Un câble est modélisé par son cuivre ; les gaines et isolants ne sont pas comptés.",
-          "note_courte": "Facteur approché : un câble est ramené à son cuivre."
+          "note_courte": "Facteur approché : un câble est ramené à son cuivre.",
+          "exemples": "Câbles de puissance et de commande, chemins de câbles."
         }
       ]
     }
@@ -194,17 +207,6 @@
       "identifiant_ademe": "43791",
       "intitule_ademe": "Voiture — motorisation moyenne — 2023",
       "remarque": "Sert uniquement à donner un ordre de grandeur. N’entre dans aucun calcul."
-    },
-    {
-      "cle": "lave_linge",
-      "libelle": "lave-linge fabriqués",
-      "gabarit": "la fabrication de {n} lave-linge",
-      "valeur": 342,
-      "unite": "kgCO2e/unité",
-      "incertitude_pct": 30,
-      "identifiant_ademe": "26983",
-      "intitule_ademe": "Lave-linge — capacité 7 kg",
-      "remarque": "La Base Empreinte ne contient aucun facteur de machine industrielle. Le lave-linge est la machine la plus proche qui y figure : châssis métallique, moteur, électronique de commande. Sert uniquement de repère."
     }
   ]
 }

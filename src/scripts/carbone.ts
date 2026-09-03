@@ -12,6 +12,7 @@
 // doit se voir dans le résultat, pas se cacher derrière une moyenne.
 
 import facteurs from '../../content/donnees/facteurs-carbone.json';
+import { typo } from './typographie';
 
 export interface Entrees {
 	/** Masse de chaque catégorie, en kilogrammes. */
@@ -149,7 +150,9 @@ export function calculer(e: Entrees): Resultat {
 			bas: totalBas / c.valeur,
 			haut: totalHaut / c.valeur,
 		})),
-		hypotheses,
+		// Les hypothèses sont écrites ici, pas dans un fichier de contenu : elles doivent donc
+		// passer par la typographie française comme le reste du site.
+		hypotheses: hypotheses.map((h) => typo(h)),
 	};
 }
 
