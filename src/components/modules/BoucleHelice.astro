@@ -508,11 +508,25 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Dessin ───────────────────────────────────────────────────────────────── */
+	/* Le mot en grand à gauche, la phrase et les critères fautifs à sa droite. Hauteur
+	   réservée : le dessin, dessous, ne doit pas bouger quand le texte s'allonge. */
 	.helice__verdict {
-		text-align: center;
-		max-width: 44rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		grid-template-areas:
+			'titre texte'
+			'titre echecs';
+		align-items: center;
+		align-content: center;
+		column-gap: 1.5rem;
+		width: 100%;
+		max-width: 46rem;
+		min-height: 6.5rem;
+		text-align: left;
 	}
 	.helice__verdict-titre {
+		grid-area: titre;
+		align-self: center;
 		margin: 0;
 		font-family: var(--titres);
 		font-weight: 700;
@@ -526,9 +540,17 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		width: 2.5rem;
 		height: 4px;
 		border-radius: 2px;
-		margin: 0.5rem auto 0.6rem;
+		margin: 0.5rem 0 0;
 		background: var(--bleu);
 		transition: background 0.25s;
+	}
+	.helice__verdict-texte {
+		grid-area: texte;
+		align-self: end;
+	}
+	.helice__echecs {
+		grid-area: echecs;
+		align-self: start;
 	}
 	.helice__verdict[data-forme='helice'] .helice__verdict-titre::after {
 		background: var(--orange);
@@ -735,10 +757,12 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Coin : aide, commandes ───────────────────────────────────────────────── */
+	/* En bas à gauche, dans les deux modes, plein écran en premier puis l'aide. */
 	.helice__coin {
 		display: flex;
+		flex-direction: row-reverse;
 		align-items: center;
-		justify-content: flex-end;
+		justify-content: flex-start;
 		gap: 1.25rem;
 	}
 	.helice__aide {
@@ -769,7 +793,7 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	.helice__aide-texte {
 		position: absolute;
 		bottom: calc(100% + 0.6rem);
-		right: 0;
+		left: 0;
 		width: max-content;
 		max-width: min(24rem, 80vw);
 		background: var(--bleu-nuit);
@@ -821,6 +845,8 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		border-radius: 0;
 		padding: 1.5rem 3rem 3.5rem;
 		grid-template-rows: auto minmax(0, 1fr);
+		/* Jamais de barre de défilement sur le module lui-même : elle décalerait tout. */
+		overflow: hidden;
 	}
 	.helice:fullscreen .helice__quoi {
 		font-size: 1.5rem;
@@ -849,7 +875,9 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		max-height: 100%;
 	}
 	.helice:fullscreen .helice__verdict {
-		max-width: 52rem;
+		max-width: 56rem;
+		min-height: 9.5rem;
+		column-gap: 2rem;
 	}
 	.helice:fullscreen .helice__verdict-titre {
 		font-size: 3.2rem;
