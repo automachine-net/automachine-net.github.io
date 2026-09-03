@@ -3,8 +3,8 @@
 // trop de place. Un exemple déjà calculé, sa fourchette et sa barre : on voit ce que
 // l'outil produit sans avoir à saisir quoi que ce soit.
 //
-// Le calcul se fait à la construction du site. Ce bloc n'exécute donc aucun code chez le
-// visiteur, contrairement au simulateur lui-même.
+// Le calcul se fait à la construction du site : le visiteur ne reçoit que le résultat.
+// Seul le recalage des infobulles s'exécute chez lui, faute de pouvoir mesurer en CSS.
 import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
 import { typo } from '../../scripts/typographie';
 
@@ -76,6 +76,7 @@ const parts = chiffres.map((p) => {
 					style={`width: ${p.pourcentage}%; background: ${p.couleur}`}
 					tabindex="0"
 					aria-label={p.detail}
+					data-bulle
 				>
 					<span class="apercu__bulle">{p.detail}</span>
 				</span>
@@ -93,6 +94,11 @@ const parts = chiffres.map((p) => {
 		}
 	</ul>
 </div>
+
+<script>
+	import { recalerLesBulles } from '../../scripts/bulle';
+	recalerLesBulles(document.querySelector('.apercu') ?? document);
+</script>
 
 <style>
 	.apercu {
@@ -151,7 +157,7 @@ const parts = chiffres.map((p) => {
 		position: absolute;
 		top: calc(100% + 0.5rem);
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translateX(calc(-50% + var(--decalage, 0px)));
 		z-index: 20;
 		width: max-content;
 		max-width: min(22rem, calc(100vw - 2rem));

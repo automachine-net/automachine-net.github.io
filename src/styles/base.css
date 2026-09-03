@@ -110,6 +110,9 @@ a {
 	text-underline-offset: 0.15em;
 	text-decoration-color: var(--orange);
 	text-decoration-thickness: 2px;
+	/* Sans cela le trait s'interrompt sous chaque jambage, et un soulignement épais et
+	   coloré devient une suite de tirets. */
+	text-decoration-skip-ink: none;
 }
 
 a:hover {
@@ -190,11 +193,15 @@ button {
 	background: var(--bleu);
 	color: var(--blanc);
 }
-.bouton--clair {
+/* Le sélecteur reprend « .bloc--sombre » : sans cela la règle générale des liens dans un
+   bloc sombre l'emporte et pose du bleu clair sur fond blanc, soit 2,44:1. */
+.bouton--clair,
+.bloc--sombre .bouton--clair {
 	background: var(--blanc);
 	color: var(--bleu-nuit);
 }
-.bouton--clair:hover {
+.bouton--clair:hover,
+.bloc--sombre .bouton--clair:hover {
 	background: var(--orange);
 	color: var(--bleu-nuit);
 }

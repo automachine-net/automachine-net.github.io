@@ -82,7 +82,7 @@ const parametres = [
 			<div class="champ champ--masse" data-champ-masse hidden>
 				<div class="champ__tete">
 					<label for="masse">Masse totale</label>
-					<span class="aide" data-aide>
+					<span class="aide" data-aide data-bulle>
 						<button type="button" class="aide-bouton" aria-describedby="aide-masse">
 							<span aria-hidden="true">?</span>
 							<span class="sr-only">Que change ce paramètre ?</span>
@@ -128,7 +128,7 @@ const parametres = [
 						<div class="categorie__tete">
 							<span class="categorie__nom">
 								<label for={`cat-${c.cle}`}>{c.libelle}</label>
-								<span class="aide" data-aide>
+								<span class="aide" data-aide data-bulle>
 									<button type="button" class="aide-bouton" aria-describedby={`aide-${c.cle}`}>
 										<span aria-hidden="true">?</span>
 										<span class="sr-only">Que change ce paramètre ?</span>
@@ -168,7 +168,7 @@ const parametres = [
 										<span class="champ--sous__tete">
 											<label for={`sous-${c.cle}-${s.cle}`}>{s.libelle}</label>
 											{s.exemples && (
-												<span class="aide" data-aide>
+												<span class="aide" data-aide data-bulle>
 													<button
 														type="button"
 														class="aide-bouton aide-bouton--petit"
@@ -216,7 +216,7 @@ const parametres = [
 					<div class="champ" hidden={compact && champ.cle === 'distance'}>
 						<div class="champ__tete">
 							<label for={champ.cle}>{champ.libelle}</label>
-							<span class="aide" data-aide>
+							<span class="aide" data-aide data-bulle>
 								<button type="button" class="aide-bouton" aria-describedby={`aide-${champ.cle}`}>
 									<span aria-hidden="true">?</span>
 									<span class="sr-only">Que change ce paramètre ?</span>
@@ -273,6 +273,7 @@ const parametres = [
 <script>
 	import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
 	import { typo } from '../../scripts/typographie';
+	import { recalerLesBulles } from '../../scripts/bulle';
 
 	const form = document.querySelector<HTMLFormElement>('[data-simulateur]');
 	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
@@ -292,24 +293,9 @@ const parametres = [
 		const lire = (input: HTMLInputElement) =>
 			input.value.trim() === '' ? Number(input.placeholder) || 0 : Number(input.value) || 0;
 
-		// ---------------------------------------------------------- Infobulles
-		// Une bulle centrée sous son bouton sort de l'écran dès que le bouton est près d'un
-		// bord. On la recale donc à l'ouverture, en gardant une marge de 8 px avec les bords.
-		document.querySelectorAll<HTMLElement>('[data-aide]').forEach((aide) => {
-			const bulle = aide.querySelector<HTMLElement>('.bulle');
-			if (!bulle) return;
-			const recaler = () => {
-				bulle.style.setProperty('--decalage', '0px');
-				const r = bulle.getBoundingClientRect();
-				const marge = 8;
-				let decalage = 0;
-				if (r.left < marge) decalage = marge - r.left;
-				else if (r.right > innerWidth - marge) decalage = innerWidth - marge - r.right;
-				bulle.style.setProperty('--decalage', `${Math.round(decalage)}px`);
-			};
-			aide.addEventListener('mouseenter', recaler);
-			aide.addEventListener('focusin', recaler);
-		});
+		// Les bulles doivent rester dans la page : le recalage est mutualisé.
+		recalerLesBulles(form);
+
 
 		// ---------------------------------------------------------- Détail des catégories
 		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
