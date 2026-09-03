@@ -11,10 +11,9 @@
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
 
 /** Valeurs d'exemple, affichées en filigrane et reprises si le champ reste vide. */
-const exemples: Record<string, number> = {
-	metaux: 400,
-	plastiques: 20,
-	electrique: 80,
+const exemples = {
+	kg: { metaux: 400, plastiques: 20, electrique: 80 },
+	pct: { metaux: 80, plastiques: 4, electrique: 16 },
 	masse: 500,
 	puissance: 10,
 	charge: 50,
@@ -25,23 +24,31 @@ const exemples: Record<string, number> = {
 
 const aides: Record<string, string> = {
 	metaux:
-		'Le poste le plus lourd d’une machine, donc souvent le premier contributeur. À masse égale, l’aluminium émet plus de trois fois l’acier : détailler cette catégorie change beaucoup le résultat.',
+		'Le poste le plus lourd d’une machine, donc souvent le premier contributeur. À masse égale, l’aluminium émet plus de 3 fois l’acier : détailler cette catégorie change beaucoup le résultat.',
 	plastiques:
-		'Rarement déterminant, parce que les masses en jeu sont faibles. Les différents polymères se tiennent dans un rapport de un à deux.',
+		'Rarement déterminant, parce que les masses en jeu sont faibles. Les polymères courants se tiennent dans un rapport de 1 à 2.',
 	electrique:
-		'La catégorie la plus incertaine. À masse égale, l’électronique de commande émet douze fois un moteur. Séparer les moteurs de l’armoire resserre nettement la fourchette.',
+		'La catégorie la plus incertaine. À masse égale, l’électronique de commande émet 12 fois un moteur. Séparer les moteurs de l’armoire resserre nettement la fourchette.',
 	masse: 'Sert à convertir les pourcentages en kilogrammes. Ne change rien à la répartition.',
 	puissance:
 		'Détermine la consommation, donc tout le poste « usage ». Si la machine est alimentée en air comprimé, ajoutez ici la puissance électrique du compresseur qui la dessert : l’air comprimé n’est pas une énergie, c’est de l’électricité transformée.',
 	charge:
 		'Une machine tourne rarement à pleine puissance. Ce taux multiplie directement la consommation : le passer de 50 à 100 % double le poste « usage ».',
 	heures:
-		'Multiplie la consommation. Une machine en trois-huit émet beaucoup plus, à puissance égale, qu’une machine utilisée quelques heures par semaine.',
+		'Multiplie la consommation. Une machine en 3 × 8 émet beaucoup plus, à puissance égale, qu’une machine utilisée quelques heures par semaine.',
 	duree:
 		'Allonger la durée de vie augmente la consommation totale, mais étale la fabrication sur davantage d’années. C’est le paramètre qui fait basculer le poids relatif des postes.',
 	distance:
-		'N’influence presque jamais le résultat : le transport d’une machine pèse moins de un pour cent du total, même sur mille kilomètres.',
+		'N’influence presque jamais le résultat : le transport d’une machine pèse moins de 1 % du total, même sur 1 000 km.',
 };
+
+const parametres = [
+	{ cle: 'puissance', libelle: 'Puissance installée', unite: 'kW', pas: '0.5' },
+	{ cle: 'charge', libelle: 'Taux de charge moyen', unite: '%', pas: '5' },
+	{ cle: 'heures', libelle: 'Heures de fonctionnement', unite: 'h/an', pas: '100' },
+	{ cle: 'duree', libelle: 'Durée de vie attendue', unite: 'ans', pas: '1' },
+	{ cle: 'distance', libelle: 'Distance de livraison', unite: 'km', pas: '50' },
+] as const;
 ---
 
 <form class="simulateur" data-simulateur novalidate>
@@ -50,22 +57,47 @@ const aides: Record<string, string> = {
 		exécuter. La méthode et les facteurs restent décrits plus bas.
 	</p>
 
-	{/* ---------------------------------------------------------------- Matériaux */}
 	<fieldset class="section">
 		<legend>De quoi la machine est faite</legend>
 
-		<div class="unite-bascule" role="group" aria-label="Unité de saisie">
-			<button type="button" class="unite-bascule__choix est-actif" data-unite="kg">
-				En kilogrammes
-			</button>
-			<button type="button" class="unite-bascule__choix" data-unite="pct">En pourcentage</button>
-		</div>
+		<div class="reglages">
+			<div class="unite-bascule" role="group" aria-label="Unité de saisie">
+				<button type="button" class="unite-bascule__choix est-actif" data-unite="kg">
+					Kilogrammes
+				</button>
+				<button type="button" class="unite-bascule__choix" data-unite="pct">Pourcentage</button>
+			</div>
 
-		<div class="champ champ--masse" data-champ-masse hidden>
-			<label for="masse">Masse totale de la machine</label>
-			<div class="saisie">
-				<input type="number" id="masse" data-valeur="masse" placeholder={String(exemples.masse)} min="1" step="10" />
-				<span class="unite">kg</span>
+			<div class="champ champ--masse" data-champ-masse hidden>
+				<div class="champ__tete">
+					<label for="masse">Masse totale</label>
+					<span class="aide">
+						<button type="button" class="aide-bouton" aria-describedby="aide-masse">
+							<span aria-hidden="true">?</span>
+							<span class="sr-only">Que change ce paramètre ?</span>
+						</button>
+						<span class="bulle" role="tooltip" id="aide-masse">{aides.masse}</span>
+					</span>
+				</div>
+				<div class="saisie">
+					<input type="number" id="masse" data-valeur="masse" placeholder={String(exemples.masse)} min="1" step="10" />
+					<span class="unite">kg</span>
+				</div>
+			</div>
+
+			<div class="champ champ--ajustement" data-champ-ajustement hidden>
+				<label for="ajustee">Variable d’ajustement</label>
+				<select id="ajustee" data-ajustee>
+					{
+						facteurs.categories.map((c) => (
+							<option value={c.cle} selected={c.cle === 'plastiques'}>
+								{c.libelle}
+							</option>
+						))
+					}
+					<option value="">Aucune, je saisis les trois</option>
+				</select>
+				<p class="aide-inline">Cette catégorie absorbe le reste, pour atteindre 100 %.</p>
 			</div>
 		</div>
 
@@ -75,21 +107,21 @@ const aides: Record<string, string> = {
 					<div class="categorie" data-categorie={c.cle}>
 						<div class="categorie__tete">
 							<label for={`cat-${c.cle}`}>{c.libelle}</label>
-							<button
-								type="button"
-								class="aide-bouton"
-								data-aide={`aide-${c.cle}`}
-								aria-expanded="false"
-							>
-								<span aria-hidden="true">?</span>
-								<span class="sr-only">Que change ce paramètre ?</span>
-							</button>
+							<span class="aide">
+								<button type="button" class="aide-bouton" aria-describedby={`aide-${c.cle}`}>
+									<span aria-hidden="true">?</span>
+									<span class="sr-only">Que change ce paramètre ?</span>
+								</button>
+								<span class="bulle" role="tooltip" id={`aide-${c.cle}`}>
+									{aides[c.cle]}
+								</span>
+							</span>
 							<div class="saisie">
 								<input
 									type="number"
 									id={`cat-${c.cle}`}
 									data-categorie-valeur={c.cle}
-									placeholder={String(exemples[c.cle])}
+									placeholder={String(exemples.kg[c.cle as keyof typeof exemples.kg])}
 									min="0"
 									step="1"
 								/>
@@ -101,7 +133,6 @@ const aides: Record<string, string> = {
 						</div>
 
 						<p class="exemples">{c.aide}</p>
-						<p class="aide-texte" id={`aide-${c.cle}`} hidden>{aides[c.cle]}</p>
 
 						<div class="detail" data-detail={c.cle} hidden>
 							<p class="detail__consigne">
@@ -113,8 +144,13 @@ const aides: Record<string, string> = {
 										<label for={`sous-${c.cle}-${s.cle}`}>
 											{s.libelle}
 											{s.approche && (
-												<span class="marque" title={s.remarque}>
-													approché
+												<span class="aide aide--marque">
+													<button type="button" class="marque" aria-describedby={`note-${s.cle}`}>
+														approché
+													</button>
+													<span class="bulle" role="tooltip" id={`note-${s.cle}`}>
+														{s.note_courte}
+													</span>
 												</span>
 											)}
 										</label>
@@ -142,30 +178,23 @@ const aides: Record<string, string> = {
 		<p class="bilan-masse" data-bilan-masse aria-live="polite"></p>
 	</fieldset>
 
-	{/* ---------------------------------------------------------------- Usage */}
 	<fieldset class="section">
 		<legend>Comment elle sera utilisée</legend>
 		<div class="grille">
 			{
-				[
-					{ cle: 'puissance', libelle: 'Puissance installée', unite: 'kW', pas: '0.5' },
-					{ cle: 'charge', libelle: 'Taux de charge moyen', unite: '%', pas: '5' },
-					{ cle: 'heures', libelle: 'Heures de fonctionnement', unite: 'h/an', pas: '100' },
-					{ cle: 'duree', libelle: 'Durée de vie attendue', unite: 'ans', pas: '1' },
-					{ cle: 'distance', libelle: 'Distance de livraison', unite: 'km', pas: '50' },
-				].map((champ) => (
+				parametres.map((champ) => (
 					<div class="champ">
 						<div class="champ__tete">
 							<label for={champ.cle}>{champ.libelle}</label>
-							<button
-								type="button"
-								class="aide-bouton"
-								data-aide={`aide-${champ.cle}`}
-								aria-expanded="false"
-							>
-								<span aria-hidden="true">?</span>
-								<span class="sr-only">Que change ce paramètre ?</span>
-							</button>
+							<span class="aide">
+								<button type="button" class="aide-bouton" aria-describedby={`aide-${champ.cle}`}>
+									<span aria-hidden="true">?</span>
+									<span class="sr-only">Que change ce paramètre ?</span>
+								</button>
+								<span class="bulle" role="tooltip" id={`aide-${champ.cle}`}>
+									{aides[champ.cle]}
+								</span>
+							</span>
 						</div>
 						<div class="saisie">
 							<input
@@ -178,7 +207,6 @@ const aides: Record<string, string> = {
 							/>
 							<span class="unite">{champ.unite}</span>
 						</div>
-						<p class="aide-texte" id={`aide-${champ.cle}`} hidden>{aides[champ.cle]}</p>
 					</div>
 				))
 			}
@@ -193,24 +221,16 @@ const aides: Record<string, string> = {
 		<span class="fourchette__a">à</span>
 		<span data-total-haut></span>
 	</p>
-	<p class="comparaison">
-		soit ce qu’émettent <strong data-km></strong> parcourus en voiture, sur toute la durée de vie
-		de la machine.
-	</p>
+	<ul class="comparaisons" data-comparaisons></ul>
 
-	<div class="barre" data-barre role="img" aria-label="Part de chaque poste dans le total"></div>
+	<div class="barre-bloc">
+		<div class="barre" data-barre></div>
+		<div class="barre__bulle" data-barre-bulle hidden></div>
+	</div>
 	<ul class="legende" data-legende></ul>
 
-	<table class="postes">
-		<thead>
-			<tr>
-				<th scope="col">Poste</th>
-				<th scope="col">Fourchette</th>
-				<th scope="col">Part</th>
-			</tr>
-		</thead>
-		<tbody data-postes></tbody>
-	</table>
+	{/* Reprise du détail sous forme de texte, pour les lecteurs d'écran. */}
+	<ul class="sr-only" data-detail-postes></ul>
 
 	<p class="note-fin-de-vie">{facteurs.fin_de_vie.remarque}</p>
 
@@ -230,9 +250,10 @@ const aides: Record<string, string> = {
 		form.classList.add('simulateur--actif');
 
 		const CATEGORIES = ['metaux', 'plastiques', 'electrique'];
-		/** En pourcentage, cette catégorie absorbe le reste : c'est la variable d'ajustement. */
-		const AJUSTEE = 'plastiques';
-
+		const EXEMPLES = {
+			kg: { metaux: 400, plastiques: 20, electrique: 80 },
+			pct: { metaux: 80, plastiques: 4, electrique: 16 },
+		};
 		let unite: 'kg' | 'pct' = 'kg';
 
 		const champ = (sel: string) => form.querySelector<HTMLInputElement>(sel)!;
@@ -240,58 +261,50 @@ const aides: Record<string, string> = {
 		const lire = (input: HTMLInputElement) =>
 			input.value.trim() === '' ? Number(input.placeholder) || 0 : Number(input.value) || 0;
 
-		// ---------------------------------------------------------- Aides au survol et au clic
-		form.querySelectorAll<HTMLButtonElement>('.aide-bouton').forEach((bouton) => {
-			const cible = document.getElementById(bouton.dataset.aide!);
-			if (!cible) return;
-			const montrer = (etat: boolean) => {
-				cible.hidden = !etat;
-				bouton.setAttribute('aria-expanded', String(etat));
-			};
-			bouton.addEventListener('click', () => montrer(cible.hidden));
-			bouton.addEventListener('mouseenter', () => montrer(true));
-			bouton.addEventListener('mouseleave', () => {
-				if (bouton.getAttribute('aria-expanded') === 'true' && !bouton.matches(':focus')) montrer(false);
-			});
-		});
-
 		// ---------------------------------------------------------- Détail des catégories
 		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
-			const cle = bouton.dataset.detailler!;
-			const panneau = form.querySelector<HTMLElement>(`[data-detail="${cle}"]`)!;
+			const panneau = form.querySelector<HTMLElement>(`[data-detail="${bouton.dataset.detailler}"]`)!;
 			bouton.addEventListener('click', () => {
 				const ouvert = panneau.hidden;
 				panneau.hidden = !ouvert;
 				bouton.setAttribute('aria-expanded', String(ouvert));
-				bouton.textContent = ouvert ? 'Revenir à la louche' : 'Détailler';
+				bouton.textContent = ouvert ? 'Masquer le détail' : 'Détailler';
 				recalculer();
 			});
 		});
 
-		// ---------------------------------------------------------- Bascule kilogrammes / pourcentage
+		// ---------------------------------------------------------- Kilogrammes ou pourcentage
 		const champMasse = form.querySelector<HTMLElement>('[data-champ-masse]')!;
+		const champAjustement = form.querySelector<HTMLElement>('[data-champ-ajustement]')!;
+		const selectAjustee = form.querySelector<HTMLSelectElement>('[data-ajustee]')!;
+
 		form.querySelectorAll<HTMLButtonElement>('[data-unite]').forEach((bouton) => {
 			bouton.addEventListener('click', () => {
 				unite = bouton.dataset.unite as 'kg' | 'pct';
 				form.querySelectorAll('[data-unite]').forEach((b) => b.classList.toggle('est-actif', b === bouton));
 				champMasse.hidden = unite === 'kg';
+				champAjustement.hidden = unite === 'kg';
 				form.querySelectorAll('[data-unite-libelle]').forEach((u) => {
 					u.textContent = unite === 'kg' ? 'kg' : '%';
 				});
-				// Les valeurs d'exemple changent de sens selon l'unité.
 				CATEGORIES.forEach((c) => {
 					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
-					input.placeholder = unite === 'kg' ? String({ metaux: 400, plastiques: 20, electrique: 80 }[c]) : String({ metaux: 80, plastiques: 4, electrique: 16 }[c]);
+					input.placeholder = String(EXEMPLES[unite][c as keyof typeof EXEMPLES.kg]);
+					input.value = '';
+					input.readOnly = false;
 				});
 				recalculer();
 			});
 		});
+		selectAjustee.addEventListener('change', recalculer);
 
 		// ---------------------------------------------------------- Calcul
 		const bilanMasse = form.querySelector<HTMLElement>('[data-bilan-masse]')!;
-		const corps = resultat.querySelector<HTMLElement>('[data-postes]')!;
 		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
+		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
 		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
+		const detailPostes = resultat.querySelector<HTMLElement>('[data-detail-postes]')!;
+		const listeComparaisons = resultat.querySelector<HTMLElement>('[data-comparaisons]')!;
 		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
 		const couleurs: Record<string, string> = {
 			fabrication: 'var(--bleu)',
@@ -300,7 +313,8 @@ const aides: Record<string, string> = {
 		};
 
 		function recalculer() {
-			const masseTotaleSaisie = lire(champ('[data-valeur="masse"]'));
+			const masseSaisie = lire(champ('[data-valeur="masse"]'));
+			const ajustee = unite === 'pct' ? selectAjustee.value : '';
 
 			// Détails ouverts et renseignés
 			const details: Record<string, Record<string, number>> = {};
@@ -310,44 +324,46 @@ const aides: Record<string, string> = {
 				const lignes: Record<string, number> = {};
 				panneau.querySelectorAll<HTMLInputElement>('[data-sous]').forEach((i) => {
 					const v = Number(i.value) || 0;
-					if (v > 0) lignes[i.dataset.sousCle!] = unite === 'kg' ? v : (v / 100) * masseTotaleSaisie;
+					if (v > 0) lignes[i.dataset.sousCle!] = unite === 'kg' ? v : (v / 100) * masseSaisie;
 				});
-				details[c] = lignes;
+				if (Object.keys(lignes).length) details[c] = lignes;
 			}
 
-			// Valeurs par catégorie
+			// Valeur de chaque catégorie
 			const brutes: Record<string, number> = {};
 			for (const c of CATEGORIES) {
 				const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
-				const detaillee = details[c] && Object.keys(details[c]).length > 0;
-				if (detaillee) {
+				if (details[c]) {
 					const somme = Object.values(details[c]).reduce((a, b) => a + b, 0);
-					input.value = unite === 'kg' ? String(Math.round(somme)) : String(Math.round((somme / masseTotaleSaisie) * 100));
+					input.value =
+						unite === 'kg'
+							? String(Math.round(somme))
+							: String(masseSaisie > 0 ? Math.round((somme / masseSaisie) * 100) : 0);
 					input.readOnly = true;
-					brutes[c] = unite === 'kg' ? somme : Number(input.value);
-				} else {
+					brutes[c] = Number(input.value);
+				} else if (c !== ajustee) {
 					input.readOnly = false;
 					brutes[c] = lire(input);
 				}
 			}
 
-			// En pourcentage, la catégorie d'ajustement absorbe le reste.
+			// La variable d'ajustement absorbe le reste, si elle n'est pas détaillée.
+			let ecart = 0;
 			if (unite === 'pct') {
-				const ajusteeDetaillee = details[AJUSTEE] && Object.keys(details[AJUSTEE]).length > 0;
-				if (!ajusteeDetaillee) {
-					const autres = CATEGORIES.filter((c) => c !== AJUSTEE).reduce((s, c) => s + brutes[c], 0);
-					const reste = Math.max(0, 100 - autres);
-					brutes[AJUSTEE] = reste;
-					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${AJUSTEE}"]`)!;
-					input.value = String(Math.round(reste));
+				if (ajustee && !details[ajustee]) {
+					const autres = CATEGORIES.filter((c) => c !== ajustee).reduce((s, c) => s + (brutes[c] ?? 0), 0);
+					brutes[ajustee] = Math.max(0, 100 - autres);
+					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${ajustee}"]`)!;
+					input.value = String(Math.round(brutes[ajustee]));
 					input.readOnly = true;
 				}
+				ecart = CATEGORIES.reduce((s, c) => s + (brutes[c] ?? 0), 0) - 100;
 			}
 
 			// Conversion en kilogrammes
 			const categories: Record<string, number> = {};
 			for (const c of CATEGORIES) {
-				categories[c] = unite === 'kg' ? brutes[c] : (brutes[c] / 100) * masseTotaleSaisie;
+				categories[c] = unite === 'kg' ? (brutes[c] ?? 0) : ((brutes[c] ?? 0) / 100) * masseSaisie;
 			}
 
 			const r = calculer({
@@ -360,8 +376,11 @@ const aides: Record<string, string> = {
 				distanceLivraison: lire(champ('[data-valeur="distance"]')),
 			});
 
-			bilanMasse.textContent =
-				r.masseTotale > 0 ? `Masse totale retenue : ${Math.round(r.masseTotale).toLocaleString('fr-FR')} kg` : '';
+			const messages: string[] = [];
+			if (r.masseTotale > 0) messages.push(`Masse totale : ${Math.round(r.masseTotale).toLocaleString('fr-FR')} kg`);
+			if (unite === 'pct' && Math.abs(ecart) >= 1) messages.push(`Les parts font ${Math.round(100 + ecart)} %, il en faut 100`);
+			bilanMasse.textContent = messages.join(' · ');
+			bilanMasse.classList.toggle('bilan-masse--alerte', unite === 'pct' && Math.abs(ecart) >= 1);
 
 			if (r.masseTotale <= 0) {
 				resultat.hidden = true;
@@ -370,29 +389,50 @@ const aides: Record<string, string> = {
 
 			resultat.querySelector('[data-total-bas]')!.textContent = formaterCO2e(r.totalBas);
 			resultat.querySelector('[data-total-haut]')!.textContent = formaterCO2e(r.totalHaut);
-			resultat.querySelector('[data-km]')!.textContent =
-				`${arrondiParlant(r.kmVoitureBas)} à ${arrondiParlant(r.kmVoitureHaut)} km`;
+
+			listeComparaisons.replaceChildren(
+				...r.comparaisons.map((c) => {
+					const li = document.createElement('li');
+					li.textContent =
+						'soit ' + c.gabarit.replace('{n}', `${arrondiParlant(c.bas)} à ${arrondiParlant(c.haut)}`);
+					return li;
+				})
+			);
 
 			// Barre des parts, calculée sur le milieu de chaque fourchette.
-			const milieu = (p: { bas: number | null; haut: number | null }) =>
-				p.bas === null ? 0 : (p.bas + p.haut!) / 2;
-			const totalMilieu = r.postes.reduce((s, p) => s + milieu(p), 0);
+			const chiffres = r.postes.filter((p) => p.bas !== null && p.haut !== null);
+			const milieu = (p: { bas: number | null; haut: number | null }) => (p.bas! + p.haut!) / 2;
+			const totalMilieu = chiffres.reduce((s, p) => s + milieu(p), 0);
+
 			barre.replaceChildren(
-				...r.postes
-					.filter((p) => p.bas !== null && milieu(p) > 0)
+				...chiffres
+					.filter((p) => milieu(p) > 0)
 					.map((p) => {
 						const part = (milieu(p) / totalMilieu) * 100;
-						const segment = document.createElement('span');
+						const segment = document.createElement('button');
+						segment.type = 'button';
 						segment.className = 'barre__part';
 						segment.style.width = `${part}%`;
 						segment.style.background = couleurs[p.cle];
-						segment.title = `${p.libelle} : ${Math.round(part)} %`;
+						const texte = `${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${Math.round(part)} % du total`;
+						segment.setAttribute('aria-label', texte);
+						const montrer = () => {
+							bulleBarre.textContent = texte;
+							bulleBarre.hidden = false;
+							const gauche = segment.offsetLeft + segment.offsetWidth / 2;
+							bulleBarre.style.left = `${gauche}px`;
+						};
+						segment.addEventListener('mouseenter', montrer);
+						segment.addEventListener('focus', montrer);
+						segment.addEventListener('mouseleave', () => (bulleBarre.hidden = true));
+						segment.addEventListener('blur', () => (bulleBarre.hidden = true));
 						return segment;
 					})
 			);
+
 			legende.replaceChildren(
-				...r.postes
-					.filter((p) => p.bas !== null && milieu(p) > 0)
+				...chiffres
+					.filter((p) => milieu(p) > 0)
 					.map((p) => {
 						const li = document.createElement('li');
 						const pastille = document.createElement('span');
@@ -403,24 +443,14 @@ const aides: Record<string, string> = {
 					})
 			);
 
-			corps.replaceChildren(
+			detailPostes.replaceChildren(
 				...r.postes.map((p) => {
-					const tr = document.createElement('tr');
-					const th = document.createElement('th');
-					th.scope = 'row';
-					th.textContent = p.libelle;
-					const valeur = document.createElement('td');
-					const part = document.createElement('td');
-					if (p.bas === null) {
-						valeur.textContent = 'non chiffré';
-						valeur.className = 'non-chiffre';
-						part.textContent = '—';
-					} else {
-						valeur.textContent = `${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}`;
-						part.textContent = `${Math.round((milieu(p) / totalMilieu) * 100)} %`;
-					}
-					tr.append(th, valeur, part);
-					return tr;
+					const li = document.createElement('li');
+					li.textContent =
+						p.bas === null
+							? `${p.libelle} : non chiffré.`
+							: `${p.libelle} : ${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}.`;
+					return li;
 				})
 			);
 
@@ -473,18 +503,23 @@ const aides: Record<string, string> = {
 		margin-bottom: 1.25rem;
 	}
 
-	/* Bascule kilogrammes / pourcentage */
+	.reglages {
+		display: flex;
+		align-items: flex-end;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		margin-bottom: 1.75rem;
+	}
 	.unite-bascule {
 		display: inline-flex;
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
 		overflow: hidden;
-		margin-bottom: 1.5rem;
 	}
 	.unite-bascule__choix {
 		background: var(--blanc);
 		border: 0;
-		padding: 0.5rem 1rem;
+		padding: 0.55rem 1rem;
 		cursor: pointer;
 		color: var(--gris);
 		font-size: 0.9rem;
@@ -497,15 +532,22 @@ const aides: Record<string, string> = {
 		color: var(--blanc);
 		font-weight: 500;
 	}
+	.champ--masse {
+		width: 11rem;
+	}
+	.champ--ajustement {
+		min-width: 15rem;
+	}
+	.aide-inline {
+		margin: 0.25rem 0 0;
+		font-size: 0.8rem;
+		color: var(--gris-leger);
+	}
 
 	.champ {
 		display: grid;
 		gap: 0.3rem;
 		align-content: start;
-	}
-	.champ--masse {
-		max-width: 16rem;
-		margin-bottom: 1.5rem;
 	}
 	.champ__tete {
 		display: flex;
@@ -522,7 +564,8 @@ const aides: Record<string, string> = {
 		align-items: center;
 		gap: 0.5rem;
 	}
-	input {
+	input,
+	select {
 		font: inherit;
 		color: var(--gris);
 		background: var(--blanc);
@@ -532,7 +575,8 @@ const aides: Record<string, string> = {
 		width: 100%;
 		min-width: 0;
 	}
-	input:focus {
+	input:focus,
+	select:focus {
 		border-color: var(--bleu);
 	}
 	input:read-only {
@@ -541,7 +585,18 @@ const aides: Record<string, string> = {
 	}
 	input::placeholder {
 		color: var(--gris-leger);
-		opacity: 0.7;
+		opacity: 0.75;
+	}
+	/* Les petites flèches des champs numériques n'apportent rien ici : on saisit des
+	   centaines de kilogrammes, pas des unités. */
+	input[type='number'] {
+		appearance: textfield;
+		-moz-appearance: textfield;
+	}
+	input[type='number']::-webkit-outer-spin-button,
+	input[type='number']::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
 	}
 	.unite {
 		font-size: 0.9rem;
@@ -549,9 +604,12 @@ const aides: Record<string, string> = {
 		white-space: nowrap;
 	}
 
-	/* Bouton d'aide */
+	/* Aide au survol */
+	.aide {
+		position: relative;
+		display: inline-flex;
+	}
 	.aide-bouton {
-		flex: 0 0 auto;
 		width: 1.25rem;
 		height: 1.25rem;
 		border-radius: 50%;
@@ -566,19 +624,52 @@ const aides: Record<string, string> = {
 		place-items: center;
 		padding: 0;
 	}
-	.aide-bouton:hover,
-	.aide-bouton[aria-expanded='true'] {
+	.aide-bouton:hover {
 		background: var(--bleu);
 		color: var(--blanc);
 		border-color: var(--bleu);
 	}
-	.aide-texte {
-		margin: 0.4rem 0 0;
-		padding: 0.6rem 0.8rem;
-		background: var(--gris-clair);
-		border-left: 3px solid var(--bleu-clair);
+	.bulle {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 10;
+		width: max-content;
+		max-width: min(22rem, 70vw);
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.65rem 0.85rem;
+		border-radius: var(--rayon);
 		font-size: 0.85rem;
-		max-width: 44rem;
+		font-weight: 400;
+		line-height: 1.45;
+		text-align: left;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.15s,
+			visibility 0.15s;
+		pointer-events: none;
+	}
+	.bulle::before {
+		content: '';
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border: 6px solid transparent;
+		border-bottom-color: var(--bleu-nuit);
+	}
+	.aide:hover .bulle,
+	.aide:focus-within .bulle {
+		opacity: 1;
+		visibility: visible;
+	}
+	.aide--marque .bulle {
+		font-weight: 400;
+		text-transform: none;
+		letter-spacing: normal;
 	}
 
 	/* Catégories */
@@ -646,18 +737,21 @@ const aides: Record<string, string> = {
 	.champ--sous label {
 		font-size: 0.88rem;
 		font-weight: 400;
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		flex-wrap: wrap;
 	}
 	.marque {
-		display: inline-block;
-		margin-left: 0.3rem;
 		font-size: 0.66rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: var(--gris-leger);
 		border: 1px solid var(--gris-moyen);
+		background: var(--blanc);
 		border-radius: 2px;
-		padding: 0 0.25rem;
-		vertical-align: middle;
+		padding: 0.1rem 0.25rem;
+		cursor: help;
 	}
 	.bilan-masse {
 		margin: 1.25rem 0 0;
@@ -666,6 +760,13 @@ const aides: Record<string, string> = {
 		font-size: 0.9rem;
 		font-weight: 500;
 		color: var(--bleu-nuit);
+	}
+	.bilan-masse--alerte {
+		color: var(--bleu-nuit);
+		border-left: 3px solid var(--orange);
+		padding: 0.6rem 0 0.6rem 0.75rem;
+		border-top: 0;
+		background: var(--gris-clair);
 	}
 
 	.grille {
@@ -702,19 +803,22 @@ const aides: Record<string, string> = {
 		font-weight: 500;
 		color: var(--gris-leger);
 	}
-	.comparaison {
-		margin: 0.6rem 0 2rem;
+	.comparaisons {
+		list-style: none;
+		margin: 0.7rem 0 2rem;
+		padding: 0;
 		font-size: 1.05rem;
-		max-width: 46rem;
-	}
-	.comparaison strong {
-		color: var(--bleu);
+		display: grid;
+		gap: 0.2rem;
 	}
 
 	/* Barre des parts */
+	.barre-bloc {
+		position: relative;
+	}
 	.barre {
 		display: flex;
-		height: 1.5rem;
+		height: 1.75rem;
 		border-radius: var(--rayon);
 		overflow: hidden;
 		background: var(--gris-clair);
@@ -722,10 +826,33 @@ const aides: Record<string, string> = {
 	.barre__part {
 		display: block;
 		height: 100%;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		/* Un poste minuscule, comme le transport, doit rester survolable. */
+		min-width: 10px;
+	}
+	.barre__part:hover,
+	.barre__part:focus-visible {
+		filter: brightness(1.12);
+	}
+	.barre__bulle {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		transform: translateX(-50%);
+		z-index: 10;
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.55rem 0.8rem;
+		border-radius: var(--rayon);
+		font-size: 0.85rem;
+		white-space: nowrap;
+		max-width: 90vw;
+		pointer-events: none;
 	}
 	.legende {
 		list-style: none;
-		margin: 0.75rem 0 2rem;
+		margin: 0.75rem 0 0;
 		padding: 0;
 		display: flex;
 		flex-wrap: wrap;
@@ -744,42 +871,15 @@ const aides: Record<string, string> = {
 		flex: 0 0 auto;
 	}
 
-	.postes {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.95rem;
-	}
-	.postes th,
-	.postes td {
-		text-align: left;
-		padding: 0.7rem 1rem 0.7rem 0;
-		border-bottom: 1px solid var(--gris-moyen);
-	}
-	.postes thead th {
-		font-family: var(--titres);
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		font-size: 0.72rem;
-		color: var(--gris-leger);
-		border-bottom: 2px solid var(--bleu-nuit);
-	}
-	.postes tbody th {
-		font-weight: 600;
-		color: var(--bleu-nuit);
-	}
-	.non-chiffre {
-		color: var(--gris-leger);
-		font-style: italic;
-	}
 	.note-fin-de-vie {
-		margin: 0.9rem 0 0;
+		margin: 2rem 0 0;
 		font-size: 0.85rem;
 		color: var(--gris-leger);
 		max-width: 52rem;
 	}
 
 	.hypotheses {
-		margin-top: 1.75rem;
+		margin-top: 1.5rem;
 	}
 	.hypotheses summary {
 		cursor: pointer;

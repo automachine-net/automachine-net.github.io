@@ -42,9 +42,8 @@ export interface Resultat {
 	totalBas: number;
 	totalHaut: number;
 	masseTotale: number;
-	/** Équivalent en kilomètres parcourus en voiture, pour donner un ordre de grandeur. */
-	kmVoitureBas: number;
-	kmVoitureHaut: number;
+	/** Repères concrets, pour donner un ordre de grandeur au chiffre. */
+	comparaisons: { gabarit: string; bas: number; haut: number }[];
 	hypotheses: string[];
 }
 
@@ -145,8 +144,11 @@ export function calculer(e: Entrees): Resultat {
 		totalBas,
 		totalHaut,
 		masseTotale,
-		kmVoitureBas: totalBas / facteurs.comparaison.valeur,
-		kmVoitureHaut: totalHaut / facteurs.comparaison.valeur,
+		comparaisons: facteurs.comparaisons.map((c) => ({
+			gabarit: c.gabarit,
+			bas: totalBas / c.valeur,
+			haut: totalHaut / c.valeur,
+		})),
 		hypotheses,
 	};
 }

@@ -106,7 +106,7 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 						))
 					}
 					<tr class="ligne-categorie">
-						<th scope="rowgroup" colspan="4">Énergie, transport et comparaison</th>
+						<th scope="rowgroup" colspan="4">Énergie, transport et repères de comparaison</th>
 					</tr>
 					<tr>
 						<th scope="row">Électricité</th>
@@ -126,15 +126,19 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 							<span class="intitule">{facteurs.transport.intitule_ademe}</span>
 						</td>
 					</tr>
-					<tr>
-						<th scope="row">Voiture</th>
-						<td>{facteurs.comparaison.valeur} {facteurs.comparaison.unite}</td>
-						<td>{facteurs.comparaison.incertitude_pct} %</td>
-						<td>
-							n° {facteurs.comparaison.identifiant_ademe}
-							<span class="intitule">{facteurs.comparaison.intitule_ademe}</span>
-						</td>
-					</tr>
+					{
+						facteurs.comparaisons.map((c) => (
+							<tr>
+								<th scope="row">{c.libelle}</th>
+								<td>{c.valeur} {c.unite}</td>
+								<td>{c.incertitude_pct} %</td>
+								<td>
+									n° {c.identifiant_ademe}
+									<span class="intitule">{c.intitule_ademe}</span>
+								</td>
+							</tr>
+						))
+					}
 				</tbody>
 			</table>
 
@@ -183,16 +187,6 @@ const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.app
 		</div>
 	</section>
 
-	<section class="bloc bloc--sombre">
-		<div class="bloc__interieur appel">
-			<h2>Une question sur la méthode ?</h2>
-			<p>
-				<span class="a-rediger">[à relire]</span> Elle est faite pour être discutée. Dites-nous ce
-				qui vous paraît juste ou faux.
-			</p>
-			<p><a class="bouton bouton--clair" href="/contact">Nous écrire</a></p>
-		</div>
-	</section>
 </Base>
 
 <style>

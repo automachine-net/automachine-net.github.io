@@ -3,7 +3,6 @@
   "avertissement": "Chaque ligne provient de la Base Empreinte de l'ADEME et porte son identifiant d'élément, sa valeur, son incertitude officielle et la date à laquelle elle a été relevée. Aucune valeur n'est estimée. Une ligne marquée « approché » utilise un facteur voisin faute de facteur exact : elle doit être remplacée dès qu'un facteur propre existe.",
   "base": "Base Empreinte (ADEME), jeu de données « Base carbone® » ouvert sur data.ademe.fr",
   "date_releve": "2026-09-03",
-
   "categories": [
     {
       "cle": "metaux",
@@ -28,7 +27,8 @@
           "identifiant_ademe": "20643",
           "intitule_ademe": "Fil de palissage inox neuf 18/8",
           "approche": true,
-          "remarque": "Approché. La Base Empreinte ne contient aucun facteur générique pour l'inox : ce fil de palissage est le seul élément inox valide, et son incertitude officielle est de 100 %."
+          "remarque": "Approché. La Base Empreinte ne contient aucun facteur générique pour l'inox : ce fil de palissage est le seul élément inox valide, et son incertitude officielle est de 100 %.",
+          "note_courte": "Facteur approché : la base publique ne contient aucun facteur d’inox."
         },
         {
           "cle": "aluminium",
@@ -142,7 +142,8 @@
           "identifiant_ademe": "20586",
           "intitule_ademe": "Variateur électrique",
           "approche": true,
-          "remarque": "Approché. Le variateur tient lieu d'électronique de commande. C'est le poste le plus intense du simulateur, douze fois un moteur à masse égale."
+          "remarque": "Approché. Le variateur tient lieu d'électronique de commande. C'est le poste le plus intense du simulateur, douze fois un moteur à masse égale.",
+          "note_courte": "Facteur approché : l’électronique de commande est représentée par un variateur."
         },
         {
           "cle": "cablage",
@@ -152,12 +153,12 @@
           "identifiant_ademe": "26733",
           "intitule_ademe": "Cuivre — neuf",
           "approche": true,
-          "remarque": "Approché. Un câble est modélisé par son cuivre ; les gaines et isolants ne sont pas comptés."
+          "remarque": "Approché. Un câble est modélisé par son cuivre ; les gaines et isolants ne sont pas comptés.",
+          "note_courte": "Facteur approché : un câble est ramené à son cuivre."
         }
       ]
     }
   ],
-
   "energie": {
     "cle": "electricite_france",
     "libelle": "Électricité, mix moyen français, consommation",
@@ -178,18 +179,32 @@
     "intitule_ademe": "Articulé — 40 à 44 tonnes — diesel routier, incorporation de 7 % de biodiesel",
     "remarque": "Total des postes amont, combustion et fabrication du véhicule. Ne couvre que la livraison de la machine terminée, pas l'acheminement des matières premières."
   },
-  "comparaison": {
-    "cle": "voiture",
-    "libelle": "kilomètres en voiture",
-    "valeur": 0.256,
-    "unite": "kgCO2e/km",
-    "incertitude_pct": 60,
-    "identifiant_ademe": "43791",
-    "intitule_ademe": "Voiture — motorisation moyenne — 2023",
-    "remarque": "Sert uniquement à donner un ordre de grandeur parlant. N'entre dans aucun calcul."
-  },
   "fin_de_vie": {
     "chiffre": false,
     "remarque": "La fin de vie n'est pas chiffrée : la Base Empreinte de l'ADEME ne propose aucun facteur applicable à une machine spéciale."
-  }
+  },
+  "comparaisons": [
+    {
+      "cle": "voiture",
+      "libelle": "kilomètres parcourus en voiture",
+      "gabarit": "{n} km parcourus en voiture",
+      "valeur": 0.256,
+      "unite": "kgCO2e/km",
+      "incertitude_pct": 60,
+      "identifiant_ademe": "43791",
+      "intitule_ademe": "Voiture — motorisation moyenne — 2023",
+      "remarque": "Sert uniquement à donner un ordre de grandeur. N’entre dans aucun calcul."
+    },
+    {
+      "cle": "lave_linge",
+      "libelle": "lave-linge fabriqués",
+      "gabarit": "la fabrication de {n} lave-linge",
+      "valeur": 342,
+      "unite": "kgCO2e/unité",
+      "incertitude_pct": 30,
+      "identifiant_ademe": "26983",
+      "intitule_ademe": "Lave-linge — capacité 7 kg",
+      "remarque": "La Base Empreinte ne contient aucun facteur de machine industrielle. Le lave-linge est la machine la plus proche qui y figure : châssis métallique, moteur, électronique de commande. Sert uniquement de repère."
+    }
+  ]
 }
