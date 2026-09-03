@@ -97,13 +97,13 @@ const flux: Flux[] = [
 		cle: 'remblayage',
 		nature: 'boucle',
 		e: ep('remblayage'),
-		d: `M ${TRAITEMENT.x + TRAITEMENT.l},581.1 C 1180,581.1 1200,620 1200,700 C 1200,790 1150,830 1060,830 L 900,830 C 820,830 775,810 772,750 C 770,712 775,693.9 ${UTILISATION.x},693.9`,
+		d: `M ${TRAITEMENT.x + TRAITEMENT.l},581.1 C 1180,581.1 1200,620 1200,700 C 1200,780 1150,818 1060,818 L 900,818 C 820,818 775,800 772,750 C 770,712 775,693.9 ${UTILISATION.x},693.9`,
 	},
 	{
 		cle: 'recyclage',
 		nature: 'boucle',
 		e: ep('recyclage'),
-		d: `M ${TRAITEMENT.x + TRAITEMENT.l},613.8 C 1235,613.8 1268,660 1268,732 C 1268,852 1190,892 1080,892 L 900,892 C 800,892 728,860 725,782 C 722,732 745,726.6 ${UTILISATION.x},726.6`,
+		d: `M ${TRAITEMENT.x + TRAITEMENT.l},613.8 C 1235,613.8 1268,660 1268,732 C 1268,860 1190,900 1080,900 L 900,900 C 800,900 728,866 725,782 C 722,732 745,726.6 ${UTILISATION.x},726.6`,
 	},
 ];
 
@@ -147,13 +147,13 @@ const etiquettes: Etiquette[] = [
 
 	// Ces deux étiquettes sont posées sur le blanc, juste au-dessus de leur bande : dessus,
 	// elles ne contrastaient pas assez.
-	// Sous la bande descendante (dont le bord bas passe vers y = 644 à x = 690) et à gauche
-	// des boucles (qui ne remontent pas au-delà de x ≈ 700).
-	{ cles: ['utilisation', 'vers_utilisation'], x: 690, y: 676, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
+	// Sous la bande descendante (dont le bord bas passe vers y = 588 à x = 640) et à
+	// distance des boucles (qui ne remontent pas au-delà de x ≈ 700).
+	{ cles: ['utilisation', 'vers_utilisation'], x: 640, y: 622, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
 	{ cles: ['traitement'], x: 958, y: 506, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'] },
 	{ cles: ['incineration'], x: 1132, y: 545, ancre: 'start', valeurCle: 'incineration', lignes: ['Incinération'] },
-	{ cles: ['remblayage'], x: 980, y: 822, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
-	{ cles: ['recyclage'], x: 980, y: 884, ancre: 'middle', valeurCle: 'recyclage', lignes: ['Recyclage'], sur: true },
+	{ cles: ['remblayage'], x: 980, y: 810, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
+	{ cles: ['recyclage'], x: 980, y: 892, ancre: 'middle', valeurCle: 'recyclage', lignes: ['Recyclage'], sur: true },
 ];
 
 // ─── Étapes ───────────────────────────────────────────────────────────────────────────
