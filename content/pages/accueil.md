@@ -89,10 +89,4 @@ blocs:
     image_alt: ''
     image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
     position_image: droite
-  - type: appel
-    titre: Un besoin de machine ?
-    lien_libelle: Nous contacter
-    lien_url: /contact
-    texte: '[à relire] Décrivez-nous l’opération à réaliser, même sommairement. Nous vous dirons rapidement si c’est un sujet pour nous, et ce qu’il faudrait pour aller plus loin.'
-    fond: blanc
 ---
