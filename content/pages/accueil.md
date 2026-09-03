@@ -23,7 +23,7 @@ blocs:
     machines: []
   - type: module
     titre: Quelle sera l’empreinte carbone de votre machine ?
-    lien_libelle: Ouvrir le simulateur complet
+    lien_libelle: Ouvrir le simulateur
     lien_url: /outils/simulateur-carbone
     fond: sombre
     introduction: ''
@@ -40,19 +40,19 @@ blocs:
     nombre_questions: 3
     attente: '[MODULE À CONSTRUIRE ENSEMBLE] animation interactive sur le principe de réversibilité. Scénario à écrire.'
   - type: module
-    titre: Le règlement machines change le 20 janvier 2027
+    titre: ''
     lien_libelle: ''
     lien_url: ''
-    fond: clair
-    introduction: '[à relire] Le règlement (UE) 2023/1230 remplace la directive 2006/42/CE. Il change ce qui doit figurer dans votre dossier technique, qui porte la responsabilité et comment se déroule l’évaluation de conformité.'
+    fond: sombre
+    introduction: ''
     module: compte-a-rebours
     nombre_questions: 3
     attente: ''
   - type: module
-    titre: ''
+    titre: Serez-vous prêt ?
     lien_libelle: Continuer
     lien_url: /outils/quiz-reglement-machines
-    fond: clair
+    fond: sombre
     introduction: ''
     module: quiz-extrait
     nombre_questions: 3

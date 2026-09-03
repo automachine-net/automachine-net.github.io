@@ -31,7 +31,7 @@ const classeFond = classeFond_(bloc.fond);
 		{bloc.titre && <h2>{bloc.titre}</h2>}
 		{bloc.introduction && <p class="introduction" set:html={bloc.introduction} />}
 
-		{bloc.module === 'compte-a-rebours' && <CompteARebours />}
+		{bloc.module === 'compte-a-rebours' && <CompteARebours carte={bloc.fond !== 'sombre'} />}
 		{bloc.module === 'apercu-carbone' && <ApercuCarbone />}
 		{bloc.module === 'simulateur-carbone' && <SimulateurCarbone compact />}
 		{

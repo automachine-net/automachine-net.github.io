@@ -140,6 +140,24 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 		background: var(--bleu);
 	}
 
+	/* Sur un bloc sombre, le bouton et les textes doivent s'inverser : le bleu nuit sur
+	   bleu nuit serait invisible. */
+	:global(.bloc--sombre) .quiz__bouton {
+		background: var(--blanc);
+		color: var(--bleu-nuit);
+	}
+	:global(.bloc--sombre) .quiz__bouton:hover {
+		background: var(--orange);
+		color: var(--bleu-nuit);
+	}
+	:global(.bloc--sombre) .question__texte {
+		color: var(--blanc);
+	}
+	:global(.bloc--sombre) .quiz__mention {
+		color: var(--bleu-clair);
+		border-top-color: rgba(255, 255, 255, 0.2);
+	}
+
 	.quiz__liste {
 		list-style: none;
 		padding: 0;

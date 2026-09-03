@@ -2,9 +2,15 @@
 // Compte à rebours vers l'application du règlement (UE) 2023/1230.
 // Sans JavaScript, la date reste lisible : seul le nombre de jours manque.
 const ECHEANCE = '2027-01-20';
+
+interface Props {
+	/** Encadré sombre. À désactiver quand le bloc d'accueil est lui-même sombre. */
+	carte?: boolean;
+}
+const { carte = true } = Astro.props;
 ---
 
-<div class="compte" data-echeance={ECHEANCE}>
+<div class={`compte ${carte ? 'compte--carte' : ''}`} data-echeance={ECHEANCE}>
 	<p class="compte__valeur">
 		<span data-jours>—</span>
 		<span class="compte__unite">jours restants</span>
@@ -25,7 +31,7 @@ const ECHEANCE = '2027-01-20';
 </script>
 
 <style>
-	.compte {
+	.compte--carte {
 		background: var(--bleu-nuit);
 		color: var(--blanc);
 		padding: 1.75rem 2rem;
