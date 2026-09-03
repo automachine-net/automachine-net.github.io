@@ -457,8 +457,8 @@ const parametres = [
 						if (part < 4) segment.classList.add('barre__part--menue');
 						const texte = typo(
 							`${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
-								part < 1 ? 'moins de 1' : Math.round(part)
-							} % du total`
+								part < 1 ? '< 1' : Math.round(part)
+							} % du total`
 						);
 						segment.setAttribute('aria-label', texte);
 						const montrer = () => {
@@ -490,7 +490,7 @@ const parametres = [
 						const pastille = document.createElement('span');
 						pastille.className = 'legende__pastille';
 						pastille.style.background = couleurs[p.cle];
-						li.append(pastille, typo(`${p.libelle} ${part < 1 ? 'moins de 1' : Math.round(part)} %`));
+						li.append(pastille, typo(`${p.libelle} ${part < 1 ? '< 1' : Math.round(part)} %`));
 						return li;
 					})
 			);
@@ -888,7 +888,7 @@ const parametres = [
 		overflow: visible;
 		background: var(--gris-clair);
 	}
-	.barre__part {
+	.barre :global(.barre__part) {
 		position: relative;
 		display: block;
 		height: 100%;
@@ -897,22 +897,25 @@ const parametres = [
 		margin: 0;
 		cursor: pointer;
 		appearance: none;
+		/* Un poste très petit resterait invisible à sa largeur exacte. Un filet de 2 px suffit
+		   à le montrer sans fausser la lecture des proportions. */
+		min-width: 2px;
 	}
-	.barre__part:first-child {
+	.barre :global(.barre__part:first-child) {
 		border-radius: 2px 0 0 2px;
 	}
-	.barre__part:last-child {
+	.barre :global(.barre__part:last-child) {
 		border-radius: 0 2px 2px 0;
 	}
 	/* Un poste minuscule reste survolable : sa zone de clic déborde, pas son dessin. */
-	.barre__part--menue::after {
+	.barre :global(.barre__part--menue)::after {
 		content: '';
 		position: absolute;
 		inset: -0.5rem -0.6rem;
 		z-index: 2;
 	}
-	.barre__part:hover,
-	.barre__part:focus-visible {
+	.barre :global(.barre__part:hover),
+	.barre :global(.barre__part:focus-visible) {
 		filter: brightness(1.1);
 	}
 	.barre__bulle {
@@ -937,12 +940,12 @@ const parametres = [
 		gap: 0.5rem 1.5rem;
 		font-size: 0.9rem;
 	}
-	.legende li {
+	.legende :global(li) {
 		display: flex;
 		align-items: center;
 		gap: 0.45rem;
 	}
-	.legende__pastille {
+	.legende :global(.legende__pastille) {
 		width: 0.75rem;
 		height: 0.75rem;
 		border-radius: 2px;
@@ -970,7 +973,7 @@ const parametres = [
 		font-size: 0.9rem;
 		max-width: 52rem;
 	}
-	.hypotheses li {
+	.hypotheses :global(li) {
 		margin-bottom: 0.5rem;
 	}
 </style>
