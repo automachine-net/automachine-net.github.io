@@ -453,14 +453,17 @@ const parametres = [
 						// Un poste minuscule garde une zone de survol utilisable, sans être
 						// dessiné plus large qu'il n'est.
 						if (part < 4) segment.classList.add('barre__part--menue');
-						const texte = typo(
-							`${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
-								part < 1 ? '< 1' : Math.round(part)
-							} % du total`
+						// Le libellé du poste est gardé à part : dans la bulle, il est en gras.
+						const valeurs = typo(
+							`${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
+								part < 1 ? '< 1' : Math.round(part)
+							} % du total`
 						);
-						segment.setAttribute('aria-label', texte);
+						segment.setAttribute('aria-label', typo(`${p.libelle} : ${valeurs}`));
 						const montrer = () => {
-							bulleBarre.textContent = texte;
+							const nom = document.createElement('strong');
+							nom.textContent = p.libelle;
+							bulleBarre.replaceChildren(nom, document.createTextNode(typo(` : ${valeurs}`)));
 							bulleBarre.hidden = false;
 							bulleBarre.style.left = `${segment.offsetLeft + segment.offsetWidth / 2}px`;
 							bulleBarre.style.setProperty('--decalage', '0px');
@@ -945,6 +948,10 @@ const parametres = [
 	.barre :global(.barre__part:hover),
 	.barre :global(.barre__part:focus-visible) {
 		filter: brightness(1.1);
+	}
+	/* Le gras est fabriqué en JavaScript : sans « :global », la règle ne l'atteindrait pas. */
+	.barre__bulle :global(strong) {
+		color: var(--bleu-clair);
 	}
 	.barre__bulle {
 		position: absolute;

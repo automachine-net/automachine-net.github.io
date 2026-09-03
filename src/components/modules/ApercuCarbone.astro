@@ -34,8 +34,9 @@ const parts = chiffres.map((p) => {
 		libelle: p.libelle,
 		pourcentage,
 		couleur: couleurs[p.cle],
-		detail: typo(
-			`${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
+		// Le libellé est gardé à part : dans la bulle, il s'affiche en gras.
+		valeurs: typo(
+			`${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
 				pourcentage < 1 ? '< 1' : Math.round(pourcentage)
 			} % du total`
 		),
@@ -75,10 +76,12 @@ const parts = chiffres.map((p) => {
 					class={`apercu__part ${p.pourcentage < 4 ? 'apercu__part--menue' : ''}`}
 					style={`width: ${p.pourcentage}%; background: ${p.couleur}`}
 					tabindex="0"
-					aria-label={p.detail}
+					aria-label={typo(`${p.libelle} : ${p.valeurs}`)}
 					data-bulle
 				>
-					<span class="apercu__bulle">{p.detail}</span>
+					<span class="apercu__bulle">
+						<strong>{p.libelle}</strong> : {p.valeurs}
+					</span>
 				</span>
 			))
 		}
@@ -152,6 +155,9 @@ const parts = chiffres.map((p) => {
 	.apercu__part:hover,
 	.apercu__part:focus-visible {
 		filter: brightness(1.1);
+	}
+	.apercu__bulle strong {
+		color: var(--bleu-nuit);
 	}
 	.apercu__bulle {
 		position: absolute;
