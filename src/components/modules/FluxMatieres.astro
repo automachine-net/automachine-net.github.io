@@ -147,7 +147,9 @@ const etiquettes: Etiquette[] = [
 
 	// Ces deux étiquettes sont posées sur le blanc, juste au-dessus de leur bande : dessus,
 	// elles ne contrastaient pas assez.
-	{ cles: ['utilisation', 'vers_utilisation'], x: UTILISATION.x - 12, y: 480, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
+	// Sous la bande descendante (dont le bord bas passe vers y = 644 à x = 690) et à gauche
+	// des boucles (qui ne remontent pas au-delà de x ≈ 700).
+	{ cles: ['utilisation', 'vers_utilisation'], x: 690, y: 676, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
 	{ cles: ['traitement'], x: 958, y: 506, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'] },
 	{ cles: ['incineration'], x: 1132, y: 545, ancre: 'start', valeurCle: 'incineration', lignes: ['Incinération'] },
 	{ cles: ['remblayage'], x: 980, y: 822, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
