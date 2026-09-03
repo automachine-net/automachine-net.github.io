@@ -52,6 +52,9 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		</div>
 
 		<div class="helice__panneau">
+			<div class="helice__panneau-tete">
+				<button type="button" class="helice__bouton" data-reinitialiser>Valeurs de départ</button>
+			</div>
 			<ol class="helice__criteres">
 				{
 					criteres.map((c, i) => (
@@ -124,7 +127,6 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 				{typo('Touches 1 à 4 : choisir un critère, puis flèches ← → pour le régler. R : revenir aux valeurs de départ.')}
 			</span>
 		</span>
-		<button type="button" class="helice__bouton" data-reinitialiser>Valeurs de départ</button>
 		<button type="button" class="helice__bouton" data-plein-ecran>
 			<span data-plein-ecran-texte>Plein écran</span>
 		</button>
@@ -505,6 +507,11 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Critères ─────────────────────────────────────────────────────────────── */
+	.helice__panneau-tete {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 0.75rem;
+	}
 	.helice__criteres {
 		list-style: none;
 		margin: 0;
@@ -760,29 +767,56 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	.helice:fullscreen .helice__sous-titre {
 		font-size: 1.1rem;
 	}
+	/* C'est la hauteur qui commande : le dessin prend toute la hauteur de sa rangée, sa
+	   largeur en découle ; le panneau se cale en hauteur et défile s'il le faut. */
 	.helice:fullscreen .helice__cadre {
 		grid-template-columns: minmax(0, 1fr) 30rem;
 		gap: 3rem;
 		min-height: 0;
+		height: 100%;
+		align-items: stretch;
+	}
+	.helice:fullscreen .helice__scene {
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.helice:fullscreen .helice__dessin {
-		max-height: calc(100vh - 9rem);
+		height: 100%;
+		width: auto;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.helice:fullscreen .helice__panneau {
+		min-height: 0;
+		max-height: 100%;
+		overflow: auto;
+		align-self: center;
+		/* Les commandes du coin occupent le bas de cette colonne. */
+		padding-bottom: 4rem;
+	}
+	.helice:fullscreen .helice__criteres {
+		gap: 0.75rem;
+	}
+	.helice:fullscreen .helice__verdict {
+		margin-top: 1rem;
 	}
 	.helice:fullscreen .critere__tete label {
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 	}
 	.helice:fullscreen .critere__valeur {
-		font-size: 1.5rem;
+		font-size: 1.35rem;
 	}
 	.helice:fullscreen .critere__regle {
-		font-size: 1rem;
+		font-size: 0.95rem;
 	}
 	.helice:fullscreen .helice__verdict-titre {
-		font-size: 2rem;
+		font-size: 1.8rem;
 	}
 	.helice:fullscreen .helice__verdict-texte,
 	.helice:fullscreen .helice__echecs {
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 	}
 	.helice:fullscreen .helice__coin {
 		position: absolute;
