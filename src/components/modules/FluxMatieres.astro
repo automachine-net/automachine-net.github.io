@@ -171,94 +171,114 @@ const etapes = donnees.etapes.map((e, i) => {
 ---
 
 <figure class="flux" data-flux-module data-etape="0">
-	<div class="flux__cadre">
-		<div class="flux__scene">
-			<svg
-				class="flux__dessin"
-				viewBox="0 0 1700 960"
-				role="img"
-				aria-labelledby="flux-titre-svg"
-				preserveAspectRatio="xMidYMid meet"
-			>
-				<title id="flux-titre-svg">
-					{typo(`${donnees.titre}, ${donnees.annee}, en ${donnees.unite}.`)}
-				</title>
-
-				<g class="flux__bandes">
-					{
-						flux.map((f) => (
-							<g class="flux__flux" data-flux={f.cle} data-nature={f.nature}>
-								<path class="flux__bande" d={f.d} stroke-width={f.e} />
-								<path class="flux__mouvement" d={f.d} stroke-width={f.e} />
-							</g>
-						))
-					}
-				</g>
-
-				<g class="flux__noeuds">
-					{noeuds.map((n) => <rect x={n.x} y={n.y} width={n.l} height={n.h} rx="1" />)}
-				</g>
-
-				<g class="flux__etiquettes">
-					{
-						etiquettes.map((et) => (
-							<g
-								class={`flux__etiquette ${et.sur ? 'flux__etiquette--sur' : ''}`}
-								data-etiquette={et.cles.join(' ')}
-							>
-								<text x={et.x} y={et.y} text-anchor={et.ancre}>
-									<tspan class="flux__valeur">{nombre(valeur(et.valeurCle))}</tspan>
-									{et.lignes.map((l, i) => (
-										<tspan x={et.x} dy={i === 0 ? 26 : 24} class="flux__nom">
-											{l}
-										</tspan>
-									))}
-								</text>
-							</g>
-						))
-					}
-				</g>
-			</svg>
-		</div>
-
-		<div class="flux__panneau">
+	<!-- Bandeau : ce qu'on regarde, dans quelle unité, et où l'on en est. -->
+	<header class="flux__entete">
+		<p class="flux__quoi">
+			<strong>{typo(donnees.titre)}</strong>
+			<span class="flux__unite">{typo(`${donnees.annee} · ${donnees.unite}`)}</span>
+		</p>
+		<div class="flux__progression">
 			<p class="flux__rang">
 				<span data-rang>1</span><span class="flux__sur"> / {etapes.length}</span>
 			</p>
-			<h3 class="flux__titre-etape" data-titre>{etapes[0].titre}</h3>
-			<p class="flux__nombre" data-nombre hidden></p>
-			<p class="flux__commentaire" data-commentaire>{etapes[0].commentaire}</p>
-			<p class="flux__cumul" data-cumul hidden></p>
-
-			<div class="flux__commandes">
-				<button type="button" class="flux__fleche" data-precedent aria-label="Étape précédente">
-					<span aria-hidden="true">←</span>
-				</button>
-				<ol class="flux__jalons">
-					{
-						etapes.map((e) => (
-							<li>
-								<button type="button" data-jalon={e.index} aria-label={e.titre}>
-									<span aria-hidden="true" />
-								</button>
-							</li>
-						))
-					}
-				</ol>
-				<button type="button" class="flux__fleche" data-suivant aria-label="Étape suivante">
-					<span aria-hidden="true">→</span>
-				</button>
-			</div>
-
-			<button type="button" class="flux__plein-ecran" data-plein-ecran>
-				<span data-plein-ecran-texte>Plein écran</span>
-			</button>
-			<p class="flux__aide">{typo('Flèches ← et → du clavier, ou barre d’espace.')}</p>
+			<ol class="flux__jalons">
+				{
+					etapes.map((e) => (
+						<li>
+							<button type="button" data-jalon={e.index} aria-label={e.titre}>
+								<span aria-hidden="true" />
+							</button>
+						</li>
+					))
+				}
+			</ol>
 		</div>
+	</header>
+
+	<!-- Scène : le schéma au centre, une flèche de chaque côté. -->
+	<div class="flux__scene">
+		<button type="button" class="flux__fleche flux__fleche--scene" data-precedent aria-label="Étape précédente">
+			<span aria-hidden="true">←</span>
+		</button>
+		<svg
+			class="flux__dessin"
+			viewBox="0 0 1700 960"
+			role="img"
+			aria-labelledby="flux-titre-svg"
+			preserveAspectRatio="xMidYMid meet"
+		>
+			<title id="flux-titre-svg">
+				{typo(`${donnees.titre}, ${donnees.annee}, en ${donnees.unite}.`)}
+			</title>
+
+			<g class="flux__bandes">
+				{
+					flux.map((f) => (
+						<g class="flux__flux" data-flux={f.cle} data-nature={f.nature}>
+							<path class="flux__bande" d={f.d} stroke-width={f.e} />
+							<path class="flux__mouvement" d={f.d} stroke-width={f.e} />
+						</g>
+					))
+				}
+			</g>
+
+			<g class="flux__noeuds">
+				{noeuds.map((n) => <rect x={n.x} y={n.y} width={n.l} height={n.h} rx="1" />)}
+			</g>
+
+			<g class="flux__etiquettes">
+				{
+					etiquettes.map((et) => (
+						<g
+							class={`flux__etiquette ${et.sur ? 'flux__etiquette--sur' : ''}`}
+							data-etiquette={et.cles.join(' ')}
+						>
+							<text x={et.x} y={et.y} text-anchor={et.ancre}>
+								<tspan class="flux__valeur">{nombre(valeur(et.valeurCle))}</tspan>
+								{et.lignes.map((l, i) => (
+									<tspan x={et.x} dy={i === 0 ? 26 : 24} class="flux__nom">
+										{l}
+									</tspan>
+								))}
+							</text>
+						</g>
+					))
+				}
+			</g>
+		</svg>
+		<button type="button" class="flux__fleche flux__fleche--scene" data-suivant aria-label="Étape suivante">
+			<span aria-hidden="true">→</span>
+		</button>
+	</div>
+
+	<!-- L'étape : titre, chiffre et commentaire, ensemble, sous le schéma. -->
+	<div class="flux__etape">
+		<h3 class="flux__titre-etape" data-titre>{etapes[0].titre}</h3>
+		<p class="flux__nombre" data-nombre hidden></p>
+		<p class="flux__commentaire" data-commentaire>{etapes[0].commentaire}</p>
+		<p class="flux__cumul" data-cumul hidden></p>
+	</div>
+
+	<!-- Coin inférieur : l'aide derrière un « ? », le plein écran, et en plein écran les
+	     flèches, pour ne rien laisser au milieu qui gêne la lecture. -->
+	<div class="flux__coin">
+		<details class="flux__aide">
+			<summary aria-label="Aide à la navigation"><span aria-hidden="true">?</span></summary>
+			<p>{typo('Flèches ← et → du clavier, ou barre d’espace. Touche Début pour revenir au départ.')}</p>
+		</details>
+		<button type="button" class="flux__plein-ecran" data-plein-ecran>
+			<span data-plein-ecran-texte>Plein écran</span>
+		</button>
+		<button type="button" class="flux__fleche flux__fleche--coin" data-precedent aria-label="Étape précédente">
+			<span aria-hidden="true">←</span>
+		</button>
+		<button type="button" class="flux__fleche flux__fleche--coin" data-suivant aria-label="Étape suivante">
+			<span aria-hidden="true">→</span>
+		</button>
 	</div>
 
 	<figcaption class="flux__source">
-		<strong>{typo(donnees.titre)}</strong>{typo(`, ${donnees.annee}, en ${donnees.unite}. Source : ${donnees.source} ${donnees.note}`)}
+		{typo(`Source : ${donnees.source} ${donnees.note}`)}
 	</figcaption>
 </figure>
 
@@ -298,7 +318,7 @@ const etapes = donnees.etapes.map((e, i) => {
 				nombre.innerHTML =
 					'<span class="flux__nombre-valeur">' +
 					e.valeur.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) +
-					'</span><span class="flux__nombre-unite">millions de tonnes par an</span>' +
+					'</span> <span class="flux__nombre-unite">millions de tonnes par an</span>' +
 					// La part n'a de sens que rapportée à l'entrée : on ne l'affiche pas pour l'entrée.
 					(e.pourcentage < 100
 						? '<span class="flux__nombre-part">' + e.pourcentage + ' % de ce qui entre</span>'
@@ -309,8 +329,7 @@ const etapes = donnees.etapes.map((e, i) => {
 				cumul.hidden = true;
 			} else {
 				cumul.hidden = false;
-				cumul.innerHTML =
-					'<strong>' + e.cumulPourcentage + ' %</strong> ' + e.cumulLibelle;
+				cumul.innerHTML = '<strong>' + e.cumulPourcentage + ' %</strong> ' + e.cumulLibelle;
 			}
 
 			bandes.forEach((b) => b.classList.toggle('est-actif', actifs.has(b.dataset.flux)));
@@ -323,8 +342,10 @@ const etapes = donnees.etapes.map((e, i) => {
 			jalons.forEach((j, k) => j.setAttribute('aria-current', k === index ? 'true' : 'false'));
 		}
 
-		module.querySelector('[data-precedent]').addEventListener('click', () => afficher(courante - 1));
-		module.querySelector('[data-suivant]').addEventListener('click', () => afficher(courante + 1));
+		// Les flèches existent en deux jeux (côtés du schéma, coin en plein écran) : un seul
+		// des deux est visible à la fois, les deux sont branchés.
+		module.querySelectorAll('[data-precedent]').forEach((b) => b.addEventListener('click', () => afficher(courante - 1)));
+		module.querySelectorAll('[data-suivant]').forEach((b) => b.addEventListener('click', () => afficher(courante + 1)));
 		jalons.forEach((j) => j.addEventListener('click', () => afficher(Number(j.dataset.jalon))));
 
 		// Plein écran : l'orateur projette le module seul, sans le reste de la page.
@@ -372,80 +393,137 @@ const etapes = donnees.etapes.map((e, i) => {
 </script>
 
 <style>
+	/* ── Squelette ────────────────────────────────────────────────────────────────
+	   Quatre rangs : bandeau, scène, étape, coin. Le schéma est borné en hauteur pour que
+	   tout tienne à l'écran, légende comprise : c'est le schéma qui s'adapte, pas le texte. */
 	.flux {
 		margin: 0;
-	}
-	/* Le schéma prend toute la largeur ; le panneau d'étape vient dessous. Les étiquettes
-	   du dessin restent ainsi lisibles sur un écran ordinaire. */
-	.flux__cadre {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		gap: 1.5rem;
+		grid-template-rows: auto minmax(0, 1fr) auto auto;
+		gap: 1rem;
 		background: var(--blanc);
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
-		padding: 1.5rem;
+		padding: 1.25rem 1.5rem 1rem;
+		position: relative;
 	}
+
+	/* ── Bandeau ──────────────────────────────────────────────────────────────── */
+	.flux__entete {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem 2rem;
+		flex-wrap: wrap;
+	}
+	.flux__quoi {
+		margin: 0;
+		font-family: var(--titres);
+		color: var(--bleu-nuit);
+		font-size: 1.05rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+	.flux__unite {
+		font-weight: 500;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+		letter-spacing: 0.02em;
+	}
+	.flux__progression {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+	}
+	.flux__rang {
+		margin: 0;
+		font-family: var(--titres);
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		color: var(--gris-leger);
+	}
+	.flux__rang [data-rang] {
+		color: var(--bleu-nuit);
+		font-weight: 700;
+	}
+	.flux__jalons {
+		list-style: none;
+		display: flex;
+		gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+	}
+	.flux__jalons button {
+		display: block;
+		padding: 0.5rem 0.1rem;
+		border: 0;
+		background: none;
+		cursor: pointer;
+	}
+	.flux__jalons span {
+		display: block;
+		width: 1.1rem;
+		height: 3px;
+		background: var(--gris-moyen);
+		transition: background 0.2s;
+	}
+	.flux__jalons button:hover span {
+		background: var(--bleu-clair);
+	}
+	.flux__jalons button[aria-current='true'] span {
+		background: var(--orange);
+	}
+
+	/* ── Scène ────────────────────────────────────────────────────────────────── */
+	/* Les flèches collent au schéma : la largeur du dessin est bornée par sa hauteur
+	   (rapport 1700 / 960), et l'ensemble est centré. */
 	.flux__scene {
-		min-width: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		min-height: 0;
 	}
 	.flux__dessin {
 		display: block;
+		flex: 0 1 auto;
 		width: 100%;
+		max-width: calc(min(58vh, 640px) * 1.7708);
 		height: auto;
+		min-width: 0;
 	}
-	.flux__panneau {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-		grid-template-areas:
-			'rang commentaire'
-			'titre commentaire'
-			'nombre cumul'
-			'commandes commandes'
-			'plein aide';
-		column-gap: 2.5rem;
-		align-items: start;
-		border-top: 1px solid var(--gris-moyen);
-		padding-top: 1.25rem;
+	.flux__fleche {
+		flex: 0 0 auto;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 1px solid var(--gris-moyen);
+		border-radius: 50%;
+		background: var(--blanc);
+		color: var(--bleu-nuit);
+		font-size: 1.1rem;
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			border-color 0.2s,
+			background 0.2s;
 	}
-	@media (max-width: 48rem) {
-		.flux__panneau {
-			grid-template-columns: minmax(0, 1fr);
-			grid-template-areas:
-				'rang'
-				'titre'
-				'nombre'
-				'commentaire'
-				'cumul'
-				'commandes'
-				'plein'
-				'aide';
+	.flux__fleche:hover {
+		border-color: var(--bleu);
+		background: var(--gris-clair);
+	}
+	.flux__fleche--coin {
+		display: none;
+	}
+	@media (max-width: 40rem) {
+		/* Sur un petit écran, les flèches gagnent à quitter les côtés du schéma. */
+		.flux__fleche--scene {
+			display: none;
 		}
-	}
-	.flux__rang {
-		grid-area: rang;
-	}
-	.flux__titre-etape {
-		grid-area: titre;
-	}
-	.flux__nombre {
-		grid-area: nombre;
-	}
-	.flux__commentaire {
-		grid-area: commentaire;
-	}
-	.flux__cumul {
-		grid-area: cumul;
-	}
-	.flux__commandes {
-		grid-area: commandes;
-	}
-	.flux__plein-ecran {
-		grid-area: plein;
-		justify-self: start;
-	}
-	.flux__aide {
-		grid-area: aide;
+		.flux__fleche--coin {
+			display: inline-block;
+		}
 	}
 
 	/* ── Bandes ───────────────────────────────────────────────────────────────── */
@@ -504,7 +582,7 @@ const etapes = donnees.etapes.map((e, i) => {
 		fill: var(--bleu-nuit);
 	}
 
-	/* ── Étiquettes ───────────────────────────────────────────────────────────── */
+	/* ── Étiquettes du schéma ─────────────────────────────────────────────────── */
 	.flux__etiquettes text {
 		font-family: var(--titres);
 		fill: var(--bleu-nuit);
@@ -532,186 +610,195 @@ const etapes = donnees.etapes.map((e, i) => {
 		font-size: 24px;
 	}
 
-	/* ── Panneau ──────────────────────────────────────────────────────────────── */
-	.flux__panneau {
-		min-width: 0;
-	}
-	.flux__rang {
-		font-family: var(--titres);
-		font-size: 0.85rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--gris-leger);
-		margin: 0 0 0.5rem;
-	}
-	.flux__sur {
-		opacity: 0.6;
+	/* ── Étape ────────────────────────────────────────────────────────────────── */
+	.flux__etape {
+		text-align: center;
+		max-width: 60ch;
+		margin: 0 auto;
 	}
 	.flux__titre-etape {
-		font-size: clamp(1.35rem, 2.4vw, 1.75rem);
-		margin: 0 0 0.75rem;
+		font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+		margin: 0 0 0.25rem;
 	}
 	.flux__nombre {
-		margin: 0 0 0.75rem;
-		display: grid;
+		margin: 0 0 0.5rem;
+		font-family: var(--titres);
+		color: var(--bleu-nuit);
+		display: flex;
+		justify-content: center;
+		align-items: baseline;
+		gap: 0.5rem 0.75rem;
+		flex-wrap: wrap;
 	}
 	.flux__nombre :global(.flux__nombre-valeur) {
-		font-family: var(--titres);
 		font-weight: 700;
-		font-size: clamp(2.4rem, 6vw, 3.4rem);
+		font-size: clamp(1.8rem, 3.2vw, 2.4rem);
 		line-height: 1;
-		color: var(--bleu-nuit);
 	}
 	.flux__nombre :global(.flux__nombre-unite) {
-		font-size: 0.9rem;
+		font-weight: 500;
+		font-size: 0.95rem;
 		color: var(--gris-leger);
 	}
 	.flux__nombre :global(.flux__nombre-part) {
-		margin-top: 0.4rem;
-		font-family: var(--titres);
 		font-weight: 600;
-		font-size: 1.05rem;
+		font-size: 1rem;
 		color: var(--bleu);
+	}
+	.flux__nombre :global(.flux__nombre-part)::before {
+		content: '·';
+		margin-right: 0.75rem;
+		color: var(--gris-moyen);
 	}
 	.flux__commentaire {
 		margin: 0;
-		font-size: 1rem;
+		font-size: 1.05rem;
 	}
 	.flux__cumul {
-		margin: 1rem 0 0;
-		padding: 0.7rem 0.9rem;
+		display: inline-block;
+		margin: 0.75rem 0 0;
+		padding: 0.5rem 0.9rem;
 		background: var(--gris-clair);
 		border-left: 3px solid var(--orange);
 		font-size: 0.95rem;
 	}
 	.flux__cumul :global(strong) {
 		font-family: var(--titres);
-		font-size: 1.4rem;
+		font-size: 1.3rem;
 		color: var(--bleu-nuit);
 	}
 
-	.flux__commandes {
+	/* ── Coin : aide, plein écran ─────────────────────────────────────────────── */
+	.flux__coin {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		margin-top: 1.75rem;
+		justify-content: flex-end;
+		gap: 1rem;
 	}
-	.flux__fleche {
-		flex: 0 0 auto;
-		width: 2.5rem;
-		height: 2.5rem;
-		border: 1px solid var(--gris-moyen);
+	.flux__aide {
+		position: relative;
+	}
+	.flux__aide summary {
+		list-style: none;
+		width: 1.75rem;
+		height: 1.75rem;
 		border-radius: 50%;
-		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		display: grid;
+		place-items: center;
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: 0.95rem;
 		color: var(--bleu-nuit);
-		font-size: 1.1rem;
-		line-height: 1;
 		cursor: pointer;
-		transition:
-			border-color 0.2s,
-			background 0.2s;
 	}
-	.flux__fleche:hover {
+	.flux__aide summary::-webkit-details-marker {
+		display: none;
+	}
+	.flux__aide summary:hover {
 		border-color: var(--bleu);
 		background: var(--gris-clair);
 	}
-	.flux__jalons {
-		list-style: none;
-		display: flex;
-		gap: 0.4rem;
+	/* L'aide s'ouvre au-dessus du bouton, sans déplacer le reste. */
+	.flux__aide p {
+		position: absolute;
+		bottom: calc(100% + 0.5rem);
+		right: 0;
 		margin: 0;
-		padding: 0;
-		flex: 1 1 auto;
+		width: max-content;
+		max-width: min(22rem, 80vw);
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.6rem 0.85rem;
+		border-radius: var(--rayon);
+		font-size: 0.85rem;
+		line-height: 1.4;
+		z-index: 10;
 	}
-	.flux__jalons button {
-		display: block;
-		padding: 0.4rem 0.15rem;
-		border: 0;
-		background: none;
-		cursor: pointer;
-	}
-	.flux__jalons span {
-		display: block;
-		width: 0.9rem;
-		height: 3px;
-		background: var(--gris-moyen);
-		transition: background 0.2s;
-	}
-	.flux__jalons button:hover span {
-		background: var(--bleu-clair);
-	}
-	.flux__jalons button[aria-current='true'] span {
-		background: var(--orange);
-	}
-
 	.flux__plein-ecran {
-		margin-top: 1.25rem;
 		border: 0;
 		background: none;
 		padding: 0;
 		font-family: var(--titres);
 		font-weight: 600;
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		color: var(--bleu);
 		border-bottom: 2px solid var(--orange);
 		cursor: pointer;
 	}
-	.flux__aide {
-		margin: 0.75rem 0 0;
-		font-size: 0.85rem;
-		color: var(--gris-leger);
-	}
 
 	.flux__source {
-		margin-top: 1rem;
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		color: var(--gris-leger);
-		max-width: 56rem;
+		margin: 0;
 	}
 
-	/* En plein écran, c'est la hauteur qui limite : le schéma prend toute la hauteur
-	   disponible et le panneau se range à sa droite, en colonne. */
+	/* ── Plein écran ──────────────────────────────────────────────────────────────
+	   L'essentiel au centre : bandeau en haut, schéma au milieu qui prend toute la hauteur
+	   restante, étape juste dessous, commandes dans le coin inférieur droit. */
 	.flux:fullscreen {
-		background: var(--blanc);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		padding: 2rem 3rem;
-	}
-	.flux:fullscreen .flux__cadre {
 		border: 0;
-		padding: 0;
-		grid-template-columns: minmax(0, 1fr) 24rem;
-		gap: 3rem;
-		align-items: center;
+		border-radius: 0;
+		padding: 1.5rem 3rem 1.25rem;
+		gap: 1.25rem;
+		grid-template-rows: auto minmax(0, 1fr) auto;
 	}
+	.flux:fullscreen .flux__quoi {
+		font-size: 1.25rem;
+	}
+	.flux:fullscreen .flux__unite {
+		font-size: 1rem;
+	}
+	.flux:fullscreen .flux__progression {
+		gap: 1.25rem;
+	}
+	.flux:fullscreen .flux__jalons span {
+		width: 1.6rem;
+	}
+	.flux:fullscreen .flux__fleche--scene {
+		display: none;
+	}
+	/* Ici c'est la hauteur qui commande : le dessin prend toute la hauteur de sa rangée,
+	   sa largeur en découle. */
 	.flux:fullscreen .flux__dessin {
-		max-height: calc(100vh - 4rem);
+		height: 100%;
+		width: auto;
+		max-width: 100%;
+		max-height: 100%;
 	}
-	.flux:fullscreen .flux__panneau {
-		grid-template-columns: minmax(0, 1fr);
-		grid-template-areas:
-			'rang'
-			'titre'
-			'nombre'
-			'commentaire'
-			'cumul'
-			'commandes'
-			'plein'
-			'aide';
-		border-top: 0;
-		padding-top: 0;
+	/* Le texte d'étape laisse la place des commandes du coin, de chaque côté pour rester
+	   centré. */
+	.flux:fullscreen .flux__etape {
+		max-width: min(80ch, calc(100% - 26rem));
 	}
 	.flux:fullscreen .flux__titre-etape {
 		font-size: 2.2rem;
 	}
-	.flux:fullscreen .flux__commentaire {
+	.flux:fullscreen .flux__nombre :global(.flux__nombre-valeur) {
+		font-size: 3.2rem;
+	}
+	.flux:fullscreen .flux__nombre :global(.flux__nombre-unite),
+	.flux:fullscreen .flux__nombre :global(.flux__nombre-part) {
 		font-size: 1.3rem;
 	}
-	.flux:fullscreen .flux__nombre :global(.flux__nombre-valeur) {
-		font-size: 4.5rem;
+	.flux:fullscreen .flux__commentaire {
+		font-size: 1.45rem;
+	}
+	.flux:fullscreen .flux__cumul {
+		font-size: 1.2rem;
+	}
+	.flux:fullscreen .flux__cumul :global(strong) {
+		font-size: 1.7rem;
+	}
+	.flux:fullscreen .flux__coin {
+		position: absolute;
+		right: 1.5rem;
+		bottom: 1.25rem;
+	}
+	.flux:fullscreen .flux__fleche--coin {
+		display: inline-block;
 	}
 	.flux:fullscreen .flux__source {
 		display: none;
