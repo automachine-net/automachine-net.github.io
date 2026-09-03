@@ -62,8 +62,10 @@ type Flux = {
 };
 
 const flux: Flux[] = [
-	{ cle: 'importations', nature: 'entree', e: ep('importations'), d: bande(200, 106, APPORTS.x, 161.2) },
-	{ cle: 'extraction', nature: 'entree', e: ep('extraction'), d: bande(200, 340, APPORTS.x, 307.4) },
+	// Les entrées démarrent à 260 pour laisser, à leur gauche, la place de leurs étiquettes :
+	// posées sur la bande, elles ne contrastaient pas assez (2,85 : 1).
+	{ cle: 'importations', nature: 'entree', e: ep('importations'), d: bande(260, 106, APPORTS.x, 161.2) },
+	{ cle: 'extraction', nature: 'entree', e: ep('extraction'), d: bande(260, 340, APPORTS.x, 307.4) },
 
 	{ cle: 'exportations', nature: 'sortie', e: ep('exportations'), d: bande(APPORTS.x + APPORTS.l, 140.3, XT, 95) },
 	{ cle: 'dissipatifs', nature: 'perte', e: ep('dissipatifs'), d: bande(APPORTS.x + APPORTS.l, 178.7, XT, 205) },
@@ -131,8 +133,8 @@ type Etiquette = {
 };
 
 const etiquettes: Etiquette[] = [
-	{ cles: ['importations'], x: 215, y: 92, ancre: 'start', valeurCle: 'importations', lignes: ['Importations'], sur: true },
-	{ cles: ['extraction'], x: 215, y: 320, ancre: 'start', valeurCle: 'extraction', lignes: ['Extraction', 'intérieure'], sur: true },
+	{ cles: ['importations'], x: 244, y: 96, ancre: 'end', valeurCle: 'importations', lignes: ['Importations'] },
+	{ cles: ['extraction'], x: 244, y: 318, ancre: 'end', valeurCle: 'extraction', lignes: ['Extraction', 'intérieure'] },
 	{ cles: ['importations', 'extraction', 'apports'], x: APPORTS.x + APPORTS.l + 10, y: 44, ancre: 'start', valeurCle: 'apports', lignes: ['Apports directs', 'de matières'] },
 
 	{ cles: ['exportations'], x: XT + 26, y: 82, ancre: 'start', valeurCle: 'exportations', lignes: ['Exportations'] },
@@ -143,8 +145,10 @@ const etiquettes: Etiquette[] = [
 	{ cles: ['enfouis'], x: XT + 26, y: 507, ancre: 'start', valeurCle: 'enfouis', lignes: ['Déchets enfouis'] },
 	{ cles: ['accumulation'], x: XT + 26, y: 707, ancre: 'start', valeurCle: 'accumulation', lignes: ['Accumulation', 'de matières'] },
 
-	{ cles: ['utilisation', 'vers_utilisation'], x: UTILISATION.x - 14, y: 640, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
-	{ cles: ['traitement'], x: 958, y: 566, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'], sur: true },
+	// Ces deux étiquettes sont posées sur le blanc, juste au-dessus de leur bande : dessus,
+	// elles ne contrastaient pas assez.
+	{ cles: ['utilisation', 'vers_utilisation'], x: UTILISATION.x - 12, y: 480, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
+	{ cles: ['traitement'], x: 958, y: 506, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'] },
 	{ cles: ['incineration'], x: 1132, y: 545, ancre: 'start', valeurCle: 'incineration', lignes: ['Incinération'] },
 	{ cles: ['remblayage'], x: 980, y: 822, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
 	{ cles: ['recyclage'], x: 980, y: 884, ancre: 'middle', valeurCle: 'recyclage', lignes: ['Recyclage'], sur: true },
