@@ -11,6 +11,16 @@
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
 import { typo } from '../../scripts/typographie';
 
+interface Props {
+	/**
+	 * Version réduite, pour poser le simulateur dans une page : pas de bascule d'unité,
+	 * pas de détail par matériau, pas de liste d'hypothèses. Le nécessaire pour obtenir
+	 * un ordre de grandeur, et un lien vers la version complète.
+	 */
+	compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
 /** Valeurs d'exemple, affichées en filigrane et reprises si le champ reste vide. */
 const exemples = {
 	kg: { metaux: 400, plastiques: 20, electrique: 80 },
@@ -52,7 +62,7 @@ const parametres = [
 ] as const;
 ---
 
-<form class="simulateur" data-simulateur novalidate>
+<form class={`simulateur ${compact ? 'simulateur--compact' : ''}`} data-simulateur novalidate>
 	<p class="sans-js">
 		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
 		exécuter. La méthode et les facteurs restent décrits plus bas.
@@ -61,7 +71,7 @@ const parametres = [
 	<fieldset class="section">
 		<legend>De quoi la machine est faite</legend>
 
-		<div class="reglages">
+		<div class="reglages" hidden={compact}>
 			<div class="unite-bascule" role="group" aria-label="Unité de saisie">
 				<button type="button" class="unite-bascule__choix est-actif" data-unite="kg">
 					Kilogrammes
@@ -139,14 +149,16 @@ const parametres = [
 								/>
 								<span class="unite" data-unite-libelle>kg</span>
 							</div>
-							<button type="button" class="detailler" data-detailler={c.cle} aria-expanded="false">
-								Afficher le détail
-							</button>
+							{!compact && (
+								<button type="button" class="detailler" data-detailler={c.cle} aria-expanded="false">
+									Afficher le détail
+								</button>
+							)}
 						</div>
 
 						<p class="exemples">{typo(c.aide)}</p>
 
-						<div class="detail" data-detail={c.cle} hidden>
+						<div class="detail" data-detail={c.cle} hidden={true}>
 							<p class="detail__consigne">
 								Renseignez ce que vous connaissez. Les lignes laissées vides ne comptent pas.
 							</p>
@@ -201,7 +213,7 @@ const parametres = [
 		<div class="grille">
 			{
 				parametres.map((champ) => (
-					<div class="champ">
+					<div class="champ" hidden={compact && champ.cle === 'distance'}>
 						<div class="champ__tete">
 							<label for={champ.cle}>{champ.libelle}</label>
 							<span class="aide" data-aide>
@@ -232,7 +244,7 @@ const parametres = [
 	</fieldset>
 </form>
 
-<section class="resultat" data-resultat hidden aria-live="polite">
+<section class={`resultat ${compact ? 'resultat--compact' : ''}`} data-resultat hidden aria-live="polite">
 	<h2>Ordre de grandeur</h2>
 	<p class="fourchette">
 		<span data-total-bas></span>
@@ -250,9 +262,9 @@ const parametres = [
 	{/* Reprise du détail sous forme de texte, pour les lecteurs d'écran. */}
 	<ul class="sr-only" data-detail-postes></ul>
 
-	<p class="note-fin-de-vie">{typo(facteurs.fin_de_vie.remarque)}</p>
+	<p class="note-fin-de-vie" hidden={compact}>{typo(facteurs.fin_de_vie.remarque)}</p>
 
-	<details class="hypotheses">
+	<details class="hypotheses" hidden={compact}>
 		<summary>Hypothèses retenues pour ce calcul</summary>
 		<ul data-hypotheses></ul>
 	</details>
@@ -528,6 +540,36 @@ const parametres = [
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
 		padding: clamp(1.25rem, 3vw, 2rem);
+	}
+	/* Posée dans une page, la version compacte est une carte claire : elle reste lisible
+	   sur un fond sombre comme sur un fond blanc. */
+	/* La carte est claire mais peut être posée dans un bloc sombre : la couleur du texte
+	   doit être reprise explicitement, sinon elle hérite du blanc et devient illisible. */
+	.simulateur--compact,
+	.resultat--compact {
+		color: var(--gris);
+	}
+	.simulateur--compact {
+		background: var(--blanc);
+		border-color: transparent;
+	}
+	.simulateur--compact .section {
+		margin-bottom: 1.75rem;
+	}
+	.simulateur--compact legend {
+		font-size: 1rem;
+	}
+	.resultat--compact {
+		background: var(--blanc);
+		border-radius: var(--rayon);
+		margin-top: 1rem;
+		padding: clamp(1.25rem, 3vw, 2rem);
+	}
+	.resultat--compact .fourchette {
+		font-size: clamp(1.6rem, 4vw, 2.4rem);
+	}
+	.resultat--compact .comparaisons {
+		margin-bottom: 1.5rem;
 	}
 	.simulateur--actif .sans-js {
 		display: none;

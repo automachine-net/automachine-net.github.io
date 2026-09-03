@@ -23,13 +23,13 @@ blocs:
     machines: []
   - type: module
     titre: Quelle sera l’empreinte carbone de votre machine ?
-    lien_libelle: Ouvrir le simulateur
+    lien_libelle: Ouvrir le simulateur complet
     lien_url: /outils/simulateur-carbone
     fond: sombre
-    introduction: '[à relire] Une fourchette, calculée à partir de la masse, de la répartition des matériaux, de la puissance installée et de la durée de vie. Avec les hypothèses affichées, pour que vous puissiez les discuter.'
-    module: a-venir
+    introduction: ''
+    module: simulateur-carbone
     nombre_questions: 3
-    attente: '[MODULE EN CONSTRUCTION] simulateur d’empreinte carbone. Les facteurs d’émission (Base Empreinte de l’ADEME, PEP ecopassport) et les ratios de calage sur machines livrées restent à réunir.'
+    attente: ''
   - type: module
     titre: Une transformation est réversible si on peut l’annuler
     lien_libelle: Ouvrir l’explication
