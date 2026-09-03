@@ -3,7 +3,7 @@
     { "label": "Accueil", "href": "/" },
     { "label": "Entreprise", "href": "/entreprise" },
     { "label": "Machines", "href": "/machines" },
-    { "label": "Outils", "href": "/outils/quiz-reglement-machines" },
+    { "label": "Outils", "href": "/outils" },
     { "label": "Contact", "href": "/contact" }
   ],
   "pied": [

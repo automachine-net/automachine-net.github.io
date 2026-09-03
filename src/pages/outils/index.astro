@@ -1,0 +1,156 @@
+---
+// Sommaire des outils : une entrée par module, avec ce qu'il fait en une phrase.
+//
+// C'est la cible de l'onglet « Outils » du menu. Les modules en préparation y figurent
+// aussi, pour qu'on puisse les ouvrir facilement ; ils restent non indexés tant qu'ils ne
+// sont pas validés, et la page l'est avec eux.
+import Base from '../../layouts/Base.astro';
+
+const outils = [
+	{
+		href: '/outils/quiz-reglement-machines',
+		titre: 'Règlement machines : êtes-vous prêt ?',
+		texte:
+			'Le règlement (UE) 2023/1230 remplace la directive machines le 20 janvier 2027. Un quiz pour mesurer ce qui change.',
+		etat: null,
+	},
+	{
+		href: '/outils/simulateur-carbone',
+		titre: 'Empreinte carbone d’une machine',
+		texte:
+			'Un ordre de grandeur des émissions sur le cycle de vie, à partir de ce que vous savez de la machine.',
+		etat: 'En préparation',
+	},
+	{
+		href: '/outils/flux-matieres',
+		titre: 'Où va la matière ?',
+		texte:
+			'Ce qui entre chaque année dans l’économie française, ce qui en ressort, ce qui est perdu, ce qui est recyclé. Étape par étape.',
+		etat: 'En préparation',
+	},
+	{
+		href: '/outils/reversibilite',
+		titre: 'Boucle ou hélice ?',
+		texte:
+			'Quatre critères décident si un cycle de matière se referme sur lui-même ou dérive vers le déchet. À manipuler.',
+		etat: 'En préparation',
+	},
+];
+---
+
+<Base
+	titre="Outils"
+	description="Quiz, simulateurs et animations : des outils pour comprendre avant de décider."
+	noindex={true}
+>
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur entete">
+			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> Outils</p>
+			<h1>Des outils pour comprendre avant de décider</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[à relire]</span> Chaque outil se manipule plutôt qu’il ne se
+				lit. Rien de ce que vous y saisissez ne nous parvient.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--clair">
+		<div class="bloc__interieur">
+			<ul class="outils">
+				{
+					outils.map((o) => (
+						<li class="outil">
+							<a class="outil__lien" href={o.href}>
+								<span class="outil__tete">
+									<span class="outil__titre">{o.titre}</span>
+									{o.etat && <span class="outil__etat">{o.etat}</span>}
+								</span>
+								<span class="outil__texte">{o.texte}</span>
+								<span class="outil__ouvrir" aria-hidden="true">Ouvrir →</span>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.entete {
+		max-width: 46rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+	}
+
+	.outils {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+		gap: 1.25rem;
+	}
+	.outil__lien {
+		display: grid;
+		gap: 0.6rem;
+		height: 100%;
+		padding: 1.5rem;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		color: inherit;
+		text-decoration: none;
+		transition:
+			border-color 0.2s,
+			transform 0.2s;
+	}
+	.outil__lien:hover,
+	.outil__lien:focus-visible {
+		border-color: var(--bleu);
+		transform: translateY(-2px);
+	}
+	.outil__tete {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+	.outil__titre {
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.3rem;
+		line-height: 1.15;
+		color: var(--bleu-nuit);
+	}
+	.outil__etat {
+		font-family: var(--titres);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--gris-leger);
+		border: 1px solid var(--gris-moyen);
+		border-radius: 2px;
+		padding: 0.1rem 0.4rem 0;
+		white-space: nowrap;
+	}
+	.outil__texte {
+		font-size: 1rem;
+	}
+	.outil__ouvrir {
+		margin-top: 0.25rem;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 0.85rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--bleu);
+	}
+</style>
