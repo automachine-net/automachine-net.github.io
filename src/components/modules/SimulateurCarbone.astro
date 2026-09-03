@@ -131,6 +131,12 @@ const defauts: Record<string, number> = {
 		<tbody data-postes></tbody>
 	</table>
 
+	<p class="note-fin-de-vie">
+		La fin de vie n’est pas chiffrée : la Base Empreinte de l’ADEME ne propose aucun facteur
+		applicable à une machine spéciale. Plutôt que d’avancer une estimation, ce poste est laissé
+		hors du total.
+	</p>
+
 	<details class="hypotheses">
 		<summary>Hypothèses retenues pour ce calcul</summary>
 		<ul data-hypotheses></ul>
@@ -392,6 +398,14 @@ const defauts: Record<string, number> = {
 	.non-chiffre {
 		color: var(--gris-leger);
 		font-style: italic;
+	}
+	/* Visible sous le tableau, et non repliée dans les hypothèses : un poste absent du total
+	   doit s'expliquer là où le total s'affiche. */
+	.note-fin-de-vie {
+		margin: 0.9rem 0 0;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+		max-width: 52rem;
 	}
 
 	.hypotheses {
