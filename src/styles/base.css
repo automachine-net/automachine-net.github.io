@@ -99,13 +99,43 @@ dl {
 	margin: 0 0 1em;
 }
 
+/* Les liens du site partagent une même identité : un soulignement orange.
+   Deux formes seulement.
+   1. Le lien dans une phrase garde la typographie du texte courant, pour rester lisible
+      au fil de la lecture, et porte le même soulignement orange.
+   2. Le lien d'action, seul sur sa ligne, prend la classe « lien » ci-dessous :
+      typographie des titres, capitales, filet orange. */
 a {
 	color: var(--bleu);
 	text-underline-offset: 0.15em;
+	text-decoration-color: var(--orange);
+	text-decoration-thickness: 2px;
 }
 
 a:hover {
 	color: var(--bleu-nuit);
+}
+
+.lien {
+	display: inline-block;
+	font-family: var(--titres);
+	font-weight: 600;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--bleu-nuit);
+	text-decoration: none;
+	border-bottom: 2px solid var(--orange);
+	padding-bottom: 0.2rem;
+}
+.lien:hover {
+	color: var(--bleu);
+}
+.bloc--sombre .lien {
+	color: var(--blanc);
+}
+.bloc--sombre .lien:hover {
+	color: var(--orange);
 }
 
 :focus-visible {

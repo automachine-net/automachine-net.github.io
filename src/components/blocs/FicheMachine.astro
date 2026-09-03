@@ -37,7 +37,7 @@ const choisies = bloc.machines?.length
 			</div>
 			{
 				bloc.lien_url && (
-					<a class="tete__lien" href={bloc.lien_url}>
+					<a class="lien tete__lien" href={bloc.lien_url}>
 						{bloc.lien_libelle ?? 'Toutes les machines'}
 					</a>
 				)
@@ -171,19 +171,9 @@ const choisies = bloc.machines?.length
 		font-size: 1.05rem;
 		margin: 0.75rem 0 0;
 	}
+	/* L'habillage vient de la classe « lien », commune à tout le site. */
 	.tete__lien {
-		font-family: var(--titres);
-		font-weight: 600;
-		font-size: 0.95rem;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		text-decoration: none;
-		border-bottom: 2px solid var(--orange);
-		padding-bottom: 0.2rem;
 		white-space: nowrap;
-	}
-	.bloc--sombre .tete__lien {
-		color: var(--blanc);
 	}
 
 	.carrousel {

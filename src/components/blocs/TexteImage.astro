@@ -30,7 +30,7 @@ const aGauche = bloc.position_image === 'gauche';
 			{
 				bloc.lien_url && (
 					<p class="duo__lien">
-						<a href={bloc.lien_url}>{bloc.lien_libelle ?? 'En savoir plus'}</a>
+						<a class="lien" href={bloc.lien_url}>{bloc.lien_libelle ?? 'En savoir plus'}</a>
 					</p>
 				)
 			}

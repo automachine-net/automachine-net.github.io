@@ -57,7 +57,7 @@ const phrases = bloc.titre.split(/(?<=[?!])\s+(?=[A-ZÀ-ÖØ-Þ])/u);
 						</a>
 					)}
 					{bloc.lien_secondaire_url && (
-						<a class="hero__lien" href={bloc.lien_secondaire_url}>
+						<a class="lien" href={bloc.lien_secondaire_url}>
 							{bloc.lien_secondaire_libelle ?? 'En savoir plus'}
 						</a>
 					)}
@@ -100,9 +100,6 @@ const phrases = bloc.titre.split(/(?<=[?!])\s+(?=[A-ZÀ-ÖØ-Þ])/u);
 		flex-wrap: wrap;
 		margin-top: 1.75rem;
 		margin-bottom: 0;
-	}
-	.hero__lien {
-		font-weight: 500;
 	}
 	.secteurs {
 		list-style: none;

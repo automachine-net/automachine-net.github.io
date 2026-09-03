@@ -86,7 +86,9 @@ const suivante = toutes[(position + 1) % toutes.length];
 		<nav class="bloc bloc--clair" aria-label="Machine suivante">
 			<div class="bloc__interieur suite">
 				<p class="suite__libelle">Machine suivante</p>
-				<p class="suite__nom"><a href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a></p>
+				<p class="suite__nom">
+					<a class="lien" href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a>
+				</p>
 			</div>
 		</nav>
 	</article>
@@ -202,11 +204,5 @@ const suivante = toutes[(position + 1) % toutes.length];
 	}
 	.suite__nom {
 		margin: 0;
-		font-family: var(--titres);
-		font-size: 1.5rem;
-		font-weight: 600;
-	}
-	.suite__nom a {
-		text-decoration: none;
 	}
 </style>
