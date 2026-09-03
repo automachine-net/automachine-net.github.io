@@ -5,106 +5,184 @@
 // Le calcul vit dans src/scripts/carbone.ts et tourne dans le navigateur : aucune donnée
 // saisie ne quitte le poste du visiteur.
 //
-// Sans JavaScript, le formulaire reste lisible et la méthode reste exposée : seul le calcul
-// manque, et la page le dit.
+// Deux niveaux de saisie : « à la louche » par grande catégorie, ou détaillée par matériau.
+// Sans détail, la fourchette est volontairement large — c'est ce qui rend visible le gain
+// qu'apporte une saisie plus fine.
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
 
-const materiaux = facteurs.materiaux;
-// Répartition de départ : une machine d'ossature acier, courante dans le métier.
-// C'est un point de départ, pas une moyenne mesurée.
-const defauts: Record<string, number> = {
-	acier: 60,
-	inox: 10,
-	aluminium: 10,
-	plastiques: 5,
-	electrique: 15,
+/** Valeurs d'exemple, affichées en filigrane et reprises si le champ reste vide. */
+const exemples: Record<string, number> = {
+	metaux: 400,
+	plastiques: 20,
+	electrique: 80,
+	masse: 500,
+	puissance: 10,
+	charge: 50,
+	heures: 6000,
+	duree: 20,
+	distance: 300,
+};
+
+const aides: Record<string, string> = {
+	metaux:
+		'Le poste le plus lourd d’une machine, donc souvent le premier contributeur. À masse égale, l’aluminium émet plus de trois fois l’acier : détailler cette catégorie change beaucoup le résultat.',
+	plastiques:
+		'Rarement déterminant, parce que les masses en jeu sont faibles. Les différents polymères se tiennent dans un rapport de un à deux.',
+	electrique:
+		'La catégorie la plus incertaine. À masse égale, l’électronique de commande émet douze fois un moteur. Séparer les moteurs de l’armoire resserre nettement la fourchette.',
+	masse: 'Sert à convertir les pourcentages en kilogrammes. Ne change rien à la répartition.',
+	puissance:
+		'Détermine la consommation, donc tout le poste « usage ». Si la machine est alimentée en air comprimé, ajoutez ici la puissance électrique du compresseur qui la dessert : l’air comprimé n’est pas une énergie, c’est de l’électricité transformée.',
+	charge:
+		'Une machine tourne rarement à pleine puissance. Ce taux multiplie directement la consommation : le passer de 50 à 100 % double le poste « usage ».',
+	heures:
+		'Multiplie la consommation. Une machine en trois-huit émet beaucoup plus, à puissance égale, qu’une machine utilisée quelques heures par semaine.',
+	duree:
+		'Allonger la durée de vie augmente la consommation totale, mais étale la fabrication sur davantage d’années. C’est le paramètre qui fait basculer le poids relatif des postes.',
+	distance:
+		'N’influence presque jamais le résultat : le transport d’une machine pèse moins de un pour cent du total, même sur mille kilomètres.',
 };
 ---
 
 <form class="simulateur" data-simulateur novalidate>
 	<p class="sans-js">
-		Le calcul se fait dans votre navigateur. Il demande JavaScript, que votre navigateur
-		semble ne pas exécuter. La méthode et les facteurs restent décrits ci-dessous.
+		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
+		exécuter. La méthode et les facteurs restent décrits plus bas.
 	</p>
 
-	<div class="grille">
-		<div class="champ">
+	{/* ---------------------------------------------------------------- Matériaux */}
+	<fieldset class="section">
+		<legend>De quoi la machine est faite</legend>
+
+		<div class="unite-bascule" role="group" aria-label="Unité de saisie">
+			<button type="button" class="unite-bascule__choix est-actif" data-unite="kg">
+				En kilogrammes
+			</button>
+			<button type="button" class="unite-bascule__choix" data-unite="pct">En pourcentage</button>
+		</div>
+
+		<div class="champ champ--masse" data-champ-masse hidden>
 			<label for="masse">Masse totale de la machine</label>
 			<div class="saisie">
-				<input type="number" id="masse" name="masse" value="1500" min="1" step="10" />
+				<input type="number" id="masse" data-valeur="masse" placeholder={String(exemples.masse)} min="1" step="10" />
 				<span class="unite">kg</span>
 			</div>
 		</div>
 
-		<div class="champ">
-			<label for="puissance">Puissance installée</label>
-			<div class="saisie">
-				<input type="number" id="puissance" name="puissance" value="10" min="0" step="0.5" />
-				<span class="unite">kW</span>
-			</div>
-		</div>
-
-		<div class="champ">
-			<label for="charge">Taux de charge moyen</label>
-			<div class="saisie">
-				<input type="number" id="charge" name="charge" value="50" min="1" max="100" step="5" />
-				<span class="unite">%</span>
-			</div>
-			<p class="aide">Part de la puissance installée réellement appelée en marche.</p>
-		</div>
-
-		<div class="champ">
-			<label for="heures">Heures de fonctionnement</label>
-			<div class="saisie">
-				<input type="number" id="heures" name="heures" value="1600" min="1" step="100" />
-				<span class="unite">h/an</span>
-			</div>
-		</div>
-
-		<div class="champ">
-			<label for="duree">Durée de vie attendue</label>
-			<div class="saisie">
-				<input type="number" id="duree" name="duree" value="15" min="1" step="1" />
-				<span class="unite">ans</span>
-			</div>
-		</div>
-
-		<div class="champ">
-			<label for="distance">Distance de livraison</label>
-			<div class="saisie">
-				<input type="number" id="distance" name="distance" value="500" min="0" step="50" />
-				<span class="unite">km</span>
-			</div>
-		</div>
-	</div>
-
-	<fieldset class="repartition">
-		<legend>Répartition de la masse par famille de matériaux</legend>
-		<div class="repartition__lignes">
+		<div class="categories">
 			{
-				materiaux.map((m) => (
-					<div class="champ champ--part">
-						<label for={`part-${m.cle}`}>
-							{m.libelle}
-							{m.approximation && <span class="marque" title="Facteur approché">approché</span>}
-						</label>
-						<div class="saisie">
-							<input
-								type="number"
-								id={`part-${m.cle}`}
-								data-part={m.cle}
-								value={defauts[m.cle] ?? 0}
-								min="0"
-								max="100"
-								step="5"
-							/>
-							<span class="unite">%</span>
+				facteurs.categories.map((c) => (
+					<div class="categorie" data-categorie={c.cle}>
+						<div class="categorie__tete">
+							<label for={`cat-${c.cle}`}>{c.libelle}</label>
+							<button
+								type="button"
+								class="aide-bouton"
+								data-aide={`aide-${c.cle}`}
+								aria-expanded="false"
+							>
+								<span aria-hidden="true">?</span>
+								<span class="sr-only">Que change ce paramètre ?</span>
+							</button>
+							<div class="saisie">
+								<input
+									type="number"
+									id={`cat-${c.cle}`}
+									data-categorie-valeur={c.cle}
+									placeholder={String(exemples[c.cle])}
+									min="0"
+									step="1"
+								/>
+								<span class="unite" data-unite-libelle>kg</span>
+							</div>
+							<button type="button" class="detailler" data-detailler={c.cle} aria-expanded="false">
+								Détailler
+							</button>
+						</div>
+
+						<p class="exemples">{c.aide}</p>
+						<p class="aide-texte" id={`aide-${c.cle}`} hidden>{aides[c.cle]}</p>
+
+						<div class="detail" data-detail={c.cle} hidden>
+							<p class="detail__consigne">
+								Renseignez ce que vous connaissez. Les lignes laissées vides ne comptent pas.
+							</p>
+							<div class="detail__lignes">
+								{c.sous.map((s) => (
+									<div class="champ champ--sous">
+										<label for={`sous-${c.cle}-${s.cle}`}>
+											{s.libelle}
+											{s.approche && (
+												<span class="marque" title={s.remarque}>
+													approché
+												</span>
+											)}
+										</label>
+										<div class="saisie">
+											<input
+												type="number"
+												id={`sous-${c.cle}-${s.cle}`}
+												data-sous={c.cle}
+												data-sous-cle={s.cle}
+												min="0"
+												step="1"
+												placeholder="0"
+											/>
+											<span class="unite" data-unite-libelle>kg</span>
+										</div>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				))
 			}
 		</div>
-		<p class="total-parts" data-total-parts aria-live="polite"></p>
+
+		<p class="bilan-masse" data-bilan-masse aria-live="polite"></p>
+	</fieldset>
+
+	{/* ---------------------------------------------------------------- Usage */}
+	<fieldset class="section">
+		<legend>Comment elle sera utilisée</legend>
+		<div class="grille">
+			{
+				[
+					{ cle: 'puissance', libelle: 'Puissance installée', unite: 'kW', pas: '0.5' },
+					{ cle: 'charge', libelle: 'Taux de charge moyen', unite: '%', pas: '5' },
+					{ cle: 'heures', libelle: 'Heures de fonctionnement', unite: 'h/an', pas: '100' },
+					{ cle: 'duree', libelle: 'Durée de vie attendue', unite: 'ans', pas: '1' },
+					{ cle: 'distance', libelle: 'Distance de livraison', unite: 'km', pas: '50' },
+				].map((champ) => (
+					<div class="champ">
+						<div class="champ__tete">
+							<label for={champ.cle}>{champ.libelle}</label>
+							<button
+								type="button"
+								class="aide-bouton"
+								data-aide={`aide-${champ.cle}`}
+								aria-expanded="false"
+							>
+								<span aria-hidden="true">?</span>
+								<span class="sr-only">Que change ce paramètre ?</span>
+							</button>
+						</div>
+						<div class="saisie">
+							<input
+								type="number"
+								id={champ.cle}
+								data-valeur={champ.cle}
+								placeholder={String(exemples[champ.cle])}
+								min="0"
+								step={champ.pas}
+							/>
+							<span class="unite">{champ.unite}</span>
+						</div>
+						<p class="aide-texte" id={`aide-${champ.cle}`} hidden>{aides[champ.cle]}</p>
+					</div>
+				))
+			}
+		</div>
 	</fieldset>
 </form>
 
@@ -115,10 +193,13 @@ const defauts: Record<string, number> = {
 		<span class="fourchette__a">à</span>
 		<span data-total-haut></span>
 	</p>
-	<p class="fourchette__note">
-		sur toute la durée de vie, fin de vie non comprise. Ce n’est pas une mesure, c’est un ordre
-		de grandeur destiné à situer les postes les uns par rapport aux autres.
+	<p class="comparaison">
+		soit ce qu’émettent <strong data-km></strong> parcourus en voiture, sur toute la durée de vie
+		de la machine.
 	</p>
+
+	<div class="barre" data-barre role="img" aria-label="Part de chaque poste dans le total"></div>
+	<ul class="legende" data-legende></ul>
 
 	<table class="postes">
 		<thead>
@@ -131,11 +212,7 @@ const defauts: Record<string, number> = {
 		<tbody data-postes></tbody>
 	</table>
 
-	<p class="note-fin-de-vie">
-		La fin de vie n’est pas chiffrée : la Base Empreinte de l’ADEME ne propose aucun facteur
-		applicable à une machine spéciale. Plutôt que d’avancer une estimation, ce poste est laissé
-		hors du total.
-	</p>
+	<p class="note-fin-de-vie">{facteurs.fin_de_vie.remarque}</p>
 
 	<details class="hypotheses">
 		<summary>Hypothèses retenues pour ce calcul</summary>
@@ -144,50 +221,187 @@ const defauts: Record<string, number> = {
 </section>
 
 <script>
-	import { calculer, formaterCO2e } from '../../scripts/carbone';
+	import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
 
 	const form = document.querySelector<HTMLFormElement>('[data-simulateur]');
 	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
+
 	if (form && resultat) {
 		form.classList.add('simulateur--actif');
 
-		const nombre = (id: string) => Number((form.querySelector(`#${id}`) as HTMLInputElement).value);
-		const parts = [...form.querySelectorAll<HTMLInputElement>('[data-part]')];
-		const totalParts = form.querySelector<HTMLElement>('[data-total-parts]')!;
-		const corps = resultat.querySelector<HTMLElement>('[data-postes]')!;
-		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
+		const CATEGORIES = ['metaux', 'plastiques', 'electrique'];
+		/** En pourcentage, cette catégorie absorbe le reste : c'est la variable d'ajustement. */
+		const AJUSTEE = 'plastiques';
 
-		const recalculer = () => {
-			const repartition: Record<string, number> = {};
-			let somme = 0;
-			for (const p of parts) {
-				const v = Number(p.value) || 0;
-				repartition[p.dataset.part!] = v;
-				somme += v;
+		let unite: 'kg' | 'pct' = 'kg';
+
+		const champ = (sel: string) => form.querySelector<HTMLInputElement>(sel)!;
+		/** Valeur saisie, ou valeur d'exemple affichée en filigrane si le champ est vide. */
+		const lire = (input: HTMLInputElement) =>
+			input.value.trim() === '' ? Number(input.placeholder) || 0 : Number(input.value) || 0;
+
+		// ---------------------------------------------------------- Aides au survol et au clic
+		form.querySelectorAll<HTMLButtonElement>('.aide-bouton').forEach((bouton) => {
+			const cible = document.getElementById(bouton.dataset.aide!);
+			if (!cible) return;
+			const montrer = (etat: boolean) => {
+				cible.hidden = !etat;
+				bouton.setAttribute('aria-expanded', String(etat));
+			};
+			bouton.addEventListener('click', () => montrer(cible.hidden));
+			bouton.addEventListener('mouseenter', () => montrer(true));
+			bouton.addEventListener('mouseleave', () => {
+				if (bouton.getAttribute('aria-expanded') === 'true' && !bouton.matches(':focus')) montrer(false);
+			});
+		});
+
+		// ---------------------------------------------------------- Détail des catégories
+		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
+			const cle = bouton.dataset.detailler!;
+			const panneau = form.querySelector<HTMLElement>(`[data-detail="${cle}"]`)!;
+			bouton.addEventListener('click', () => {
+				const ouvert = panneau.hidden;
+				panneau.hidden = !ouvert;
+				bouton.setAttribute('aria-expanded', String(ouvert));
+				bouton.textContent = ouvert ? 'Revenir à la louche' : 'Détailler';
+				recalculer();
+			});
+		});
+
+		// ---------------------------------------------------------- Bascule kilogrammes / pourcentage
+		const champMasse = form.querySelector<HTMLElement>('[data-champ-masse]')!;
+		form.querySelectorAll<HTMLButtonElement>('[data-unite]').forEach((bouton) => {
+			bouton.addEventListener('click', () => {
+				unite = bouton.dataset.unite as 'kg' | 'pct';
+				form.querySelectorAll('[data-unite]').forEach((b) => b.classList.toggle('est-actif', b === bouton));
+				champMasse.hidden = unite === 'kg';
+				form.querySelectorAll('[data-unite-libelle]').forEach((u) => {
+					u.textContent = unite === 'kg' ? 'kg' : '%';
+				});
+				// Les valeurs d'exemple changent de sens selon l'unité.
+				CATEGORIES.forEach((c) => {
+					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
+					input.placeholder = unite === 'kg' ? String({ metaux: 400, plastiques: 20, electrique: 80 }[c]) : String({ metaux: 80, plastiques: 4, electrique: 16 }[c]);
+				});
+				recalculer();
+			});
+		});
+
+		// ---------------------------------------------------------- Calcul
+		const bilanMasse = form.querySelector<HTMLElement>('[data-bilan-masse]')!;
+		const corps = resultat.querySelector<HTMLElement>('[data-postes]')!;
+		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
+		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
+		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
+		const couleurs: Record<string, string> = {
+			fabrication: 'var(--bleu)',
+			transport: 'var(--bleu-clair)',
+			usage: 'var(--orange)',
+		};
+
+		function recalculer() {
+			const masseTotaleSaisie = lire(champ('[data-valeur="masse"]'));
+
+			// Détails ouverts et renseignés
+			const details: Record<string, Record<string, number>> = {};
+			for (const c of CATEGORIES) {
+				const panneau = form.querySelector<HTMLElement>(`[data-detail="${c}"]`)!;
+				if (panneau.hidden) continue;
+				const lignes: Record<string, number> = {};
+				panneau.querySelectorAll<HTMLInputElement>('[data-sous]').forEach((i) => {
+					const v = Number(i.value) || 0;
+					if (v > 0) lignes[i.dataset.sousCle!] = unite === 'kg' ? v : (v / 100) * masseTotaleSaisie;
+				});
+				details[c] = lignes;
 			}
 
-			// La somme des parts doit faire 100 : sinon le résultat n'a pas de sens et on le dit,
-			// plutôt que de normaliser en douce.
-			const ecart = Math.round(somme - 100);
-			totalParts.textContent = ecart === 0 ? 'Total : 100 %' : `Total : ${Math.round(somme)} % — il faut 100 %`;
-			totalParts.classList.toggle('total-parts--faux', ecart !== 0);
-			if (ecart !== 0) {
+			// Valeurs par catégorie
+			const brutes: Record<string, number> = {};
+			for (const c of CATEGORIES) {
+				const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
+				const detaillee = details[c] && Object.keys(details[c]).length > 0;
+				if (detaillee) {
+					const somme = Object.values(details[c]).reduce((a, b) => a + b, 0);
+					input.value = unite === 'kg' ? String(Math.round(somme)) : String(Math.round((somme / masseTotaleSaisie) * 100));
+					input.readOnly = true;
+					brutes[c] = unite === 'kg' ? somme : Number(input.value);
+				} else {
+					input.readOnly = false;
+					brutes[c] = lire(input);
+				}
+			}
+
+			// En pourcentage, la catégorie d'ajustement absorbe le reste.
+			if (unite === 'pct') {
+				const ajusteeDetaillee = details[AJUSTEE] && Object.keys(details[AJUSTEE]).length > 0;
+				if (!ajusteeDetaillee) {
+					const autres = CATEGORIES.filter((c) => c !== AJUSTEE).reduce((s, c) => s + brutes[c], 0);
+					const reste = Math.max(0, 100 - autres);
+					brutes[AJUSTEE] = reste;
+					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${AJUSTEE}"]`)!;
+					input.value = String(Math.round(reste));
+					input.readOnly = true;
+				}
+			}
+
+			// Conversion en kilogrammes
+			const categories: Record<string, number> = {};
+			for (const c of CATEGORIES) {
+				categories[c] = unite === 'kg' ? brutes[c] : (brutes[c] / 100) * masseTotaleSaisie;
+			}
+
+			const r = calculer({
+				categories,
+				details,
+				puissance: lire(champ('[data-valeur="puissance"]')),
+				tauxDeCharge: lire(champ('[data-valeur="charge"]')) / 100,
+				heuresParAn: lire(champ('[data-valeur="heures"]')),
+				dureeDeVie: lire(champ('[data-valeur="duree"]')),
+				distanceLivraison: lire(champ('[data-valeur="distance"]')),
+			});
+
+			bilanMasse.textContent =
+				r.masseTotale > 0 ? `Masse totale retenue : ${Math.round(r.masseTotale).toLocaleString('fr-FR')} kg` : '';
+
+			if (r.masseTotale <= 0) {
 				resultat.hidden = true;
 				return;
 			}
 
-			const r = calculer({
-				masse: nombre('masse'),
-				repartition,
-				puissance: nombre('puissance'),
-				heuresParAn: nombre('heures'),
-				dureeDeVie: nombre('duree'),
-				distanceLivraison: nombre('distance'),
-				tauxDeCharge: nombre('charge') / 100,
-			});
-
 			resultat.querySelector('[data-total-bas]')!.textContent = formaterCO2e(r.totalBas);
 			resultat.querySelector('[data-total-haut]')!.textContent = formaterCO2e(r.totalHaut);
+			resultat.querySelector('[data-km]')!.textContent =
+				`${arrondiParlant(r.kmVoitureBas)} à ${arrondiParlant(r.kmVoitureHaut)} km`;
+
+			// Barre des parts, calculée sur le milieu de chaque fourchette.
+			const milieu = (p: { bas: number | null; haut: number | null }) =>
+				p.bas === null ? 0 : (p.bas + p.haut!) / 2;
+			const totalMilieu = r.postes.reduce((s, p) => s + milieu(p), 0);
+			barre.replaceChildren(
+				...r.postes
+					.filter((p) => p.bas !== null && milieu(p) > 0)
+					.map((p) => {
+						const part = (milieu(p) / totalMilieu) * 100;
+						const segment = document.createElement('span');
+						segment.className = 'barre__part';
+						segment.style.width = `${part}%`;
+						segment.style.background = couleurs[p.cle];
+						segment.title = `${p.libelle} : ${Math.round(part)} %`;
+						return segment;
+					})
+			);
+			legende.replaceChildren(
+				...r.postes
+					.filter((p) => p.bas !== null && milieu(p) > 0)
+					.map((p) => {
+						const li = document.createElement('li');
+						const pastille = document.createElement('span');
+						pastille.className = 'legende__pastille';
+						pastille.style.background = couleurs[p.cle];
+						li.append(pastille, `${p.libelle} ${Math.round((milieu(p) / totalMilieu) * 100)} %`);
+						return li;
+					})
+			);
 
 			corps.replaceChildren(
 				...r.postes.map((p) => {
@@ -201,12 +415,9 @@ const defauts: Record<string, number> = {
 						valeur.textContent = 'non chiffré';
 						valeur.className = 'non-chiffre';
 						part.textContent = '—';
-						tr.title = p.detail;
 					} else {
 						valeur.textContent = `${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}`;
-						const milieu = (p.bas + p.haut!) / 2;
-						const total = (r.totalBas + r.totalHaut) / 2;
-						part.textContent = `${Math.round((milieu / total) * 100)} %`;
+						part.textContent = `${Math.round((milieu(p) / totalMilieu) * 100)} %`;
 					}
 					tr.append(th, valeur, part);
 					return tr;
@@ -218,16 +429,11 @@ const defauts: Record<string, number> = {
 					const li = document.createElement('li');
 					li.textContent = h;
 					return li;
-				}),
-				...r.nonChiffres.map((n) => {
-					const li = document.createElement('li');
-					li.textContent = `${n} : poste non chiffré, exclu du total.`;
-					return li;
 				})
 			);
 
 			resultat.hidden = false;
-		};
+		}
 
 		form.addEventListener('input', recalculer);
 		recalculer();
@@ -240,7 +446,6 @@ const defauts: Record<string, number> = {
 		border-radius: var(--rayon);
 		padding: clamp(1.25rem, 3vw, 2rem);
 	}
-	/* Message affiché seulement si JavaScript n'a pas pris la main. */
 	.simulateur--actif .sans-js {
 		display: none;
 	}
@@ -251,15 +456,61 @@ const defauts: Record<string, number> = {
 		margin: 0 0 1.5rem;
 	}
 
-	.grille {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-		gap: 1.25rem;
+	.section {
+		border: 0;
+		padding: 0;
+		margin: 0 0 2.5rem;
 	}
+	.section:last-of-type {
+		margin-bottom: 0;
+	}
+	.section legend {
+		padding: 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.15rem;
+		color: var(--bleu-nuit);
+		margin-bottom: 1.25rem;
+	}
+
+	/* Bascule kilogrammes / pourcentage */
+	.unite-bascule {
+		display: inline-flex;
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		overflow: hidden;
+		margin-bottom: 1.5rem;
+	}
+	.unite-bascule__choix {
+		background: var(--blanc);
+		border: 0;
+		padding: 0.5rem 1rem;
+		cursor: pointer;
+		color: var(--gris);
+		font-size: 0.9rem;
+	}
+	.unite-bascule__choix + .unite-bascule__choix {
+		border-left: 1px solid var(--gris-moyen);
+	}
+	.unite-bascule__choix.est-actif {
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		font-weight: 500;
+	}
+
 	.champ {
 		display: grid;
 		gap: 0.3rem;
 		align-content: start;
+	}
+	.champ--masse {
+		max-width: 16rem;
+		margin-bottom: 1.5rem;
+	}
+	.champ__tete {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
 	}
 	label {
 		font-weight: 500;
@@ -284,38 +535,122 @@ const defauts: Record<string, number> = {
 	input:focus {
 		border-color: var(--bleu);
 	}
+	input:read-only {
+		background: var(--gris-clair);
+		color: var(--gris-leger);
+	}
+	input::placeholder {
+		color: var(--gris-leger);
+		opacity: 0.7;
+	}
 	.unite {
 		font-size: 0.9rem;
 		color: var(--gris-leger);
 		white-space: nowrap;
 	}
-	.aide {
-		margin: 0;
-		font-size: 0.82rem;
+
+	/* Bouton d'aide */
+	.aide-bouton {
+		flex: 0 0 auto;
+		width: 1.25rem;
+		height: 1.25rem;
+		border-radius: 50%;
+		border: 1px solid var(--gris-moyen);
+		background: var(--blanc);
+		color: var(--bleu);
+		font-size: 0.75rem;
+		font-weight: 700;
+		line-height: 1;
+		cursor: help;
+		display: grid;
+		place-items: center;
+		padding: 0;
+	}
+	.aide-bouton:hover,
+	.aide-bouton[aria-expanded='true'] {
+		background: var(--bleu);
+		color: var(--blanc);
+		border-color: var(--bleu);
+	}
+	.aide-texte {
+		margin: 0.4rem 0 0;
+		padding: 0.6rem 0.8rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--bleu-clair);
+		font-size: 0.85rem;
+		max-width: 44rem;
+	}
+
+	/* Catégories */
+	.categories {
+		display: grid;
+		gap: 1.5rem;
+	}
+	.categorie {
+		border-top: 1px solid var(--gris-moyen);
+		padding-top: 1.25rem;
+	}
+	.categorie__tete {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+	.categorie__tete label {
+		font-size: 1rem;
+	}
+	.categorie__tete .saisie {
+		width: 9rem;
+		margin-left: auto;
+	}
+	.detailler {
+		background: none;
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.45rem 0.8rem;
+		font-size: 0.85rem;
+		color: var(--bleu);
+		cursor: pointer;
+		white-space: nowrap;
+	}
+	.detailler:hover {
+		border-color: var(--bleu);
+	}
+	.detailler[aria-expanded='true'] {
+		background: var(--bleu-nuit);
+		border-color: var(--bleu-nuit);
+		color: var(--blanc);
+	}
+	.exemples {
+		margin: 0.4rem 0 0;
+		font-size: 0.85rem;
 		color: var(--gris-leger);
 	}
 
-	.repartition {
-		border: 0;
-		border-top: 1px solid var(--gris-moyen);
-		margin: 1.75rem 0 0;
-		padding: 1.5rem 0 0;
+	.detail {
+		margin-top: 1rem;
+		padding: 1rem 1.25rem;
+		background: var(--gris-clair);
+		border-radius: var(--rayon);
 	}
-	.repartition legend {
-		padding: 0;
-		font-weight: 500;
-		color: var(--bleu-nuit);
-		margin-bottom: 1rem;
+	.detail__consigne {
+		margin: 0 0 0.9rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
 	}
-	.repartition__lignes {
+	.detail__lignes {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-		gap: 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+		gap: 0.9rem;
+	}
+	.champ--sous label {
+		font-size: 0.88rem;
+		font-weight: 400;
 	}
 	.marque {
 		display: inline-block;
-		margin-left: 0.35rem;
-		font-size: 0.7rem;
+		margin-left: 0.3rem;
+		font-size: 0.66rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: var(--gris-leger);
@@ -324,17 +659,19 @@ const defauts: Record<string, number> = {
 		padding: 0 0.25rem;
 		vertical-align: middle;
 	}
-	.total-parts {
-		margin: 1rem 0 0;
+	.bilan-masse {
+		margin: 1.25rem 0 0;
+		padding-top: 1rem;
+		border-top: 1px solid var(--gris-moyen);
 		font-size: 0.9rem;
-		color: var(--gris-leger);
-	}
-	.total-parts--faux {
+		font-weight: 500;
 		color: var(--bleu-nuit);
-		font-weight: 600;
-		background: var(--gris-clair);
-		border-left: 3px solid var(--orange);
-		padding: 0.5rem 0.75rem;
+	}
+
+	.grille {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+		gap: 1.25rem;
 	}
 
 	/* Résultat */
@@ -365,11 +702,46 @@ const defauts: Record<string, number> = {
 		font-weight: 500;
 		color: var(--gris-leger);
 	}
-	.fourchette__note {
+	.comparaison {
 		margin: 0.6rem 0 2rem;
-		color: var(--gris-leger);
-		font-size: 0.9rem;
+		font-size: 1.05rem;
 		max-width: 46rem;
+	}
+	.comparaison strong {
+		color: var(--bleu);
+	}
+
+	/* Barre des parts */
+	.barre {
+		display: flex;
+		height: 1.5rem;
+		border-radius: var(--rayon);
+		overflow: hidden;
+		background: var(--gris-clair);
+	}
+	.barre__part {
+		display: block;
+		height: 100%;
+	}
+	.legende {
+		list-style: none;
+		margin: 0.75rem 0 2rem;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		font-size: 0.9rem;
+	}
+	.legende li {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+	.legende__pastille {
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 2px;
+		flex: 0 0 auto;
 	}
 
 	.postes {
@@ -399,8 +771,6 @@ const defauts: Record<string, number> = {
 		color: var(--gris-leger);
 		font-style: italic;
 	}
-	/* Visible sous le tableau, et non repliée dans les hypothèses : un poste absent du total
-	   doit s'expliquer là où le total s'affiche. */
 	.note-fin-de-vie {
 		margin: 0.9rem 0 0;
 		font-size: 0.85rem;

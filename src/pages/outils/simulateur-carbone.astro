@@ -1,20 +1,21 @@
 ---
-// Module « Simulateur d'empreinte carbone » — version 1 : méthode seulement.
+// Module « Simulateur d'empreinte carbone ».
 //
-// La page est volontairement non indexée tant que les facteurs d'émission et les ratios de
-// calage sur machines livrées ne sont pas réunis. Publier un chiffre non calé engagerait
-// l'entreprise.
+// La page reste non indexée tant que les ratios de calage sur machines livrées ne sont pas
+// fournis : publier un chiffre non calé engagerait l'entreprise.
 //
 // Aucun qualificatif environnemental n'est employé ici (« bas carbone », « vert »,
 // « neutre »…) : la directive (UE) 2024/825 s'applique depuis le 27 septembre 2026.
 import Base from '../../layouts/Base.astro';
 import SimulateurCarbone from '../../components/modules/SimulateurCarbone.astro';
 import facteurs from '../../../content/donnees/facteurs-carbone.json';
+
+const approches = facteurs.categories.flatMap((c) => c.sous).filter((s) => s.approche);
 ---
 
 <Base
 	titre="Simulateur d’empreinte carbone"
-	description="Méthode de calcul d’un ordre de grandeur des émissions d’une machine spéciale, sur son cycle de vie."
+	description="Ordre de grandeur des émissions d’une machine spéciale sur son cycle de vie."
 	noindex={true}
 >
 	<section class="bloc bloc--blanc">
@@ -23,9 +24,8 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 			<p class="surtitre">Outil en préparation</p>
 			<h1>Quelle sera l’empreinte carbone de votre machine ?</h1>
 			<p class="chapeau">
-				<span class="a-rediger">[à relire]</span> Cet outil donne un ordre de grandeur des
-				émissions d’une machine spéciale sur son cycle de vie. Une fourchette, jamais un chiffre
-				unique, avec les hypothèses affichées et chaque facteur d’émission renvoyé à sa source.
+				<span class="a-rediger">[à relire]</span> Renseignez ce que vous savez de la machine, même
+				grossièrement, puis affinez ce que vous connaissez précisément.
 			</p>
 		</div>
 	</section>
@@ -39,10 +39,6 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	<section class="bloc bloc--clair">
 		<div class="bloc__interieur methode">
 			<h2>Comment il procède</h2>
-			<p>
-				Les entrées sont volontairement grossières. En demander davantage donnerait l’illusion
-				d’une précision que la méthode n’a pas.
-			</p>
 			<ul>
 				<li>
 					<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par son
@@ -60,11 +56,11 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 				<li><strong>Fin de vie</strong> : non chiffrée, et donc absente du total.</li>
 			</ul>
 			<p>
-				Le résultat est <strong>une fourchette, jamais un chiffre unique</strong>. Un résultat
-				unique serait faux, et se ferait passer pour exact. Les hypothèses retenues sont
-				affichées avec lui, et le calcul se fait dans votre navigateur : rien de ce que vous
-				saisissez ne nous parvient.
+				Une catégorie renseignée sans détail est bornée par son matériau le moins émetteur et par
+				le plus émetteur. La fourchette est alors large, et se resserre dès qu’on détaille :
+				c’est voulu, l’imprécision de la saisie doit se voir dans le résultat.
 			</p>
+			<p>Le calcul se fait dans votre navigateur : rien de ce que vous saisissez ne nous parvient.</p>
 
 			<h2>Les facteurs d’émission employés</h2>
 			<p>
@@ -77,7 +73,7 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 			<table class="facteurs">
 				<thead>
 					<tr>
-						<th scope="col">Poste</th>
+						<th scope="col">Matériau</th>
 						<th scope="col">Valeur</th>
 						<th scope="col">Incertitude</th>
 						<th scope="col">Élément ADEME</th>
@@ -85,24 +81,33 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 				</thead>
 				<tbody>
 					{
-						facteurs.materiaux.map((m) => (
-							<tr>
-								<th scope="row">
-									{m.libelle}
-									{m.approximation && <span class="marque">approché</span>}
-								</th>
-								<td>
-									{m.valeur.toLocaleString('fr-FR')}
-									{m.valeur_haute ? ` à ${m.valeur_haute.toLocaleString('fr-FR')}` : ''} {m.unite}
-								</td>
-								<td>{m.incertitude_pct} %</td>
-								<td>
-									n° {m.identifiant_ademe}
-									<span class="intitule">{m.intitule_ademe}</span>
-								</td>
-							</tr>
+						facteurs.categories.map((c) => (
+							<>
+								<tr class="ligne-categorie">
+									<th scope="rowgroup" colspan="4">
+										{c.libelle}
+									</th>
+								</tr>
+								{c.sous.map((s) => (
+									<tr>
+										<th scope="row">
+											{s.libelle}
+											{s.approche && <span class="marque">approché</span>}
+										</th>
+										<td>{s.valeur.toLocaleString('fr-FR')} kgCO2e/tonne</td>
+										<td>{s.incertitude_pct} %</td>
+										<td>
+											n° {s.identifiant_ademe}
+											<span class="intitule">{s.intitule_ademe}</span>
+										</td>
+									</tr>
+								))}
+							</>
 						))
 					}
+					<tr class="ligne-categorie">
+						<th scope="rowgroup" colspan="4">Énergie, transport et comparaison</th>
+					</tr>
 					<tr>
 						<th scope="row">Électricité</th>
 						<td>{facteurs.energie.valeur} {facteurs.energie.unite}</td>
@@ -121,6 +126,15 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 							<span class="intitule">{facteurs.transport.intitule_ademe}</span>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row">Voiture</th>
+						<td>{facteurs.comparaison.valeur} {facteurs.comparaison.unite}</td>
+						<td>{facteurs.comparaison.incertitude_pct} %</td>
+						<td>
+							n° {facteurs.comparaison.identifiant_ademe}
+							<span class="intitule">{facteurs.comparaison.intitule_ademe}</span>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 
@@ -131,17 +145,12 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 			<h2>Les approximations, à lever</h2>
 			<ul>
 				{
-					facteurs.materiaux
-						.filter((m) => m.approximation)
-						.map((m) => (
-							<li>
-								<strong>{m.libelle}</strong> — {m.remarque}
-							</li>
-						))
+					approches.map((s) => (
+						<li>
+							<strong>{s.libelle}</strong> — {s.remarque}
+						</li>
+					))
 				}
-				<li>
-					<strong>Composants électriques</strong> — {facteurs.materiaux.find((m) => m.cle === 'electrique')?.remarque}
-				</li>
 			</ul>
 			<p>
 				Les déclarations <strong>PEP ecopassport</strong> donneraient des facteurs propres aux
@@ -156,16 +165,15 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 			<ol>
 				<li>
 					<span class="a-rediger">[À FOURNIR PAR AUTOMACHINE]</span> les ratios de calage sur des
-					machines réellement livrées. Sans eux, la fourchette est cohérente mais invérifiable :
-					rien ne dit qu’elle tombe juste sur une machine spéciale.
+					machines réellement livrées. Sans eux, la fourchette est cohérente mais invérifiable.
 				</li>
 				<li>
 					<span class="a-rediger">[À DÉPOUILLER]</span> les déclarations PEP ecopassport, pour
-					remplacer l’intervalle très large des composants électriques par des facteurs propres.
+					remplacer le facteur approché de l’armoire électrique par des facteurs propres.
 				</li>
 				<li>
-					<span class="a-rediger">[À TRANCHER]</span> le sort de la fin de vie : la laisser hors
-					du total, ou retenir une hypothèse et l’assumer comme telle.
+					<span class="a-rediger">[À TRANCHER]</span> le sort de la fin de vie : la laisser hors du
+					total, ou retenir une hypothèse et l’assumer comme telle.
 				</li>
 			</ol>
 			<p class="avertissement">
@@ -209,7 +217,7 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 		font-size: 1.15rem;
 	}
 	.methode {
-		max-width: 46rem;
+		max-width: 48rem;
 	}
 	.methode h2 {
 		font-size: clamp(1.3rem, 3vw, 1.7rem);
@@ -228,7 +236,7 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	.avertissement {
 		margin-top: 1.5rem;
 		padding: 1rem 1.25rem;
-		background: var(--gris-clair);
+		background: var(--blanc);
 		border-left: 3px solid var(--orange);
 	}
 	.facteurs {
@@ -240,7 +248,7 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	.facteurs th,
 	.facteurs td {
 		text-align: left;
-		padding: 0.7rem 1rem 0.7rem 0;
+		padding: 0.6rem 1rem 0.6rem 0;
 		border-bottom: 1px solid var(--gris-moyen);
 		vertical-align: top;
 	}
@@ -255,12 +263,21 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	.facteurs tbody th {
 		font-weight: 600;
 		color: var(--bleu-nuit);
-		white-space: nowrap;
+	}
+	.ligne-categorie th {
+		font-family: var(--titres);
+		text-transform: uppercase;
+		letter-spacing: 0.07em;
+		font-size: 0.72rem;
+		color: var(--bleu);
+		padding-top: 1.25rem;
+		border-bottom: 1px solid var(--bleu-clair);
 	}
 	.intitule {
 		display: block;
 		font-size: 0.82rem;
 		color: var(--gris-leger);
+		font-weight: 400;
 	}
 	.marque {
 		display: inline-block;

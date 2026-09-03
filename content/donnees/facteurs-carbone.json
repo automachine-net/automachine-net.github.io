@@ -1,66 +1,163 @@
 {
   "titre": "Facteurs d'émission du simulateur d'empreinte carbone",
-  "avertissement": "Chaque ligne provient de la Base Empreinte de l'ADEME et porte son identifiant d'élément, sa valeur, son incertitude officielle et la date à laquelle elle a été relevée. Aucune valeur n'est estimée. Une ligne marquée « approximation » utilise un facteur voisin faute de facteur exact : elle doit être remplacée dès qu'un facteur propre existe.",
+  "avertissement": "Chaque ligne provient de la Base Empreinte de l'ADEME et porte son identifiant d'élément, sa valeur, son incertitude officielle et la date à laquelle elle a été relevée. Aucune valeur n'est estimée. Une ligne marquée « approché » utilise un facteur voisin faute de facteur exact : elle doit être remplacée dès qu'un facteur propre existe.",
   "base": "Base Empreinte (ADEME), jeu de données « Base carbone® » ouvert sur data.ademe.fr",
   "date_releve": "2026-09-03",
-  "materiaux": [
+
+  "categories": [
     {
-      "cle": "acier",
-      "libelle": "Acier",
-      "valeur": 2211,
-      "unite": "kgCO2e/tonne",
-      "incertitude_pct": 10,
-      "identifiant_ademe": "26729",
-      "intitule_ademe": "Acier ou fer blanc — neuf",
-      "approximation": false,
-      "remarque": "Acier neuf. L'acier recyclé vaut 938 kgCO2e/tonne (identifiant 26730) : la part recyclée n'est pas encore un paramètre du simulateur."
-    },
-    {
-      "cle": "inox",
-      "libelle": "Inox",
-      "valeur": 5250,
-      "unite": "kgCO2e/tonne",
-      "incertitude_pct": 100,
-      "identifiant_ademe": "20643",
-      "intitule_ademe": "Fil de palissage inox neuf 18/8",
-      "approximation": true,
-      "remarque": "Approximation. La base ne contient pas de facteur générique pour l'inox ; ce fil de palissage est le seul élément inox valide. Son incertitude officielle est de 100 %."
-    },
-    {
-      "cle": "aluminium",
-      "libelle": "Aluminium",
-      "valeur": 7803,
-      "unite": "kgCO2e/tonne",
-      "incertitude_pct": 30,
-      "identifiant_ademe": "26731",
-      "intitule_ademe": "Aluminium — neuf",
-      "approximation": false,
-      "remarque": "Aluminium neuf. L'aluminium recyclé vaut 562 kgCO2e/tonne (identifiant 26732), soit quatorze fois moins."
+      "cle": "metaux",
+      "libelle": "Métaux",
+      "aide": "Châssis, bâti, carters, tôlerie, arbres, visserie, guidages.",
+      "sous": [
+        {
+          "cle": "acier",
+          "libelle": "Acier",
+          "valeur": 2211,
+          "incertitude_pct": 10,
+          "identifiant_ademe": "26729",
+          "intitule_ademe": "Acier ou fer blanc — neuf",
+          "approche": false,
+          "remarque": "Acier neuf. L'acier recyclé vaut 938 kgCO2e/tonne (élément 26730)."
+        },
+        {
+          "cle": "inox",
+          "libelle": "Inox",
+          "valeur": 5250,
+          "incertitude_pct": 100,
+          "identifiant_ademe": "20643",
+          "intitule_ademe": "Fil de palissage inox neuf 18/8",
+          "approche": true,
+          "remarque": "Approché. La Base Empreinte ne contient aucun facteur générique pour l'inox : ce fil de palissage est le seul élément inox valide, et son incertitude officielle est de 100 %."
+        },
+        {
+          "cle": "aluminium",
+          "libelle": "Aluminium",
+          "valeur": 7803,
+          "incertitude_pct": 30,
+          "identifiant_ademe": "26731",
+          "intitule_ademe": "Aluminium — neuf",
+          "approche": false,
+          "remarque": "Aluminium neuf. L'aluminium recyclé vaut 562 kgCO2e/tonne (élément 26732), soit quatorze fois moins."
+        },
+        {
+          "cle": "cuivre",
+          "libelle": "Cuivre",
+          "valeur": 1445,
+          "incertitude_pct": 50,
+          "identifiant_ademe": "26733",
+          "intitule_ademe": "Cuivre — neuf",
+          "approche": false,
+          "remarque": "Cuivre neuf."
+        }
+      ]
     },
     {
       "cle": "plastiques",
       "libelle": "Plastiques",
-      "valeur": 2000,
-      "unite": "kgCO2e/tonne",
-      "incertitude_pct": 100,
-      "identifiant_ademe": "20845",
-      "intitule_ademe": "PP — polypropylène",
-      "approximation": true,
-      "remarque": "Approximation. Le polypropylène tient lieu de plastique moyen ; les autres polymères s'écartent de cette valeur. Incertitude officielle de 100 %."
+      "aide": "Capots, protecteurs transparents, guides, gaines, joints, roulettes.",
+      "sous": [
+        {
+          "cle": "moyenne",
+          "libelle": "Plastique moyen",
+          "valeur": 2383,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20836",
+          "intitule_ademe": "Plastique — moyenne — neuf",
+          "approche": false,
+          "remarque": "Moyenne des polymères, publiée comme telle par l'ADEME. À retenir quand la nature exacte du plastique est inconnue."
+        },
+        {
+          "cle": "pvc",
+          "libelle": "PVC",
+          "valeur": 1870,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20834",
+          "intitule_ademe": "Plastique — PVC — neuf",
+          "approche": false,
+          "remarque": ""
+        },
+        {
+          "cle": "pehd",
+          "libelle": "PEHD",
+          "valeur": 1920,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20830",
+          "intitule_ademe": "Plastique — PEHD — neuf",
+          "approche": false,
+          "remarque": ""
+        },
+        {
+          "cle": "pebd",
+          "libelle": "PEBD",
+          "valeur": 2090,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20831",
+          "intitule_ademe": "Plastique — PEBD — neuf",
+          "approche": false,
+          "remarque": ""
+        },
+        {
+          "cle": "ps",
+          "libelle": "Polystyrène",
+          "valeur": 2830,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20833",
+          "intitule_ademe": "Plastique — PS — neuf",
+          "approche": false,
+          "remarque": ""
+        },
+        {
+          "cle": "pet",
+          "libelle": "PET",
+          "valeur": 3270,
+          "incertitude_pct": 20,
+          "identifiant_ademe": "20832",
+          "intitule_ademe": "Plastique — PET — neuf",
+          "approche": false,
+          "remarque": ""
+        }
+      ]
     },
     {
       "cle": "electrique",
       "libelle": "Composants électriques",
-      "valeur": 2930,
-      "valeur_haute": 36837,
-      "unite": "kgCO2e/tonne",
-      "incertitude_pct": 30,
-      "identifiant_ademe": "20585 et 20586",
-      "intitule_ademe": "Moteur électrique (2,93 kgCO2e/kg) et Variateur électrique (36 837 kgCO2e/tonne)",
-      "approximation": false,
-      "remarque": "Ce poste s'étend sur un facteur douze. Un ensemble surtout composé de moteurs se situe près de la valeur basse ; un ensemble riche en variateurs et en électronique, près de la valeur haute. Le simulateur retient les deux comme bornes."
+      "aide": "Moteurs et motoréducteurs, armoire, variateurs, automate, interface opérateur, câblage.",
+      "sous": [
+        {
+          "cle": "moteurs",
+          "libelle": "Moteurs et motoréducteurs",
+          "valeur": 2930,
+          "incertitude_pct": 30,
+          "identifiant_ademe": "20585",
+          "intitule_ademe": "Moteur électrique (2,93 kgCO2e/kg)",
+          "approche": false,
+          "remarque": "Beaucoup de masse, peu d'électronique : c'est le composant électrique le moins intense."
+        },
+        {
+          "cle": "armoire",
+          "libelle": "Armoire, variateurs, automate, IHM",
+          "valeur": 36837,
+          "incertitude_pct": 30,
+          "identifiant_ademe": "20586",
+          "intitule_ademe": "Variateur électrique",
+          "approche": true,
+          "remarque": "Approché. Le variateur tient lieu d'électronique de commande. C'est le poste le plus intense du simulateur, douze fois un moteur à masse égale."
+        },
+        {
+          "cle": "cablage",
+          "libelle": "Câblage",
+          "valeur": 1445,
+          "incertitude_pct": 50,
+          "identifiant_ademe": "26733",
+          "intitule_ademe": "Cuivre — neuf",
+          "approche": true,
+          "remarque": "Approché. Un câble est modélisé par son cuivre ; les gaines et isolants ne sont pas comptés."
+        }
+      ]
     }
   ],
+
   "energie": {
     "cle": "electricite_france",
     "libelle": "Électricité, mix moyen français, consommation",
@@ -81,8 +178,18 @@
     "intitule_ademe": "Articulé — 40 à 44 tonnes — diesel routier, incorporation de 7 % de biodiesel",
     "remarque": "Total des postes amont, combustion et fabrication du véhicule. Ne couvre que la livraison de la machine terminée, pas l'acheminement des matières premières."
   },
+  "comparaison": {
+    "cle": "voiture",
+    "libelle": "kilomètres en voiture",
+    "valeur": 0.256,
+    "unite": "kgCO2e/km",
+    "incertitude_pct": 60,
+    "identifiant_ademe": "43791",
+    "intitule_ademe": "Voiture — motorisation moyenne — 2023",
+    "remarque": "Sert uniquement à donner un ordre de grandeur parlant. N'entre dans aucun calcul."
+  },
   "fin_de_vie": {
     "chiffre": false,
-    "remarque": "Non chiffrée. La Base Empreinte ne propose pas de facteur applicable à la fin de vie d'une machine spéciale : les éléments disponibles concernent les emballages ou les déchets électroniques, dont la composition n'a rien à voir. Plutôt que d'avancer une valeur estimée, ce poste est laissé hors du total, et le total le dit."
+    "remarque": "La fin de vie n'est pas chiffrée : la Base Empreinte de l'ADEME ne propose aucun facteur applicable à une machine spéciale."
   }
 }
