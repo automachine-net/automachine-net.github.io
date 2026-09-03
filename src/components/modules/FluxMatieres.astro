@@ -11,7 +11,8 @@
 //
 // La publication d'origine ne se referme pas exactement (arrondis et variations de stock,
 // une vingtaine de millions de tonnes). Ce n'est pas corrigé ici : les valeurs affichées sont
-// celles publiées, et l'écart est signalé sous le schéma.
+// celles publiées. L'écart relève du suivi interne (note du JSON, CLAUDE.md) : il ne
+// s'affiche pas sur le site.
 import donnees from '../../../content/donnees/flux-matieres.json';
 import { typo } from '../../scripts/typographie';
 
@@ -173,26 +174,18 @@ const etapes = donnees.etapes.map((e, i) => {
 <figure class="flux" data-flux-module data-etape="0">
 	<!-- Bandeau : ce qu'on regarde, dans quelle unité, et où l'on en est. -->
 	<header class="flux__entete">
-		<p class="flux__quoi">
-			<strong>{typo(donnees.titre)}</strong>
-			<span class="flux__unite">{typo(`${donnees.annee} · ${donnees.unite}`)}</span>
-		</p>
-		<div class="flux__progression">
-			<p class="flux__rang">
-				<span data-rang>1</span><span class="flux__sur"> / {etapes.length}</span>
-			</p>
-			<ol class="flux__jalons">
-				{
-					etapes.map((e) => (
-						<li>
-							<button type="button" data-jalon={e.index} aria-label={e.titre}>
-								<span aria-hidden="true" />
-							</button>
-						</li>
-					))
-				}
-			</ol>
-		</div>
+		<p class="flux__quoi">{typo(donnees.titre)}</p>
+		<ol class="flux__jalons">
+			{
+				etapes.map((e) => (
+					<li>
+						<button type="button" data-jalon={e.index} aria-label={e.titre}>
+							<span aria-hidden="true" />
+						</button>
+					</li>
+				))
+			}
+		</ol>
 	</header>
 
 	<!-- Scène : le schéma au centre, une flèche de chaque côté. -->
@@ -262,10 +255,13 @@ const etapes = donnees.etapes.map((e, i) => {
 	<!-- Coin inférieur : l'aide derrière un « ? », le plein écran, et en plein écran les
 	     flèches, pour ne rien laisser au milieu qui gêne la lecture. -->
 	<div class="flux__coin">
-		<details class="flux__aide">
-			<summary aria-label="Aide à la navigation"><span aria-hidden="true">?</span></summary>
-			<p>{typo('Flèches ← et → du clavier, ou barre d’espace. Touche Début pour revenir au départ.')}</p>
-		</details>
+		<!-- L'aide apparaît au survol ou à la prise de focus, sans clic. -->
+		<span class="flux__aide" tabindex="0" aria-describedby="flux-aide-texte">
+			<span class="flux__aide-rond" aria-hidden="true">?</span>
+			<span class="flux__aide-texte" id="flux-aide-texte" role="tooltip">
+				{typo('Flèches ← et → du clavier, ou barre d’espace. Touche Début pour revenir au départ.')}
+			</span>
+		</span>
 		<button type="button" class="flux__plein-ecran" data-plein-ecran>
 			<span data-plein-ecran-texte>Plein écran</span>
 		</button>
@@ -278,7 +274,7 @@ const etapes = donnees.etapes.map((e, i) => {
 	</div>
 
 	<figcaption class="flux__source">
-		{typo(`Source : ${donnees.source} ${donnees.note}`)}
+		<strong>Source&#8239;:</strong> {typo(donnees.source)}
 	</figcaption>
 </figure>
 
@@ -287,7 +283,6 @@ const etapes = donnees.etapes.map((e, i) => {
 		const module = document.querySelector('[data-flux-module]');
 		if (!module) return;
 
-		const rang = module.querySelector('[data-rang]');
 		const titre = module.querySelector('[data-titre]');
 		const nombre = module.querySelector('[data-nombre]');
 		const commentaire = module.querySelector('[data-commentaire]');
@@ -307,7 +302,6 @@ const etapes = donnees.etapes.map((e, i) => {
 			const actifs = new Set(e.actifs);
 
 			module.dataset.etape = String(index);
-			rang.textContent = String(index + 1);
 			titre.textContent = e.titre;
 			commentaire.textContent = e.commentaire;
 
@@ -394,12 +388,19 @@ const etapes = donnees.etapes.map((e, i) => {
 
 <style>
 	/* ── Squelette ────────────────────────────────────────────────────────────────
-	   Quatre rangs : bandeau, scène, étape, coin. Le schéma est borné en hauteur pour que
-	   tout tienne à l'écran, légende comprise : c'est le schéma qui s'adapte, pas le texte. */
+	   Bandeau, scène, étape, coin, source, en colonne. Le schéma est borné en hauteur pour
+	   que tout tienne à l'écran, légende comprise : c'est le schéma qui s'adapte, pas le
+	   texte. */
 	.flux {
 		margin: 0;
 		display: grid;
-		grid-template-rows: auto minmax(0, 1fr) auto auto;
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			'entete'
+			'scene'
+			'etape'
+			'coin'
+			'source';
 		gap: 1rem;
 		background: var(--blanc);
 		border: 1px solid var(--gris-moyen);
@@ -407,46 +408,35 @@ const etapes = donnees.etapes.map((e, i) => {
 		padding: 1.25rem 1.5rem 1rem;
 		position: relative;
 	}
-
-	/* ── Bandeau ──────────────────────────────────────────────────────────────── */
 	.flux__entete {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: 1rem 2rem;
-		flex-wrap: wrap;
+		grid-area: entete;
+	}
+	.flux__scene {
+		grid-area: scene;
+	}
+	.flux__etape {
+		grid-area: etape;
+	}
+	.flux__coin {
+		grid-area: coin;
+	}
+	.flux__source {
+		grid-area: source;
+	}
+
+	/* ── Bandeau : titre à gauche, jalons au centre ───────────────────────────── */
+	.flux__entete {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		gap: 1rem;
 	}
 	.flux__quoi {
 		margin: 0;
 		font-family: var(--titres);
+		font-weight: 600;
 		color: var(--bleu-nuit);
 		font-size: 1.05rem;
-		display: flex;
-		align-items: baseline;
-		gap: 0.75rem;
-		flex-wrap: wrap;
-	}
-	.flux__unite {
-		font-weight: 500;
-		font-size: 0.85rem;
-		color: var(--gris-leger);
-		letter-spacing: 0.02em;
-	}
-	.flux__progression {
-		display: flex;
-		align-items: center;
-		gap: 0.9rem;
-	}
-	.flux__rang {
-		margin: 0;
-		font-family: var(--titres);
-		font-size: 0.85rem;
-		letter-spacing: 0.08em;
-		color: var(--gris-leger);
-	}
-	.flux__rang [data-rang] {
-		color: var(--bleu-nuit);
-		font-weight: 700;
 	}
 	.flux__jalons {
 		list-style: none;
@@ -464,7 +454,7 @@ const etapes = donnees.etapes.map((e, i) => {
 	}
 	.flux__jalons span {
 		display: block;
-		width: 1.1rem;
+		width: 1.3rem;
 		height: 3px;
 		background: var(--gris-moyen);
 		transition: background 0.2s;
@@ -474,6 +464,13 @@ const etapes = donnees.etapes.map((e, i) => {
 	}
 	.flux__jalons button[aria-current='true'] span {
 		background: var(--orange);
+	}
+	@media (max-width: 40rem) {
+		.flux__entete {
+			grid-template-columns: minmax(0, 1fr);
+			justify-items: center;
+			text-align: center;
+		}
 	}
 
 	/* ── Scène ────────────────────────────────────────────────────────────────── */
@@ -677,43 +674,58 @@ const etapes = donnees.etapes.map((e, i) => {
 	}
 	.flux__aide {
 		position: relative;
+		display: inline-block;
+		cursor: help;
+		border-radius: 50%;
 	}
-	.flux__aide summary {
-		list-style: none;
+	.flux__aide-rond {
+		display: grid;
+		place-items: center;
 		width: 1.75rem;
 		height: 1.75rem;
 		border-radius: 50%;
 		border: 1px solid var(--gris-moyen);
-		display: grid;
-		place-items: center;
 		font-family: var(--titres);
 		font-weight: 700;
 		font-size: 0.95rem;
+		line-height: 1;
+		/* League Spartan a une hauteur de capitale qui tire vers le haut : on recentre. */
+		padding-top: 0.15em;
 		color: var(--bleu-nuit);
-		cursor: pointer;
+		transition:
+			border-color 0.2s,
+			background 0.2s;
 	}
-	.flux__aide summary::-webkit-details-marker {
-		display: none;
-	}
-	.flux__aide summary:hover {
+	.flux__aide:hover .flux__aide-rond,
+	.flux__aide:focus-visible .flux__aide-rond {
 		border-color: var(--bleu);
 		background: var(--gris-clair);
 	}
 	/* L'aide s'ouvre au-dessus du bouton, sans déplacer le reste. */
-	.flux__aide p {
+	.flux__aide-texte {
 		position: absolute;
-		bottom: calc(100% + 0.5rem);
+		bottom: calc(100% + 0.6rem);
 		right: 0;
-		margin: 0;
 		width: max-content;
 		max-width: min(22rem, 80vw);
 		background: var(--bleu-nuit);
 		color: var(--blanc);
 		padding: 0.6rem 0.85rem;
 		border-radius: var(--rayon);
+		font-family: var(--texte);
 		font-size: 0.85rem;
 		line-height: 1.4;
 		z-index: 10;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.15s,
+			visibility 0.15s;
+	}
+	.flux__aide:hover .flux__aide-texte,
+	.flux__aide:focus-visible .flux__aide-texte {
+		opacity: 1;
+		visibility: visible;
 	}
 	.flux__plein-ecran {
 		border: 0;
@@ -734,28 +746,29 @@ const etapes = donnees.etapes.map((e, i) => {
 		color: var(--gris-leger);
 		margin: 0;
 	}
+	.flux__source strong {
+		color: var(--gris);
+	}
 
 	/* ── Plein écran ──────────────────────────────────────────────────────────────
-	   L'essentiel au centre : bandeau en haut, schéma au milieu qui prend toute la hauteur
-	   restante, étape juste dessous, commandes dans le coin inférieur droit. */
+	   Format paysage : bandeau en haut, schéma à gauche sur toute la hauteur restante,
+	   étape à sa droite, commandes dans le coin inférieur droit. */
 	.flux:fullscreen {
 		border: 0;
 		border-radius: 0;
 		padding: 1.5rem 3rem 1.25rem;
-		gap: 1.25rem;
-		grid-template-rows: auto minmax(0, 1fr) auto;
+		gap: 1.25rem 3rem;
+		grid-template-columns: minmax(0, 1fr) 26rem;
+		grid-template-rows: auto minmax(0, 1fr);
+		grid-template-areas:
+			'entete entete'
+			'scene etape';
 	}
 	.flux:fullscreen .flux__quoi {
 		font-size: 1.25rem;
 	}
-	.flux:fullscreen .flux__unite {
-		font-size: 1rem;
-	}
-	.flux:fullscreen .flux__progression {
-		gap: 1.25rem;
-	}
 	.flux:fullscreen .flux__jalons span {
-		width: 1.6rem;
+		width: 1.8rem;
 	}
 	.flux:fullscreen .flux__fleche--scene {
 		display: none;
@@ -768,33 +781,48 @@ const etapes = donnees.etapes.map((e, i) => {
 		max-width: 100%;
 		max-height: 100%;
 	}
-	/* Le texte d'étape laisse la place des commandes du coin, de chaque côté pour rester
-	   centré. */
 	.flux:fullscreen .flux__etape {
-		max-width: min(80ch, calc(100% - 26rem));
+		text-align: left;
+		max-width: none;
+		margin: 0;
+		align-self: center;
+		/* Les commandes du coin occupent le bas de cette colonne. */
+		padding-bottom: 5rem;
+	}
+	.flux:fullscreen .flux__nombre {
+		justify-content: flex-start;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+		margin-bottom: 1rem;
+	}
+	.flux:fullscreen .flux__nombre :global(.flux__nombre-part)::before {
+		content: none;
 	}
 	.flux:fullscreen .flux__titre-etape {
 		font-size: 2.2rem;
+		margin-bottom: 0.75rem;
 	}
 	.flux:fullscreen .flux__nombre :global(.flux__nombre-valeur) {
-		font-size: 3.2rem;
+		font-size: 4rem;
 	}
 	.flux:fullscreen .flux__nombre :global(.flux__nombre-unite),
 	.flux:fullscreen .flux__nombre :global(.flux__nombre-part) {
-		font-size: 1.3rem;
+		font-size: 1.2rem;
 	}
 	.flux:fullscreen .flux__commentaire {
-		font-size: 1.45rem;
+		font-size: 1.4rem;
 	}
 	.flux:fullscreen .flux__cumul {
-		font-size: 1.2rem;
+		font-size: 1.15rem;
+		margin-top: 1.25rem;
 	}
 	.flux:fullscreen .flux__cumul :global(strong) {
 		font-size: 1.7rem;
 	}
 	.flux:fullscreen .flux__coin {
 		position: absolute;
-		right: 1.5rem;
+		right: 3rem;
 		bottom: 1.25rem;
 	}
 	.flux:fullscreen .flux__fleche--coin {
