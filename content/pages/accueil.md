@@ -60,11 +60,6 @@ blocs:
   - type: clients
     titre: ''
     fond: blanc
-  - type: citation
-    fond: sombre
-    citation: Texte de la citation
-    auteur: Moi
-    fonction: Dire des trucs et faire un test
   - type: texte-image
     titre: L’entreprise
     lien_libelle: Découvrir l’entreprise
@@ -77,6 +72,19 @@ blocs:
       n'a encore résolu chez le client. Nous prenons en charge la conception, la fabrication,
       l'assemblage et la mise en service.
     fond: sombre
+    image: ''
+    image_alt: ''
+    image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
+    position_image: droite
+    citation: Texte de la citation
+    auteur: Moi
+    fonction: Dire des trucs et faire un test
+  - type: appel
+    titre: Un besoin de machine ?
+    lien_libelle: Nous contacter
+    lien_url: /contact
+    texte: '[à relire] Décrivez-nous l’opération à réaliser, même sommairement. Nous vous dirons rapidement si c’est un sujet pour nous, et ce qu’il faudrait pour aller plus loin.'
+    fond: blanc
     image: ''
     image_alt: ''
     image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
