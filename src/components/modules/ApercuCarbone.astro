@@ -28,11 +28,19 @@ const couleurs: Record<string, string> = {
 	transport: 'var(--bleu-clair)',
 	usage: 'var(--orange)',
 };
-const parts = chiffres.map((p) => ({
-	libelle: p.libelle,
-	pourcentage: (milieu(p) / total) * 100,
-	couleur: couleurs[p.cle],
-}));
+const parts = chiffres.map((p) => {
+	const pourcentage = (milieu(p) / total) * 100;
+	return {
+		libelle: p.libelle,
+		pourcentage,
+		couleur: couleurs[p.cle],
+		detail: typo(
+			`${p.libelle} : ${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
+				pourcentage < 1 ? '< 1' : Math.round(pourcentage)
+			} % du total`
+		),
+	};
+});
 ---
 
 <div class="apercu">
@@ -63,7 +71,14 @@ const parts = chiffres.map((p) => ({
 	<div class="apercu__barre" role="img" aria-label={typo(parts.map((p) => `${p.libelle} ${Math.round(p.pourcentage)} %`).join(', '))}>
 		{
 			parts.map((p) => (
-				<span style={`width: ${p.pourcentage}%; background: ${p.couleur}`}></span>
+				<span
+					class={`apercu__part ${p.pourcentage < 4 ? 'apercu__part--menue' : ''}`}
+					style={`width: ${p.pourcentage}%; background: ${p.couleur}`}
+					tabindex="0"
+					aria-label={p.detail}
+				>
+					<span class="apercu__bulle">{p.detail}</span>
+				</span>
 			))
 		}
 	</div>
@@ -111,13 +126,62 @@ const parts = chiffres.map((p) => ({
 		display: flex;
 		height: 1.25rem;
 		border-radius: 2px;
-		overflow: hidden;
 		background: rgba(255, 255, 255, 0.12);
 	}
-	.apercu__barre span {
+	.apercu__part {
+		position: relative;
 		display: block;
 		height: 100%;
 		min-width: 2px;
+		cursor: pointer;
+	}
+	/* Une part minuscule garde une zone de survol utilisable, sans être dessinée plus
+	   large qu'elle n'est. */
+	.apercu__part--menue::after {
+		content: '';
+		position: absolute;
+		inset: -0.5rem -0.6rem;
+		z-index: 2;
+	}
+	.apercu__part:hover,
+	.apercu__part:focus-visible {
+		filter: brightness(1.1);
+	}
+	.apercu__bulle {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 20;
+		width: max-content;
+		max-width: min(22rem, calc(100vw - 2rem));
+		background: var(--blanc);
+		color: var(--gris);
+		padding: 0.55rem 0.8rem;
+		border-radius: var(--rayon);
+		font-size: 0.85rem;
+		line-height: 1.4;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.15s,
+			visibility 0.15s;
+		pointer-events: none;
+	}
+	.apercu__part:hover .apercu__bulle,
+	.apercu__part:focus-visible .apercu__bulle {
+		opacity: 1;
+		visibility: visible;
+	}
+	/* La barre laisse déborder les bulles ; seules les parts sont rognées. */
+	.apercu__barre {
+		overflow: visible;
+	}
+	.apercu__part:first-child {
+		border-radius: 2px 0 0 2px;
+	}
+	.apercu__part:last-child {
+		border-radius: 0 2px 2px 0;
 	}
 	.apercu__legende {
 		list-style: none;

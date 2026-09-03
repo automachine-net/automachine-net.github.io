@@ -4,6 +4,7 @@
 // Le retour est immédiat au clic : bonne réponse en bleu, réponse choisie fausse en orange,
 // puis l'explication et la référence d'article.
 import quiz from '../../../content/quiz/reglement-machines.json';
+import { lienArticle, libelleArticle } from '../../scripts/reglement';
 
 interface Props {
 	nombre?: number;
@@ -62,7 +63,9 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 					<p class="question__explication" hidden>
 						<strong data-verdict />
 						{q.explication}
-						<span class="reference">Règlement (UE) 2023/1230, {article(q.reference)}.</span>
+						<a class="reference" href={lienArticle(q.reference)} rel="noopener" target="_blank">
+										Règlement machines (UE) 2023/1230, {libelleArticle(q.reference)}
+									</a>
 					</p>
 				</li>
 			))
@@ -227,21 +230,36 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 	.option--fausse .option__lettre {
 		color: var(--bleu-nuit);
 	}
+	/* Le fond de l'explication est clair : la couleur du texte doit être posée
+	   explicitement, sinon elle hérite du blanc d'un bloc sombre et devient illisible. */
 	.question__explication {
 		margin: 0.9rem 0 0;
 		padding: 0.9rem 1rem;
 		background: var(--gris-clair);
 		border-left: 3px solid var(--bleu);
 		max-width: 75ch;
+		color: var(--gris);
+	}
+	.question__explication strong {
+		color: var(--bleu-nuit);
 	}
 	.reference {
 		display: block;
-		margin-top: 0.4rem;
+		margin-top: 0.5rem;
 		font-size: 0.85rem;
-		color: var(--gris-leger);
+		color: var(--bleu);
+		text-decoration-color: var(--orange);
 	}
 	.quiz__suite {
 		margin: 2.5rem 0 0;
+	}
+	:global(.bloc--sombre) .quiz__suite .bouton {
+		background: var(--blanc);
+		color: var(--bleu-nuit);
+	}
+	:global(.bloc--sombre) .quiz__suite .bouton:hover {
+		background: var(--orange);
+		color: var(--bleu-nuit);
 	}
 	/* La mention obligatoire ferme le bloc, rattachée par un filet : elle ne flotte pas. */
 	.quiz__mention {

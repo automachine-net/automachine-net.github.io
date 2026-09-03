@@ -50,7 +50,7 @@ blocs:
     attente: ''
   - type: module
     titre: Serez-vous prêt ?
-    lien_libelle: Continuer
+    lien_libelle: Continuer le quiz
     lien_url: /outils/quiz-reglement-machines
     fond: sombre
     introduction: ''

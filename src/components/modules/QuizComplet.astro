@@ -8,6 +8,7 @@
 // Sans JavaScript, tout reste utilisable : les questions et leurs réponses possibles sont
 // dans la page, et l'explication se déplie à la demande grâce à la balise <details>.
 import quiz from '../../../content/quiz/reglement-machines.json';
+import { lienArticle, libelleArticle } from '../../scripts/reglement';
 import { typo } from '../../scripts/typographie';
 
 const lettres = ['a', 'b', 'c', 'd'] as const;
@@ -77,7 +78,9 @@ for (const question of quiz.questions) {
 								<p>
 									<strong data-verdict />
 									{typo(q.explication)}
-									<span class="reference">Règlement (UE) 2023/1230, {article(q.reference)}.</span>
+									<a class="reference" href={lienArticle(q.reference)} rel="noopener" target="_blank">
+										Règlement machines (UE) 2023/1230, {libelleArticle(q.reference)}
+									</a>
 								</p>
 							</details>
 						</li>
