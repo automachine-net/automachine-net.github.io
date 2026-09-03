@@ -262,7 +262,8 @@ collections:
                 options:
                   - { label: Extrait du quiz règlement machines, value: quiz-extrait }
                   - { label: Compte à rebours du 20 janvier 2027, value: compte-a-rebours }
-                  - { label: Simulateur d'empreinte carbone (version courte), value: simulateur-carbone }
+                  - { label: Empreinte carbone — aperçu chiffré et lien, value: apercu-carbone }
+                  - { label: Empreinte carbone — simulateur à remplir, value: simulateur-carbone }
                   - { label: Cadre d'attente (module pas encore construit), value: a-venir }
               - name: nombre_questions
                 label: Nombre de questions du quiz

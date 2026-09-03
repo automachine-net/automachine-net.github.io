@@ -103,7 +103,7 @@ const bloc = z.discriminatedUnion('type', [
 		type: z.literal('module'),
 		titre: z.string().optional(),
 		introduction: z.string().optional(),
-		module: z.enum(['quiz-extrait', 'compte-a-rebours', 'simulateur-carbone', 'a-venir']),
+		module: z.enum(['quiz-extrait', 'compte-a-rebours', 'apercu-carbone', 'simulateur-carbone', 'a-venir']),
 		nombre_questions: z.number().optional(),
 		lien_libelle: z.string().optional(),
 		lien_url: z.string().optional(),

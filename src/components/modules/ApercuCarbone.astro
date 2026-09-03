@@ -1,0 +1,142 @@
+---
+// Aperçu du simulateur d'empreinte carbone, pour une page où l'outil complet prendrait
+// trop de place. Un exemple déjà calculé, sa fourchette et sa barre : on voit ce que
+// l'outil produit sans avoir à saisir quoi que ce soit.
+//
+// Le calcul se fait à la construction du site. Ce bloc n'exécute donc aucun code chez le
+// visiteur, contrairement au simulateur lui-même.
+import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
+import { typo } from '../../scripts/typographie';
+
+/** Machine d'exemple : celle proposée en filigrane dans le simulateur. */
+const exemple = {
+	categories: { metaux: 400, plastiques: 20, electrique: 80 },
+	details: {},
+	puissance: 10,
+	tauxDeCharge: 0.5,
+	heuresParAn: 6000,
+	dureeDeVie: 20,
+	distanceLivraison: 300,
+};
+
+const r = calculer(exemple);
+const chiffres = r.postes.filter((p) => p.bas !== null && p.haut !== null);
+const milieu = (p: { bas: number | null; haut: number | null }) => (p.bas! + p.haut!) / 2;
+const total = chiffres.reduce((s, p) => s + milieu(p), 0);
+const couleurs: Record<string, string> = {
+	fabrication: 'var(--bleu)',
+	transport: 'var(--bleu-clair)',
+	usage: 'var(--orange)',
+};
+const parts = chiffres.map((p) => ({
+	libelle: p.libelle,
+	pourcentage: (milieu(p) / total) * 100,
+	couleur: couleurs[p.cle],
+}));
+---
+
+<div class="apercu">
+	<p class="apercu__cas">
+		{
+			typo(
+				`Une machine de ${exemple.categories.metaux + exemple.categories.plastiques + exemple.categories.electrique} kg, ${exemple.puissance} kW installés, ${exemple.heuresParAn.toLocaleString('fr-FR')} h par an pendant ${exemple.dureeDeVie} ans :`
+			)
+		}
+	</p>
+
+	<p class="apercu__fourchette">
+		<span>{formaterCO2e(r.totalBas)}</span>
+		<span class="apercu__a">à</span>
+		<span>{formaterCO2e(r.totalHaut)}</span>
+	</p>
+	<p class="apercu__comparaison">
+		{
+			typo(
+				r.comparaisons[0].gabarit.replace(
+					'{n}',
+					`${arrondiParlant(r.comparaisons[0].bas)} à ${arrondiParlant(r.comparaisons[0].haut)}`
+				)
+			)
+		}
+	</p>
+
+	<div class="apercu__barre" role="img" aria-label={typo(parts.map((p) => `${p.libelle} ${Math.round(p.pourcentage)} %`).join(', '))}>
+		{
+			parts.map((p) => (
+				<span style={`width: ${p.pourcentage}%; background: ${p.couleur}`}></span>
+			))
+		}
+	</div>
+	<ul class="apercu__legende">
+		{
+			parts.map((p) => (
+				<li>
+					<span class="apercu__pastille" style={`background: ${p.couleur}`}></span>
+					{typo(`${p.libelle} ${p.pourcentage < 1 ? '< 1' : Math.round(p.pourcentage)} %`)}
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	.apercu {
+		max-width: 44rem;
+	}
+	.apercu__cas {
+		margin: 0 0 0.5rem;
+		font-size: 1rem;
+	}
+	.apercu__fourchette {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: clamp(1.9rem, 5vw, 3rem);
+		line-height: 1.1;
+		margin: 0;
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.apercu__a {
+		font-size: 0.45em;
+		font-weight: 500;
+		opacity: 0.7;
+	}
+	.apercu__comparaison {
+		margin: 0.5rem 0 1.5rem;
+		font-size: 1rem;
+	}
+	.apercu__barre {
+		display: flex;
+		height: 1.25rem;
+		border-radius: 2px;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.12);
+	}
+	.apercu__barre span {
+		display: block;
+		height: 100%;
+		min-width: 2px;
+	}
+	.apercu__legende {
+		list-style: none;
+		margin: 0.85rem 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		font-size: 0.9rem;
+	}
+	.apercu__legende li {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+	.apercu__pastille {
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 2px;
+		flex: 0 0 auto;
+	}
+</style>

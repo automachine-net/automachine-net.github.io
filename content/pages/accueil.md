@@ -27,7 +27,7 @@ blocs:
     lien_url: /outils/simulateur-carbone
     fond: sombre
     introduction: ''
-    module: simulateur-carbone
+    module: apercu-carbone
     nombre_questions: 3
     attente: ''
   - type: module

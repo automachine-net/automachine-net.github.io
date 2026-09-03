@@ -5,10 +5,13 @@ const ECHEANCE = '2027-01-20';
 ---
 
 <div class="compte" data-echeance={ECHEANCE}>
-	<p class="compte__valeur"><span data-jours>—</span></p>
+	<p class="compte__valeur">
+		<span data-jours>—</span>
+		<span class="compte__unite">jours restants</span>
+	</p>
 	<p class="compte__legende">
-		jours avant le <strong>20 janvier 2027</strong>, date d’application du règlement (UE) 2023/1230
-		qui remplace la directive 2006/42/CE.
+		avant le <strong>20 janvier 2027</strong>, date d’application du règlement (UE) 2023/1230 qui
+		remplace la directive 2006/42/CE.
 	</p>
 </div>
 
@@ -23,33 +26,32 @@ const ECHEANCE = '2027-01-20';
 
 <style>
 	.compte {
-		display: grid;
-		grid-template-columns: auto minmax(0, 1fr);
-		gap: 1.5rem;
-		align-items: center;
 		background: var(--bleu-nuit);
 		color: var(--blanc);
-		padding: 1.5rem 2rem;
+		padding: 1.75rem 2rem;
 		border-radius: var(--rayon);
 	}
-	@media (max-width: 600px) {
-		.compte {
-			grid-template-columns: 1fr;
-			gap: 0.5rem;
-		}
-	}
+	/* Le nombre seul n'intrigue pas : c'est « 139 jours restants » qui arrête le regard. */
 	.compte__valeur {
 		font-family: var(--titres);
 		font-weight: 700;
-		font-size: clamp(3.5rem, 9vw, 6rem);
-		line-height: 1;
+		font-size: clamp(2.4rem, 7vw, 4.5rem);
+		line-height: 1.05;
 		color: var(--orange);
 		margin: 0;
+		display: flex;
+		align-items: baseline;
+		gap: 0.4em;
+		flex-wrap: wrap;
+	}
+	.compte__unite {
+		color: var(--blanc);
 	}
 	.compte__legende {
-		margin: 0;
+		margin: 0.6rem 0 0;
 		font-size: 1.05rem;
 		color: var(--blanc);
+		max-width: 46rem;
 	}
 	.compte__legende strong {
 		color: var(--bleu-clair);
