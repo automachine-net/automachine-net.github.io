@@ -307,13 +307,13 @@ const etapes = donnees.etapes.map((e, i) => {
 			titre.textContent = e.titre;
 			commentaire.textContent = e.commentaire;
 
-			// Le bloc du chiffre garde toujours la même structure, rendu invisible plutôt que
-			// retiré quand il n'a rien à dire : ainsi les textes ne bougent pas d'une étape à
-			// l'autre. La part n'a de sens que rapportée à l'entrée : cachée pour l'entrée.
+			// Le bloc du chiffre garde toujours la même structure d'une étape chiffrée à l'autre,
+			// pour que les textes ne bougent pas. La part n'a de sens que rapportée à l'entrée :
+			// rendue invisible, non retirée, pour l'entrée. Sur une étape sans chiffre (la vue
+			// d'ensemble), le bloc disparaît et le commentaire remonte sous le titre.
 			const v = e.valeur === null ? etapes[0].valeur : e.valeur;
 			const p = e.pourcentage === null ? 100 : e.pourcentage;
-			nombre.hidden = false;
-			nombre.classList.toggle('est-invisible', e.valeur === null);
+			nombre.hidden = e.valeur === null;
 			nombre.innerHTML =
 				'<span class="flux__nombre-valeur">' +
 				v.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) +
@@ -663,7 +663,6 @@ const etapes = donnees.etapes.map((e, i) => {
 		min-height: 3.2em;
 	}
 	.flux__nombre :global(.est-invisible),
-	.flux__nombre.est-invisible,
 	.flux__cumul.est-invisible {
 		visibility: hidden;
 	}
