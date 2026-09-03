@@ -124,9 +124,10 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		<span class="helice__aide" tabindex="0" aria-describedby="helice-aide-texte">
 			<span class="helice__aide-rond" aria-hidden="true">?</span>
 			<span class="helice__aide-texte" id="helice-aide-texte" role="tooltip">
-				{typo('Touches 1 à 4 : choisir un critère, puis flèches ← → pour le régler. R : revenir aux valeurs de départ.')}
+				{typo('Touches 1 à 4 : choisir un critère, puis flèches ← → pour le régler. R : revenir aux valeurs de départ. + et − : accélérer ou ralentir la boule.')}
 			</span>
 		</span>
+		<span class="helice__vitesse" data-vitesse hidden aria-live="polite"></span>
 		<button type="button" class="helice__bouton" data-plein-ecran>
 			<span data-plein-ecran-texte>Plein écran</span>
 		</button>
@@ -327,6 +328,12 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 			} else if (ev.key === 'r' || ev.key === 'R') {
 				ev.preventDefault();
 				reinitialiser();
+			} else if (ev.key === '+' || ev.key === '=') {
+				ev.preventDefault();
+				reglerVitesse(vitesse * 2);
+			} else if (ev.key === '-' || ev.key === '−') {
+				ev.preventDefault();
+				reglerVitesse(vitesse / 2);
 			}
 		});
 
@@ -353,11 +360,35 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		let precedent = null;
 		const particules = [];
 
+		// Le tour se parcourt en trois temps, un par tiers : fabrication (court, fixe), usage
+		// (le temps de référence) et réversion, qui dure « délai » pour cent du temps d'usage.
+		// À 300 %, la boule traîne trois fois le temps d'usage sur le chemin du retour : on
+		// voit qu'elle revient trop tard. Un facteur de présentation, aux touches + et −,
+		// accélère ou ralentit le tout sans en changer les proportions.
+		const USAGE_S = 1.6; // durée du temps d'usage, en secondes
+		const FABRICATION_S = 0.6;
+		const TIERS = (2 * Math.PI) / 3;
+		let vitesse = 1;
+		const afficheVitesse = module.querySelector('[data-vitesse]');
+
+		function dureeDuTiers(i) {
+			if (i === 0) return FABRICATION_S; // Fabrication → Usage
+			if (i === 1) return USAGE_S; // Usage → Réversion
+			return (USAGE_S * Math.max(valeurs.delai, 5)) / 100; // Réversion → Fabrication
+		}
+
+		function reglerVitesse(v) {
+			vitesse = Math.min(4, Math.max(0.25, v));
+			afficheVitesse.textContent = '× ' + vitesse.toLocaleString('fr-FR');
+			afficheVitesse.hidden = vitesse === 1;
+		}
+
 		function animer(t) {
 			if (precedent === null) precedent = t;
 			const dt = Math.min((t - precedent) / 1000, 0.1);
 			precedent = t;
-			theta += dt * 1.1;
+			const tiers = Math.floor((theta % (2 * Math.PI)) / TIERS);
+			theta += (dt * vitesse * TIERS) / dureeDuTiers(tiers);
 			if (theta > thetaMax) {
 				theta = 0;
 				dernierTour = 0;
@@ -739,6 +770,15 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	.helice__aide:focus-visible .helice__aide-texte {
 		opacity: 1;
 		visibility: visible;
+	}
+	.helice__vitesse {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: 0.85rem;
+		color: var(--bleu-nuit);
+		border: 1px solid var(--gris-moyen);
+		border-radius: 3px;
+		padding: 0.1rem 0.4rem 0;
 	}
 	.helice__bouton {
 		border: 0;
