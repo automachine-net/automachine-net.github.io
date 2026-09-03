@@ -1,0 +1,414 @@
+---
+// Simulateur d'empreinte carbone d'une machine spéciale.
+//
+// Les facteurs viennent de content/donnees/facteurs-carbone.json, sourcés ligne par ligne.
+// Le calcul vit dans src/scripts/carbone.ts et tourne dans le navigateur : aucune donnée
+// saisie ne quitte le poste du visiteur.
+//
+// Sans JavaScript, le formulaire reste lisible et la méthode reste exposée : seul le calcul
+// manque, et la page le dit.
+import facteurs from '../../../content/donnees/facteurs-carbone.json';
+
+const materiaux = facteurs.materiaux;
+// Répartition de départ : une machine d'ossature acier, courante dans le métier.
+// C'est un point de départ, pas une moyenne mesurée.
+const defauts: Record<string, number> = {
+	acier: 60,
+	inox: 10,
+	aluminium: 10,
+	plastiques: 5,
+	electrique: 15,
+};
+---
+
+<form class="simulateur" data-simulateur novalidate>
+	<p class="sans-js">
+		Le calcul se fait dans votre navigateur. Il demande JavaScript, que votre navigateur
+		semble ne pas exécuter. La méthode et les facteurs restent décrits ci-dessous.
+	</p>
+
+	<div class="grille">
+		<div class="champ">
+			<label for="masse">Masse totale de la machine</label>
+			<div class="saisie">
+				<input type="number" id="masse" name="masse" value="1500" min="1" step="10" />
+				<span class="unite">kg</span>
+			</div>
+		</div>
+
+		<div class="champ">
+			<label for="puissance">Puissance installée</label>
+			<div class="saisie">
+				<input type="number" id="puissance" name="puissance" value="10" min="0" step="0.5" />
+				<span class="unite">kW</span>
+			</div>
+		</div>
+
+		<div class="champ">
+			<label for="charge">Taux de charge moyen</label>
+			<div class="saisie">
+				<input type="number" id="charge" name="charge" value="50" min="1" max="100" step="5" />
+				<span class="unite">%</span>
+			</div>
+			<p class="aide">Part de la puissance installée réellement appelée en marche.</p>
+		</div>
+
+		<div class="champ">
+			<label for="heures">Heures de fonctionnement</label>
+			<div class="saisie">
+				<input type="number" id="heures" name="heures" value="1600" min="1" step="100" />
+				<span class="unite">h/an</span>
+			</div>
+		</div>
+
+		<div class="champ">
+			<label for="duree">Durée de vie attendue</label>
+			<div class="saisie">
+				<input type="number" id="duree" name="duree" value="15" min="1" step="1" />
+				<span class="unite">ans</span>
+			</div>
+		</div>
+
+		<div class="champ">
+			<label for="distance">Distance de livraison</label>
+			<div class="saisie">
+				<input type="number" id="distance" name="distance" value="500" min="0" step="50" />
+				<span class="unite">km</span>
+			</div>
+		</div>
+	</div>
+
+	<fieldset class="repartition">
+		<legend>Répartition de la masse par famille de matériaux</legend>
+		<div class="repartition__lignes">
+			{
+				materiaux.map((m) => (
+					<div class="champ champ--part">
+						<label for={`part-${m.cle}`}>
+							{m.libelle}
+							{m.approximation && <span class="marque" title="Facteur approché">approché</span>}
+						</label>
+						<div class="saisie">
+							<input
+								type="number"
+								id={`part-${m.cle}`}
+								data-part={m.cle}
+								value={defauts[m.cle] ?? 0}
+								min="0"
+								max="100"
+								step="5"
+							/>
+							<span class="unite">%</span>
+						</div>
+					</div>
+				))
+			}
+		</div>
+		<p class="total-parts" data-total-parts aria-live="polite"></p>
+	</fieldset>
+</form>
+
+<section class="resultat" data-resultat hidden aria-live="polite">
+	<h2>Ordre de grandeur</h2>
+	<p class="fourchette">
+		<span data-total-bas></span>
+		<span class="fourchette__a">à</span>
+		<span data-total-haut></span>
+	</p>
+	<p class="fourchette__note">
+		sur toute la durée de vie, fin de vie non comprise. Ce n’est pas une mesure, c’est un ordre
+		de grandeur destiné à situer les postes les uns par rapport aux autres.
+	</p>
+
+	<table class="postes">
+		<thead>
+			<tr>
+				<th scope="col">Poste</th>
+				<th scope="col">Fourchette</th>
+				<th scope="col">Part</th>
+			</tr>
+		</thead>
+		<tbody data-postes></tbody>
+	</table>
+
+	<details class="hypotheses">
+		<summary>Hypothèses retenues pour ce calcul</summary>
+		<ul data-hypotheses></ul>
+	</details>
+</section>
+
+<script>
+	import { calculer, formaterCO2e } from '../../scripts/carbone';
+
+	const form = document.querySelector<HTMLFormElement>('[data-simulateur]');
+	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
+	if (form && resultat) {
+		form.classList.add('simulateur--actif');
+
+		const nombre = (id: string) => Number((form.querySelector(`#${id}`) as HTMLInputElement).value);
+		const parts = [...form.querySelectorAll<HTMLInputElement>('[data-part]')];
+		const totalParts = form.querySelector<HTMLElement>('[data-total-parts]')!;
+		const corps = resultat.querySelector<HTMLElement>('[data-postes]')!;
+		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
+
+		const recalculer = () => {
+			const repartition: Record<string, number> = {};
+			let somme = 0;
+			for (const p of parts) {
+				const v = Number(p.value) || 0;
+				repartition[p.dataset.part!] = v;
+				somme += v;
+			}
+
+			// La somme des parts doit faire 100 : sinon le résultat n'a pas de sens et on le dit,
+			// plutôt que de normaliser en douce.
+			const ecart = Math.round(somme - 100);
+			totalParts.textContent = ecart === 0 ? 'Total : 100 %' : `Total : ${Math.round(somme)} % — il faut 100 %`;
+			totalParts.classList.toggle('total-parts--faux', ecart !== 0);
+			if (ecart !== 0) {
+				resultat.hidden = true;
+				return;
+			}
+
+			const r = calculer({
+				masse: nombre('masse'),
+				repartition,
+				puissance: nombre('puissance'),
+				heuresParAn: nombre('heures'),
+				dureeDeVie: nombre('duree'),
+				distanceLivraison: nombre('distance'),
+				tauxDeCharge: nombre('charge') / 100,
+			});
+
+			resultat.querySelector('[data-total-bas]')!.textContent = formaterCO2e(r.totalBas);
+			resultat.querySelector('[data-total-haut]')!.textContent = formaterCO2e(r.totalHaut);
+
+			corps.replaceChildren(
+				...r.postes.map((p) => {
+					const tr = document.createElement('tr');
+					const th = document.createElement('th');
+					th.scope = 'row';
+					th.textContent = p.libelle;
+					const valeur = document.createElement('td');
+					const part = document.createElement('td');
+					if (p.bas === null) {
+						valeur.textContent = 'non chiffré';
+						valeur.className = 'non-chiffre';
+						part.textContent = '—';
+						tr.title = p.detail;
+					} else {
+						valeur.textContent = `${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}`;
+						const milieu = (p.bas + p.haut!) / 2;
+						const total = (r.totalBas + r.totalHaut) / 2;
+						part.textContent = `${Math.round((milieu / total) * 100)} %`;
+					}
+					tr.append(th, valeur, part);
+					return tr;
+				})
+			);
+
+			listeHypotheses.replaceChildren(
+				...r.hypotheses.map((h) => {
+					const li = document.createElement('li');
+					li.textContent = h;
+					return li;
+				}),
+				...r.nonChiffres.map((n) => {
+					const li = document.createElement('li');
+					li.textContent = `${n} : poste non chiffré, exclu du total.`;
+					return li;
+				})
+			);
+
+			resultat.hidden = false;
+		};
+
+		form.addEventListener('input', recalculer);
+		recalculer();
+	}
+</script>
+
+<style>
+	.simulateur {
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: clamp(1.25rem, 3vw, 2rem);
+	}
+	/* Message affiché seulement si JavaScript n'a pas pris la main. */
+	.simulateur--actif .sans-js {
+		display: none;
+	}
+	.sans-js {
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		padding: 0.9rem 1.1rem;
+		margin: 0 0 1.5rem;
+	}
+
+	.grille {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+		gap: 1.25rem;
+	}
+	.champ {
+		display: grid;
+		gap: 0.3rem;
+		align-content: start;
+	}
+	label {
+		font-weight: 500;
+		font-size: 0.95rem;
+		color: var(--bleu-nuit);
+	}
+	.saisie {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	input {
+		font: inherit;
+		color: var(--gris);
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.5rem 0.6rem;
+		width: 100%;
+		min-width: 0;
+	}
+	input:focus {
+		border-color: var(--bleu);
+	}
+	.unite {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		white-space: nowrap;
+	}
+	.aide {
+		margin: 0;
+		font-size: 0.82rem;
+		color: var(--gris-leger);
+	}
+
+	.repartition {
+		border: 0;
+		border-top: 1px solid var(--gris-moyen);
+		margin: 1.75rem 0 0;
+		padding: 1.5rem 0 0;
+	}
+	.repartition legend {
+		padding: 0;
+		font-weight: 500;
+		color: var(--bleu-nuit);
+		margin-bottom: 1rem;
+	}
+	.repartition__lignes {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+		gap: 1rem;
+	}
+	.marque {
+		display: inline-block;
+		margin-left: 0.35rem;
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--gris-leger);
+		border: 1px solid var(--gris-moyen);
+		border-radius: 2px;
+		padding: 0 0.25rem;
+		vertical-align: middle;
+	}
+	.total-parts {
+		margin: 1rem 0 0;
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+	.total-parts--faux {
+		color: var(--bleu-nuit);
+		font-weight: 600;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		padding: 0.5rem 0.75rem;
+	}
+
+	/* Résultat */
+	.resultat {
+		margin-top: 2.5rem;
+	}
+	.resultat h2 {
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--gris-leger);
+		font-weight: 600;
+	}
+	.fourchette {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: clamp(1.8rem, 5vw, 3rem);
+		line-height: 1.1;
+		color: var(--bleu-nuit);
+		margin: 0;
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+	.fourchette__a {
+		font-size: 0.5em;
+		font-weight: 500;
+		color: var(--gris-leger);
+	}
+	.fourchette__note {
+		margin: 0.6rem 0 2rem;
+		color: var(--gris-leger);
+		font-size: 0.9rem;
+		max-width: 46rem;
+	}
+
+	.postes {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.95rem;
+	}
+	.postes th,
+	.postes td {
+		text-align: left;
+		padding: 0.7rem 1rem 0.7rem 0;
+		border-bottom: 1px solid var(--gris-moyen);
+	}
+	.postes thead th {
+		font-family: var(--titres);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		font-size: 0.72rem;
+		color: var(--gris-leger);
+		border-bottom: 2px solid var(--bleu-nuit);
+	}
+	.postes tbody th {
+		font-weight: 600;
+		color: var(--bleu-nuit);
+	}
+	.non-chiffre {
+		color: var(--gris-leger);
+		font-style: italic;
+	}
+
+	.hypotheses {
+		margin-top: 1.75rem;
+	}
+	.hypotheses summary {
+		cursor: pointer;
+		font-weight: 500;
+		color: var(--bleu);
+	}
+	.hypotheses ul {
+		margin: 1rem 0 0;
+		padding-left: 1.3rem;
+		font-size: 0.9rem;
+		max-width: 52rem;
+	}
+	.hypotheses li {
+		margin-bottom: 0.5rem;
+	}
+</style>

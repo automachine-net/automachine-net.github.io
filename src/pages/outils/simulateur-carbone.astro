@@ -8,6 +8,8 @@
 // Aucun qualificatif environnemental n'est employé ici (« bas carbone », « vert »,
 // « neutre »…) : la directive (UE) 2024/825 s'applique depuis le 27 septembre 2026.
 import Base from '../../layouts/Base.astro';
+import SimulateurCarbone from '../../components/modules/SimulateurCarbone.astro';
+import facteurs from '../../../content/donnees/facteurs-carbone.json';
 ---
 
 <Base
@@ -21,74 +23,154 @@ import Base from '../../layouts/Base.astro';
 			<p class="surtitre">Outil en préparation</p>
 			<h1>Quelle sera l’empreinte carbone de votre machine ?</h1>
 			<p class="chapeau">
-				<span class="a-rediger">[à relire]</span> Cet outil donnera un ordre de grandeur des
-				émissions d’une machine spéciale sur son cycle de vie. Il n’est pas encore en service :
-				la méthode est arrêtée, les données de référence ne le sont pas. Elle est décrite
-				ci-dessous pour que vous puissiez la discuter avant qu’il ne soit publié.
+				<span class="a-rediger">[à relire]</span> Cet outil donne un ordre de grandeur des
+				émissions d’une machine spéciale sur son cycle de vie. Une fourchette, jamais un chiffre
+				unique, avec les hypothèses affichées et chaque facteur d’émission renvoyé à sa source.
 			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur">
+			<SimulateurCarbone />
 		</div>
 	</section>
 
 	<section class="bloc bloc--clair">
 		<div class="bloc__interieur methode">
-			<h2>Ce que l’outil demandera</h2>
+			<h2>Comment il procède</h2>
+			<p>
+				Les entrées sont volontairement grossières. En demander davantage donnerait l’illusion
+				d’une précision que la méthode n’a pas.
+			</p>
 			<ul>
-				<li>la masse totale de la machine ;</li>
 				<li>
-					sa répartition par famille de matériaux : acier et inox, aluminium, composants
-					électriques, plastiques ;
+					<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par son
+					facteur d’émission.
 				</li>
-				<li>la puissance installée ;</li>
-				<li>le nombre d’heures de fonctionnement par an ;</li>
-				<li>la durée de vie attendue.</li>
+				<li>
+					<strong>Transport</strong> : masse totale multipliée par la distance de livraison et par
+					le facteur du transport routier. Seule la livraison de la machine terminée est comptée.
+				</li>
+				<li>
+					<strong>Usage</strong> : puissance installée, taux de charge, heures par an et durée de
+					vie donnent une consommation, multipliée par le facteur du mix électrique français.
+					L’outil ne vaut donc que pour un usage en France continentale.
+				</li>
+				<li><strong>Fin de vie</strong> : non chiffrée, et donc absente du total.</li>
 			</ul>
 			<p>
-				Des entrées volontairement grossières. Demander davantage donnerait l’illusion d’une
-				précision que la méthode n’a pas.
+				Le résultat est <strong>une fourchette, jamais un chiffre unique</strong>. Un résultat
+				unique serait faux, et se ferait passer pour exact. Les hypothèses retenues sont
+				affichées avec lui, et le calcul se fait dans votre navigateur : rien de ce que vous
+				saisissez ne nous parvient.
 			</p>
 
-			<h2>Ce qu’il rendra</h2>
-			<ul>
-				<li>
-					<strong>Une fourchette, jamais un chiffre unique.</strong> Un résultat unique serait
-					faux, et le laisserait croire exact.
-				</li>
-				<li>
-					Une décomposition en quatre postes : fabrication, transport, usage, fin de vie.
-				</li>
-				<li>La liste des hypothèses retenues, affichée en clair avec le résultat.</li>
-			</ul>
-			<p>Usage en France uniquement : le calcul s’appuie sur le mix électrique français.</p>
+			<h2>Les facteurs d’émission employés</h2>
+			<p>
+				Tous proviennent de la <strong>Base Empreinte de l’ADEME</strong>, relevés le
+				{facteurs.date_releve.split('-').reverse().join('/')}. Chaque ligne porte son identifiant
+				d’élément, sa valeur et l’incertitude officielle publiée avec elle. Aucune valeur n’est
+				estimée.
+			</p>
 
-			<h2>D’où viendront les facteurs d’émission</h2>
+			<table class="facteurs">
+				<thead>
+					<tr>
+						<th scope="col">Poste</th>
+						<th scope="col">Valeur</th>
+						<th scope="col">Incertitude</th>
+						<th scope="col">Élément ADEME</th>
+					</tr>
+				</thead>
+				<tbody>
+					{
+						facteurs.materiaux.map((m) => (
+							<tr>
+								<th scope="row">
+									{m.libelle}
+									{m.approximation && <span class="marque">approché</span>}
+								</th>
+								<td>
+									{m.valeur.toLocaleString('fr-FR')}
+									{m.valeur_haute ? ` à ${m.valeur_haute.toLocaleString('fr-FR')}` : ''} {m.unite}
+								</td>
+								<td>{m.incertitude_pct} %</td>
+								<td>
+									n° {m.identifiant_ademe}
+									<span class="intitule">{m.intitule_ademe}</span>
+								</td>
+							</tr>
+						))
+					}
+					<tr>
+						<th scope="row">Électricité</th>
+						<td>{facteurs.energie.valeur} {facteurs.energie.unite}</td>
+						<td>{facteurs.energie.incertitude_pct} %</td>
+						<td>
+							n° {facteurs.energie.identifiant_ademe}
+							<span class="intitule">{facteurs.energie.intitule_ademe}</span>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Transport</th>
+						<td>{facteurs.transport.valeur} {facteurs.transport.unite}</td>
+						<td>{facteurs.transport.incertitude_pct} %</td>
+						<td>
+							n° {facteurs.transport.identifiant_ademe}
+							<span class="intitule">{facteurs.transport.intitule_ademe}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p class="avertissement">
+				<strong>Fin de vie : poste non chiffré.</strong> {facteurs.fin_de_vie.remarque}
+			</p>
+
+			<h2>Les approximations, à lever</h2>
 			<ul>
-				<li>la Base Empreinte de l’ADEME, pour les matériaux et l’électricité ;</li>
-				<li>les déclarations PEP ecopassport, pour les composants électriques.</li>
+				{
+					facteurs.materiaux
+						.filter((m) => m.approximation)
+						.map((m) => (
+							<li>
+								<strong>{m.libelle}</strong> — {m.remarque}
+							</li>
+						))
+				}
+				<li>
+					<strong>Composants électriques</strong> — {facteurs.materiaux.find((m) => m.cle === 'electrique')?.remarque}
+				</li>
 			</ul>
 			<p>
-				Ces facteurs vivront dans un fichier séparé, sourcé ligne par ligne, consultable et
-				modifiable sans toucher au calcul.
+				Les déclarations <strong>PEP ecopassport</strong> donneraient des facteurs propres aux
+				composants électriques réellement montés. Elles restent à dépouiller.
 			</p>
 		</div>
 	</section>
 
 	<section class="bloc bloc--blanc">
 		<div class="bloc__interieur methode">
-			<h2>Ce qui manque avant la mise en ligne</h2>
+			<h2>Ce qui manque avant la mise en ligne publique</h2>
 			<ol>
 				<li>
 					<span class="a-rediger">[À FOURNIR PAR AUTOMACHINE]</span> les ratios de calage sur des
-					machines réellement livrées, sans lesquels la fourchette n’est pas vérifiable.
+					machines réellement livrées. Sans eux, la fourchette est cohérente mais invérifiable :
+					rien ne dit qu’elle tombe juste sur une machine spéciale.
 				</li>
 				<li>
-					<span class="a-rediger">[À CONSTITUER]</span> le fichier de facteurs d’émission, chaque
-					ligne accompagnée de sa source et de sa date.
+					<span class="a-rediger">[À DÉPOUILLER]</span> les déclarations PEP ecopassport, pour
+					remplacer l’intervalle très large des composants électriques par des facteurs propres.
 				</li>
-				<li><span class="a-rediger">[À VALIDER]</span> les bornes de la fourchette et leur justification.</li>
+				<li>
+					<span class="a-rediger">[À TRANCHER]</span> le sort de la fin de vie : la laisser hors
+					du total, ou retenir une hypothèse et l’assumer comme telle.
+				</li>
 			</ol>
 			<p class="avertissement">
 				Tant que ces trois points ne sont pas réglés, cette page reste à l’écart des moteurs de
-				recherche et aucun résultat n’est calculé.
+				recherche.
 			</p>
 		</div>
 	</section>
@@ -148,6 +230,50 @@ import Base from '../../layouts/Base.astro';
 		padding: 1rem 1.25rem;
 		background: var(--gris-clair);
 		border-left: 3px solid var(--orange);
+	}
+	.facteurs {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9rem;
+		margin: 1.5rem 0;
+	}
+	.facteurs th,
+	.facteurs td {
+		text-align: left;
+		padding: 0.7rem 1rem 0.7rem 0;
+		border-bottom: 1px solid var(--gris-moyen);
+		vertical-align: top;
+	}
+	.facteurs thead th {
+		font-family: var(--titres);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		font-size: 0.72rem;
+		color: var(--gris-leger);
+		border-bottom: 2px solid var(--bleu-nuit);
+	}
+	.facteurs tbody th {
+		font-weight: 600;
+		color: var(--bleu-nuit);
+		white-space: nowrap;
+	}
+	.intitule {
+		display: block;
+		font-size: 0.82rem;
+		color: var(--gris-leger);
+	}
+	.marque {
+		display: inline-block;
+		margin-left: 0.35rem;
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--gris-leger);
+		border: 1px solid var(--gris-moyen);
+		border-radius: 2px;
+		padding: 0 0.25rem;
+		font-weight: 400;
+		vertical-align: middle;
 	}
 	.appel {
 		max-width: 42rem;

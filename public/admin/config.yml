@@ -469,6 +469,78 @@ collections:
               - { name: nom, label: Nom affiché, widget: string }
               - { name: description, label: Description, widget: text }
 
+      - name: facteurs-carbone
+        label: Facteurs d'émission du simulateur carbone
+        file: content/donnees/facteurs-carbone.json
+        description: >-
+          Chaque ligne vient de la Base Empreinte de l'ADEME. Ne jamais saisir une valeur sans
+          son identifiant d'élément et son incertitude officielle.
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: avertissement, label: Avertissement, widget: text }
+          - { name: base, label: Base de données de référence, widget: string }
+          - { name: date_releve, label: Date du relevé, widget: string }
+          - name: materiaux
+            label: Matériaux
+            label_singular: Matériau
+            widget: list
+            collapsed: true
+            summary: '{{fields.libelle}} — {{fields.valeur}} {{fields.unite}}'
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string }
+              - { name: libelle, label: Nom affiché, widget: string }
+              - { name: valeur, label: Valeur, widget: number, value_type: float }
+              - name: valeur_haute
+                label: Valeur haute
+                widget: number
+                value_type: float
+                required: false
+                hint: À remplir seulement si le poste couvre un intervalle de composants.
+              - { name: unite, label: Unité, widget: string }
+              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
+              - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
+              - name: approximation
+                label: Facteur approché
+                widget: boolean
+                default: false
+                hint: À cocher quand aucun facteur exact n'existe et qu'un facteur voisin est employé.
+              - { name: remarque, label: Remarque, widget: text }
+          - name: energie
+            label: Électricité
+            widget: object
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string }
+              - { name: libelle, label: Nom affiché, widget: string }
+              - { name: valeur, label: Valeur, widget: number, value_type: float }
+              - { name: unite, label: Unité, widget: string }
+              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
+              - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
+              - { name: remarque, label: Remarque, widget: text }
+          - name: transport
+            label: Transport
+            widget: object
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string }
+              - { name: libelle, label: Nom affiché, widget: string }
+              - { name: valeur, label: Valeur, widget: number, value_type: float }
+              - { name: unite, label: Unité, widget: string }
+              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
+              - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
+              - { name: remarque, label: Remarque, widget: text }
+          - name: fin_de_vie
+            label: Fin de vie
+            widget: object
+            fields:
+              - name: chiffre
+                label: Poste chiffré
+                widget: boolean
+                default: false
+                hint: Tant que la case est décochée, le poste est affiché « non chiffré » et exclu du total.
+              - { name: remarque, label: Remarque, widget: text }
+
       - name: legal
         label: Informations légales
         file: content/reglages/legal.json
