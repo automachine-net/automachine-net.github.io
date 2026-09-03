@@ -30,7 +30,11 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 
 	<div class="helice__cadre">
 		<div class="helice__scene">
-			<svg class="helice__dessin" viewBox="0 0 1200 820" aria-hidden="true">
+			<svg class="helice__dessin" viewBox="0 -160 1200 980" aria-hidden="true" data-forme="boucle">
+				<!-- Le verdict, en grand, dans l'espace au-dessus du cycle. -->
+				<text class="helice__forme" data-forme-nom x="600" y="-70" text-anchor="middle">Boucle</text>
+				<rect class="helice__forme-barre" x="570" y="-50" width="60" height="6" rx="3" />
+
 				<!-- Le sol : ce vers quoi descend l'hélice. -->
 				<line class="helice__sol" x1="120" y1="740" x2="1080" y2="740" />
 				<text class="helice__sol-nom" x="1080" y="775" text-anchor="end">{d.sol}</text>
@@ -264,6 +268,8 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 			const boucle = rates.length === 0;
 			verdict.dataset.forme = boucle ? 'boucle' : 'helice';
 			verdictTitre.textContent = boucle ? 'Boucle' : 'Hélice';
+			svg.dataset.forme = boucle ? 'boucle' : 'helice';
+			module.querySelector('[data-forme-nom]').textContent = boucle ? 'Boucle' : 'Hélice';
 			verdictTexte.textContent = boucle ? verdicts.boucle : verdicts.helice;
 			echecs.innerHTML = '';
 			rates.forEach((c) => {
@@ -475,11 +481,13 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Cadre : dessin à gauche, curseurs à droite ───────────────────────────── */
+	/* Calé en haut, pas centré : le panneau change de hauteur avec le verdict, et rien ne
+	   doit bouger autour quand on manipule un curseur. */
 	.helice__cadre {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 24rem;
 		gap: 2rem;
-		align-items: center;
+		align-items: start;
 	}
 	@media (max-width: 60rem) {
 		.helice__cadre {
@@ -497,6 +505,19 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 	}
 
 	/* ── Dessin ───────────────────────────────────────────────────────────────── */
+	.helice__forme {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: 76px;
+		fill: var(--bleu-nuit);
+	}
+	.helice__forme-barre {
+		fill: var(--bleu);
+		transition: fill 0.25s;
+	}
+	.helice__dessin[data-forme='helice'] .helice__forme-barre {
+		fill: var(--orange);
+	}
 	.helice__sol {
 		stroke: var(--gris-moyen);
 		stroke-width: 3;
@@ -834,7 +855,10 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 		min-height: 0;
 		max-height: 100%;
 		overflow: auto;
-		align-self: center;
+		/* La place de la barre de défilement est réservée : son apparition ne décale rien. */
+		scrollbar-gutter: stable;
+		align-self: start;
+		padding-top: 0.5rem;
 	}
 	.helice:fullscreen .helice__panneau-tete {
 		margin-bottom: 0.5rem;
