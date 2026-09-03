@@ -20,12 +20,19 @@ export interface BlocHero {
 
 const { bloc } = Astro.props as { bloc: BlocHero };
 const Titre = bloc.titre_principal === false ? 'h2' : 'h1';
+
+// Un titre fait parfois deux phrases : « Votre machine n'existe pas ? Nous la construisons. »
+// Laissé libre, le retour à la ligne tombe n'importe où et isole un fragment (« pas ? Nous
+// la construisons. »). On coupe donc entre les phrases, jamais au milieu de l'une d'elles.
+// La coupure n'a lieu qu'après un ? ou un ! suivi d'une majuscule : les abréviations
+// terminées par un point ne sont pas concernées.
+const phrases = bloc.titre.split(/(?<=[?!])\s+(?=[A-ZÀ-ÖØ-Þ])/u);
 ---
 
 <section class="bloc bloc--blanc hero">
 	<div class="bloc__interieur hero__interieur">
 		{bloc.surtitre && <p class="surtitre">{bloc.surtitre}</p>}
-		<Titre set:html={bloc.titre} />
+		<Titre>{phrases.map((phrase) => <span class="phrase">{phrase}</span>)}</Titre>
 		{bloc.chapeau && <p class="chapeau" set:html={bloc.chapeau} />}
 
 		{
@@ -67,6 +74,11 @@ const Titre = bloc.titre_principal === false ? 'h2' : 'h1';
 	}
 	.hero__interieur {
 		max-width: 46rem;
+	}
+	/* Chaque phrase du titre occupe sa propre ligne. Elle se replie normalement si elle est
+	   trop longue pour la largeur disponible. */
+	.phrase {
+		display: block;
 	}
 	.surtitre {
 		font-family: var(--titres);
