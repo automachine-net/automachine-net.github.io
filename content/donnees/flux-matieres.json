@@ -1,0 +1,87 @@
+{
+  "titre": "Circulation des matières dans l'économie française",
+  "annee": "2019",
+  "unite": "millions de tonnes par an",
+  "source": "Compte de flux de matières 2019, Eurostat 2021, traitements SDES 2022 (CGDD/SDES).",
+  "note": "Les valeurs sont celles publiées par le SDES. Leur somme ne se referme pas exactement : les arrondis et les variations de stock laissent un écart de l'ordre de 20 millions de tonnes, présent dans la publication d'origine et repris ici sans correction.",
+
+  "flux": [
+    { "cle": "importations", "libelle": "Importations", "valeur": 341.5 },
+    { "cle": "extraction", "libelle": "Extraction intérieure", "valeur": 633.1 },
+    { "cle": "apports", "libelle": "Apports directs de matières", "valeur": 974.7 },
+
+    { "cle": "exportations", "libelle": "Exportations", "valeur": 202.2 },
+    { "cle": "dissipatifs", "libelle": "Flux dissipatifs", "valeur": 53.7 },
+    {
+      "cle": "emissions_hors_incineration",
+      "libelle": "Émissions hors incinération des déchets",
+      "valeur": 299.5
+    },
+    { "cle": "utilisation", "libelle": "Utilisation de matières", "valeur": 656.8 },
+
+    { "cle": "accumulation", "libelle": "Accumulation de matières", "valeur": 386.5 },
+    { "cle": "traitement", "libelle": "Traitement des déchets de matériaux", "valeur": 271.3 },
+
+    { "cle": "incineration", "libelle": "Incinération", "valeur": 21.2 },
+    { "cle": "remblayage", "libelle": "Remblayage", "valeur": 34.2 },
+    { "cle": "recyclage", "libelle": "Recyclage", "valeur": 183.7 },
+    { "cle": "enfouis", "libelle": "Déchets enfouis", "valeur": 32.1 },
+
+    { "cle": "air", "libelle": "Émissions dans l'air", "valeur": 297.8 },
+    { "cle": "eau", "libelle": "Émissions dans l'eau", "valeur": 1.6 }
+  ],
+
+  "etapes": [
+    {
+      "cle": "entree",
+      "titre": "Ce qui entre",
+      "commentaire": "Tout ce qu'une industrie française traite en un an : ce qu'elle importe, et ce qu'elle extrait de son propre sol.",
+      "actifs": ["importations", "extraction", "apports"],
+      "chiffre": "apports"
+    },
+    {
+      "cle": "exportations",
+      "titre": "Ce qui repart aussitôt",
+      "commentaire": "Produits finis et énergie réexportés sans avoir été transformés ici.",
+      "actifs": ["exportations"],
+      "chiffre": "exportations"
+    },
+    {
+      "cle": "dissipatifs",
+      "titre": "Ce qui est dispersé",
+      "commentaire": "Des engrais répandus dans un champ. La matière part avec l'eau et ne reviendra pas.",
+      "actifs": ["dissipatifs"],
+      "chiffre": "dissipatifs"
+    },
+    {
+      "cle": "emissions",
+      "titre": "Ce qui part dans l'air",
+      "commentaire": "Le poste le plus lourd, et le moins nommé. On ne parle jamais du dioxyde de carbone comme d'un déchet.",
+      "actifs": ["emissions_hors_incineration", "air"],
+      "chiffre": "emissions_hors_incineration",
+      "cumul": ["dissipatifs", "emissions_hors_incineration"],
+      "cumul_libelle": "de matière perdue, dispersée ou émise"
+    },
+    {
+      "cle": "recyclage",
+      "titre": "Ce qui est recyclé",
+      "commentaire": "Sans le remblayage, sans l'enfouissement et sans l'incinération, qui n'en font plus partie.",
+      "actifs": ["utilisation", "traitement", "recyclage", "remblayage"],
+      "chiffre": "recyclage"
+    },
+    {
+      "cle": "accumulation",
+      "titre": "Ce qui s'accumule",
+      "commentaire": "Bâtiments, routes, machines. Cette matière reste en service, puis repart un jour dans le même circuit.",
+      "actifs": ["utilisation", "accumulation"],
+      "chiffre": "accumulation"
+    },
+    {
+      "cle": "ensemble",
+      "titre": "L'ensemble",
+      "commentaire": "Une boucle qui fuit de toutes parts. Le recyclage ne compense pas ce qui sort du circuit.",
+      "actifs": [],
+      "chiffre": null
+    }
+  ]
+}

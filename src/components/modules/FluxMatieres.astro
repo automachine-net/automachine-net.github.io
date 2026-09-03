@@ -1,0 +1,719 @@
+---
+// Module « Circulation des matières » — schéma de flux animé, pilotable au clavier.
+//
+// Conçu pour deux usages : la page publique, où l'on avance à son rythme, et la conférence,
+// où l'orateur commande les étapes sans souris et projette en plein écran.
+//
+// Le dessin est original : seules les valeurs sont reprises de la publication du SDES, citées
+// en pied de module. Chaque bande a une épaisseur proportionnelle à sa valeur, tracée comme
+// un trait épais plutôt que comme une forme fermée — c'est la même chose à l'œil, et cela
+// tient en une ligne par flux.
+//
+// La publication d'origine ne se referme pas exactement (arrondis et variations de stock,
+// une vingtaine de millions de tonnes). Ce n'est pas corrigé ici : les valeurs affichées sont
+// celles publiées, et l'écart est signalé sous le schéma.
+import donnees from '../../../content/donnees/flux-matieres.json';
+import { typo } from '../../scripts/typographie';
+
+interface Props {
+	/** Titre de niveau 2 au-dessus du schéma. Absent, le module s'insère sans titre. */
+	titre?: string;
+}
+const { titre } = Astro.props;
+
+const valeur = (cle: string): number =>
+	donnees.flux.find((f) => f.cle === cle)?.valeur ?? 0;
+const libelle = (cle: string): string =>
+	donnees.flux.find((f) => f.cle === cle)?.libelle ?? cle;
+
+const TOTAL = valeur('apports');
+
+/** Millions de tonnes → unités du dessin. */
+const ECHELLE = 0.3;
+const ep = (cle: string) => Math.max(valeur(cle) * ECHELLE, 3);
+
+const nombre = (v: number) => v.toLocaleString('fr-FR', { minimumFractionDigits: 1 });
+const part = (v: number) => Math.round((v / TOTAL) * 100);
+
+/** Bande courbe entre deux points, chacun repéré par le centre de la bande. */
+const bande = (x1: number, y1: number, x2: number, y2: number) => {
+	const m = (x1 + x2) / 2;
+	return `M ${x1},${y1} C ${m},${y1} ${m},${y2} ${x2},${y2}`;
+};
+
+// ─── Géométrie ────────────────────────────────────────────────────────────────────────
+// Les ordonnées sont des centres de bande. Les piles verticales ont été calculées à partir
+// des épaisseurs ci-dessus : modifier une valeur du JSON demande de reprendre ce bloc.
+
+const APPORTS = { x: 430, l: 16, haut: 110, bas: 402.4 };
+const UTILISATION = { x: 800, l: 16, haut: 560, bas: 757.3 };
+const TRAITEMENT = { x: 1100, l: 16, haut: 560, bas: 641.4 };
+const AIR = { x: 1300, l: 16, haut: 300, bas: 395.7 };
+const XT = 1300; // abscisse des extrémités de droite
+const LT = 16; // largeur d'une barre d'extrémité
+
+type Flux = {
+	cle: string;
+	nature: 'entree' | 'interne' | 'perte' | 'boucle' | 'stock' | 'sortie';
+	d: string;
+	/** Épaisseur, en unités du dessin. */
+	e: number;
+};
+
+const flux: Flux[] = [
+	{ cle: 'importations', nature: 'entree', e: ep('importations'), d: bande(200, 106, APPORTS.x, 161.2) },
+	{ cle: 'extraction', nature: 'entree', e: ep('extraction'), d: bande(200, 340, APPORTS.x, 307.4) },
+
+	{ cle: 'exportations', nature: 'sortie', e: ep('exportations'), d: bande(APPORTS.x + APPORTS.l, 140.3, XT, 95) },
+	{ cle: 'dissipatifs', nature: 'perte', e: ep('dissipatifs'), d: bande(APPORTS.x + APPORTS.l, 178.7, XT, 205) },
+	{
+		cle: 'emissions_hors_incineration',
+		nature: 'perte',
+		e: ep('emissions_hors_incineration'),
+		d: bande(APPORTS.x + APPORTS.l, 231.7, AIR.x, 345),
+	},
+	{
+		cle: 'vers_utilisation',
+		nature: 'interne',
+		e: 419.3 * ECHELLE,
+		d: bande(APPORTS.x + APPORTS.l, 339.5, UTILISATION.x, 625.9),
+	},
+
+	{ cle: 'traitement', nature: 'interne', e: ep('traitement'), d: bande(UTILISATION.x + UTILISATION.l, 600.7, TRAITEMENT.x, 600.7) },
+	{ cle: 'accumulation', nature: 'stock', e: ep('accumulation'), d: bande(UTILISATION.x + UTILISATION.l, 699.4, XT, 720) },
+
+	{ cle: 'incineration', nature: 'perte', e: ep('incineration'), d: bande(TRAITEMENT.x + TRAITEMENT.l, 563.2, AIR.x, 392.5) },
+	{ cle: 'eau', nature: 'perte', e: ep('eau'), d: bande(1185, 495, XT, 430) },
+	{ cle: 'enfouis', nature: 'perte', e: ep('enfouis'), d: bande(TRAITEMENT.x + TRAITEMENT.l, 571.2, XT, 520) },
+
+	// Les deux boucles repassent sous le schéma. Le remblayage sort plus haut et boucle plus
+	// court que le recyclage : ainsi les deux trajets ne se croisent jamais.
+	{
+		cle: 'remblayage',
+		nature: 'boucle',
+		e: ep('remblayage'),
+		d: `M ${TRAITEMENT.x + TRAITEMENT.l},581.1 C 1180,581.1 1200,620 1200,700 C 1200,790 1150,830 1060,830 L 900,830 C 820,830 775,810 772,750 C 770,712 775,693.9 ${UTILISATION.x},693.9`,
+	},
+	{
+		cle: 'recyclage',
+		nature: 'boucle',
+		e: ep('recyclage'),
+		d: `M ${TRAITEMENT.x + TRAITEMENT.l},613.8 C 1235,613.8 1268,660 1268,732 C 1268,852 1190,892 1080,892 L 900,892 C 800,892 728,860 725,782 C 722,732 745,726.6 ${UTILISATION.x},726.6`,
+	},
+];
+
+/** Barres sombres des nœuds et des extrémités. */
+const noeuds = [
+	{ x: APPORTS.x, y: APPORTS.haut, h: APPORTS.bas - APPORTS.haut, l: APPORTS.l },
+	{ x: UTILISATION.x, y: UTILISATION.haut, h: UTILISATION.bas - UTILISATION.haut, l: UTILISATION.l },
+	{ x: TRAITEMENT.x, y: TRAITEMENT.haut, h: TRAITEMENT.bas - TRAITEMENT.haut, l: TRAITEMENT.l },
+	{ x: AIR.x, y: AIR.haut, h: AIR.bas - AIR.haut, l: AIR.l },
+	{ x: XT, y: 95 - ep('exportations') / 2, h: ep('exportations'), l: LT },
+	{ x: XT, y: 205 - ep('dissipatifs') / 2, h: ep('dissipatifs'), l: LT },
+	{ x: XT, y: 430 - ep('eau') / 2, h: ep('eau'), l: LT },
+	{ x: XT, y: 520 - ep('enfouis') / 2, h: ep('enfouis'), l: LT },
+	{ x: XT, y: 720 - ep('accumulation') / 2, h: ep('accumulation'), l: LT },
+];
+
+/** Étiquettes. `lignes` permet de couper un libellé long sans dépendre du rendu. */
+type Etiquette = {
+	cles: string[];
+	x: number;
+	y: number;
+	ancre: 'start' | 'middle' | 'end';
+	valeurCle: string;
+	lignes: string[];
+	/** Étiquette posée sur une bande claire : le texte y est plus petit. */
+	sur?: boolean;
+};
+
+const etiquettes: Etiquette[] = [
+	{ cles: ['importations'], x: 215, y: 92, ancre: 'start', valeurCle: 'importations', lignes: ['Importations'], sur: true },
+	{ cles: ['extraction'], x: 215, y: 320, ancre: 'start', valeurCle: 'extraction', lignes: ['Extraction', 'intérieure'], sur: true },
+	{ cles: ['importations', 'extraction', 'apports'], x: APPORTS.x + APPORTS.l + 10, y: 44, ancre: 'start', valeurCle: 'apports', lignes: ['Apports directs', 'de matières'] },
+
+	{ cles: ['exportations'], x: XT + 26, y: 82, ancre: 'start', valeurCle: 'exportations', lignes: ['Exportations'] },
+	{ cles: ['dissipatifs'], x: XT + 26, y: 192, ancre: 'start', valeurCle: 'dissipatifs', lignes: ['Flux dissipatifs'] },
+	{ cles: ['emissions_hors_incineration'], x: 830, y: 268, ancre: 'middle', valeurCle: 'emissions_hors_incineration', lignes: ['Émissions hors', 'incinération des déchets'], sur: true },
+	{ cles: ['emissions_hors_incineration', 'incineration', 'air'], x: XT + 26, y: 325, ancre: 'start', valeurCle: 'air', lignes: ['Émissions', 'dans l’air'] },
+	{ cles: ['eau'], x: XT + 26, y: 417, ancre: 'start', valeurCle: 'eau', lignes: ['Émissions dans l’eau'] },
+	{ cles: ['enfouis'], x: XT + 26, y: 507, ancre: 'start', valeurCle: 'enfouis', lignes: ['Déchets enfouis'] },
+	{ cles: ['accumulation'], x: XT + 26, y: 707, ancre: 'start', valeurCle: 'accumulation', lignes: ['Accumulation', 'de matières'] },
+
+	{ cles: ['utilisation', 'vers_utilisation'], x: UTILISATION.x - 14, y: 640, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
+	{ cles: ['traitement'], x: 958, y: 566, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'], sur: true },
+	{ cles: ['incineration'], x: 1132, y: 545, ancre: 'start', valeurCle: 'incineration', lignes: ['Incinération'] },
+	{ cles: ['remblayage'], x: 980, y: 822, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
+	{ cles: ['recyclage'], x: 980, y: 884, ancre: 'middle', valeurCle: 'recyclage', lignes: ['Recyclage'], sur: true },
+];
+
+// ─── Étapes ───────────────────────────────────────────────────────────────────────────
+const etapes = donnees.etapes.map((e, i) => {
+	const v = e.chiffre ? valeur(e.chiffre) : null;
+	const cumul = 'cumul' in e && Array.isArray(e.cumul)
+		? (e.cumul as string[]).reduce((s, c) => s + valeur(c), 0)
+		: null;
+	return {
+		index: i,
+		cle: e.cle,
+		titre: typo(e.titre),
+		commentaire: typo(e.commentaire),
+		// Une étape sans flux nommé les allume tous : c'est la vue d'ensemble.
+		actifs: e.actifs.length ? e.actifs : flux.map((f) => f.cle),
+		valeur: v,
+		libelleValeur: e.chiffre ? libelle(e.chiffre) : null,
+		pourcentage: v === null ? null : part(v),
+		cumul,
+		cumulPourcentage: cumul === null ? null : part(cumul),
+		cumulLibelle: 'cumul_libelle' in e ? typo(String(e.cumul_libelle)) : null,
+	};
+});
+---
+
+<figure class="flux" data-flux-module data-etape="0">
+	<div class="flux__cadre">
+		<div class="flux__scene">
+			<svg
+				class="flux__dessin"
+				viewBox="0 0 1700 960"
+				role="img"
+				aria-labelledby="flux-titre-svg"
+				preserveAspectRatio="xMidYMid meet"
+			>
+				<title id="flux-titre-svg">
+					{typo(`${donnees.titre}, ${donnees.annee}, en ${donnees.unite}.`)}
+				</title>
+
+				<g class="flux__bandes">
+					{
+						flux.map((f) => (
+							<g class="flux__flux" data-flux={f.cle} data-nature={f.nature}>
+								<path class="flux__bande" d={f.d} stroke-width={f.e} />
+								<path class="flux__mouvement" d={f.d} stroke-width={f.e} />
+							</g>
+						))
+					}
+				</g>
+
+				<g class="flux__noeuds">
+					{noeuds.map((n) => <rect x={n.x} y={n.y} width={n.l} height={n.h} rx="1" />)}
+				</g>
+
+				<g class="flux__etiquettes">
+					{
+						etiquettes.map((et) => (
+							<g
+								class={`flux__etiquette ${et.sur ? 'flux__etiquette--sur' : ''}`}
+								data-etiquette={et.cles.join(' ')}
+							>
+								<text x={et.x} y={et.y} text-anchor={et.ancre}>
+									<tspan class="flux__valeur">{nombre(valeur(et.valeurCle))}</tspan>
+									{et.lignes.map((l, i) => (
+										<tspan x={et.x} dy={i === 0 ? 26 : 24} class="flux__nom">
+											{l}
+										</tspan>
+									))}
+								</text>
+							</g>
+						))
+					}
+				</g>
+			</svg>
+		</div>
+
+		<div class="flux__panneau">
+			<p class="flux__rang">
+				<span data-rang>1</span><span class="flux__sur"> / {etapes.length}</span>
+			</p>
+			<h3 class="flux__titre-etape" data-titre>{etapes[0].titre}</h3>
+			<p class="flux__nombre" data-nombre hidden></p>
+			<p class="flux__commentaire" data-commentaire>{etapes[0].commentaire}</p>
+			<p class="flux__cumul" data-cumul hidden></p>
+
+			<div class="flux__commandes">
+				<button type="button" class="flux__fleche" data-precedent aria-label="Étape précédente">
+					<span aria-hidden="true">←</span>
+				</button>
+				<ol class="flux__jalons">
+					{
+						etapes.map((e) => (
+							<li>
+								<button type="button" data-jalon={e.index} aria-label={e.titre}>
+									<span aria-hidden="true" />
+								</button>
+							</li>
+						))
+					}
+				</ol>
+				<button type="button" class="flux__fleche" data-suivant aria-label="Étape suivante">
+					<span aria-hidden="true">→</span>
+				</button>
+			</div>
+
+			<button type="button" class="flux__plein-ecran" data-plein-ecran>
+				<span data-plein-ecran-texte>Plein écran</span>
+			</button>
+			<p class="flux__aide">{typo('Flèches ← et → du clavier, ou barre d’espace.')}</p>
+		</div>
+	</div>
+
+	<figcaption class="flux__source">
+		<strong>{typo(donnees.titre)}</strong>{typo(`, ${donnees.annee}, en ${donnees.unite}. Source : ${donnees.source} ${donnees.note}`)}
+	</figcaption>
+</figure>
+
+<script is:inline define:vars={{ etapes }}>
+	(() => {
+		const module = document.querySelector('[data-flux-module]');
+		if (!module) return;
+
+		const rang = module.querySelector('[data-rang]');
+		const titre = module.querySelector('[data-titre]');
+		const nombre = module.querySelector('[data-nombre]');
+		const commentaire = module.querySelector('[data-commentaire]');
+		const cumul = module.querySelector('[data-cumul]');
+		const jalons = [...module.querySelectorAll('[data-jalon]')];
+		const bandes = [...module.querySelectorAll('[data-flux]')];
+		const etiquettes = [...module.querySelectorAll('[data-etiquette]')];
+
+		let courante = -1;
+
+		function afficher(i) {
+			const n = etapes.length;
+			const index = ((i % n) + n) % n;
+			if (index === courante) return;
+			courante = index;
+			const e = etapes[index];
+			const actifs = new Set(e.actifs);
+
+			module.dataset.etape = String(index);
+			rang.textContent = String(index + 1);
+			titre.textContent = e.titre;
+			commentaire.textContent = e.commentaire;
+
+			if (e.valeur === null) {
+				nombre.hidden = true;
+			} else {
+				nombre.hidden = false;
+				nombre.innerHTML =
+					'<span class="flux__nombre-valeur">' +
+					e.valeur.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) +
+					'</span><span class="flux__nombre-unite">millions de tonnes par an</span>' +
+					// La part n'a de sens que rapportée à l'entrée : on ne l'affiche pas pour l'entrée.
+					(e.pourcentage < 100
+						? '<span class="flux__nombre-part">' + e.pourcentage + ' % de ce qui entre</span>'
+						: '');
+			}
+
+			if (e.cumul === null) {
+				cumul.hidden = true;
+			} else {
+				cumul.hidden = false;
+				cumul.innerHTML =
+					'<strong>' + e.cumulPourcentage + ' %</strong> ' + e.cumulLibelle;
+			}
+
+			bandes.forEach((b) => b.classList.toggle('est-actif', actifs.has(b.dataset.flux)));
+			etiquettes.forEach((et) =>
+				et.classList.toggle(
+					'est-actif',
+					et.dataset.etiquette.split(' ').some((c) => actifs.has(c))
+				)
+			);
+			jalons.forEach((j, k) => j.setAttribute('aria-current', k === index ? 'true' : 'false'));
+		}
+
+		module.querySelector('[data-precedent]').addEventListener('click', () => afficher(courante - 1));
+		module.querySelector('[data-suivant]').addEventListener('click', () => afficher(courante + 1));
+		jalons.forEach((j) => j.addEventListener('click', () => afficher(Number(j.dataset.jalon))));
+
+		// Plein écran : l'orateur projette le module seul, sans le reste de la page.
+		const boutonPlein = module.querySelector('[data-plein-ecran]');
+		const textePlein = module.querySelector('[data-plein-ecran-texte]');
+		if (document.fullscreenEnabled) {
+			boutonPlein.addEventListener('click', () => {
+				if (document.fullscreenElement) document.exitFullscreen();
+				else module.requestFullscreen();
+			});
+			document.addEventListener('fullscreenchange', () => {
+				const actif = document.fullscreenElement === module;
+				textePlein.textContent = actif ? 'Quitter le plein écran' : 'Plein écran';
+			});
+		} else {
+			boutonPlein.hidden = true;
+		}
+
+		// Le clavier ne prend la main que si le module est à l'écran : sinon les flèches
+		// doivent continuer à faire défiler la page.
+		let visible = false;
+		new IntersectionObserver(
+			(entrees) => entrees.forEach((e) => (visible = e.isIntersecting)),
+			{ threshold: 0.3 }
+		).observe(module);
+
+		addEventListener('keydown', (ev) => {
+			if (!visible && document.fullscreenElement !== module) return;
+			const cible = ev.target;
+			if (cible instanceof HTMLElement && cible.closest('input, textarea, select')) return;
+			if (ev.key === 'ArrowRight' || ev.key === ' ' || ev.key === 'PageDown') {
+				ev.preventDefault();
+				afficher(courante + 1);
+			} else if (ev.key === 'ArrowLeft' || ev.key === 'PageUp') {
+				ev.preventDefault();
+				afficher(courante - 1);
+			} else if (ev.key === 'Home') {
+				ev.preventDefault();
+				afficher(0);
+			}
+		});
+
+		afficher(0);
+	})();
+</script>
+
+<style>
+	.flux {
+		margin: 0;
+	}
+	/* Le schéma prend toute la largeur ; le panneau d'étape vient dessous. Les étiquettes
+	   du dessin restent ainsi lisibles sur un écran ordinaire. */
+	.flux__cadre {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 1.5rem;
+	}
+	.flux__scene {
+		min-width: 0;
+	}
+	.flux__dessin {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.flux__panneau {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+		grid-template-areas:
+			'rang commentaire'
+			'titre commentaire'
+			'nombre cumul'
+			'commandes commandes'
+			'plein aide';
+		column-gap: 2.5rem;
+		align-items: start;
+		border-top: 1px solid var(--gris-moyen);
+		padding-top: 1.25rem;
+	}
+	@media (max-width: 48rem) {
+		.flux__panneau {
+			grid-template-columns: minmax(0, 1fr);
+			grid-template-areas:
+				'rang'
+				'titre'
+				'nombre'
+				'commentaire'
+				'cumul'
+				'commandes'
+				'plein'
+				'aide';
+		}
+	}
+	.flux__rang {
+		grid-area: rang;
+	}
+	.flux__titre-etape {
+		grid-area: titre;
+	}
+	.flux__nombre {
+		grid-area: nombre;
+	}
+	.flux__commentaire {
+		grid-area: commentaire;
+	}
+	.flux__cumul {
+		grid-area: cumul;
+	}
+	.flux__commandes {
+		grid-area: commandes;
+	}
+	.flux__plein-ecran {
+		grid-area: plein;
+		justify-self: start;
+	}
+	.flux__aide {
+		grid-area: aide;
+	}
+
+	/* ── Bandes ───────────────────────────────────────────────────────────────── */
+	.flux__bande,
+	.flux__mouvement {
+		fill: none;
+		stroke-linecap: butt;
+		stroke-linejoin: round;
+	}
+	.flux__bande {
+		stroke: var(--bleu-clair);
+		opacity: 0.22;
+		transition:
+			opacity 0.45s ease,
+			stroke 0.45s ease;
+	}
+	.flux__flux.est-actif .flux__bande {
+		opacity: 1;
+	}
+	.flux__flux[data-nature='perte'].est-actif .flux__bande {
+		stroke: var(--orange);
+	}
+	.flux__flux[data-nature='sortie'].est-actif .flux__bande {
+		stroke: var(--gris-leger);
+	}
+	.flux__flux[data-nature='stock'].est-actif .flux__bande {
+		stroke: var(--bleu-sombre);
+	}
+	.flux__flux[data-nature='boucle'].est-actif .flux__bande {
+		stroke: var(--bleu-clair);
+	}
+	.flux__flux[data-nature='entree'].est-actif .flux__bande,
+	.flux__flux[data-nature='interne'].est-actif .flux__bande {
+		stroke: var(--bleu);
+	}
+
+	/* La matière en mouvement : des jalons clairs qui défilent le long de la bande active.
+	   C'est ce que le dessin fixe ne peut pas montrer. */
+	.flux__mouvement {
+		stroke: var(--blanc);
+		opacity: 0;
+		stroke-dasharray: 16 74;
+		transition: opacity 0.45s ease;
+	}
+	.flux__flux.est-actif .flux__mouvement {
+		opacity: 0.4;
+		animation: flux-defiler 2.6s linear infinite;
+	}
+	@keyframes flux-defiler {
+		to {
+			stroke-dashoffset: -90;
+		}
+	}
+
+	.flux__noeuds rect {
+		fill: var(--bleu-nuit);
+	}
+
+	/* ── Étiquettes ───────────────────────────────────────────────────────────── */
+	.flux__etiquettes text {
+		font-family: var(--titres);
+		fill: var(--bleu-nuit);
+	}
+	.flux__etiquette {
+		opacity: 0.32;
+		transition: opacity 0.45s ease;
+	}
+	.flux__etiquette.est-actif {
+		opacity: 1;
+	}
+	.flux__valeur {
+		font-size: 38px;
+		font-weight: 700;
+	}
+	.flux__nom {
+		font-size: 27px;
+		font-weight: 500;
+	}
+	/* Posée sur une bande, l'étiquette doit rester lisible sans l'écraser. */
+	.flux__etiquette--sur .flux__valeur {
+		font-size: 33px;
+	}
+	.flux__etiquette--sur .flux__nom {
+		font-size: 24px;
+	}
+
+	/* ── Panneau ──────────────────────────────────────────────────────────────── */
+	.flux__panneau {
+		min-width: 0;
+	}
+	.flux__rang {
+		font-family: var(--titres);
+		font-size: 0.85rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--gris-leger);
+		margin: 0 0 0.5rem;
+	}
+	.flux__sur {
+		opacity: 0.6;
+	}
+	.flux__titre-etape {
+		font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+		margin: 0 0 0.75rem;
+	}
+	.flux__nombre {
+		margin: 0 0 0.75rem;
+		display: grid;
+	}
+	.flux__nombre :global(.flux__nombre-valeur) {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: clamp(2.4rem, 6vw, 3.4rem);
+		line-height: 1;
+		color: var(--bleu-nuit);
+	}
+	.flux__nombre :global(.flux__nombre-unite) {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+	.flux__nombre :global(.flux__nombre-part) {
+		margin-top: 0.4rem;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.05rem;
+		color: var(--bleu);
+	}
+	.flux__commentaire {
+		margin: 0;
+		font-size: 1rem;
+	}
+	.flux__cumul {
+		margin: 1rem 0 0;
+		padding: 0.7rem 0.9rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		font-size: 0.95rem;
+	}
+	.flux__cumul :global(strong) {
+		font-family: var(--titres);
+		font-size: 1.4rem;
+		color: var(--bleu-nuit);
+	}
+
+	.flux__commandes {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 1.75rem;
+	}
+	.flux__fleche {
+		flex: 0 0 auto;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 1px solid var(--gris-moyen);
+		border-radius: 50%;
+		background: var(--blanc);
+		color: var(--bleu-nuit);
+		font-size: 1.1rem;
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			border-color 0.2s,
+			background 0.2s;
+	}
+	.flux__fleche:hover {
+		border-color: var(--bleu);
+		background: var(--gris-clair);
+	}
+	.flux__jalons {
+		list-style: none;
+		display: flex;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0;
+		flex: 1 1 auto;
+	}
+	.flux__jalons button {
+		display: block;
+		padding: 0.4rem 0.15rem;
+		border: 0;
+		background: none;
+		cursor: pointer;
+	}
+	.flux__jalons span {
+		display: block;
+		width: 0.9rem;
+		height: 3px;
+		background: var(--gris-moyen);
+		transition: background 0.2s;
+	}
+	.flux__jalons button:hover span {
+		background: var(--bleu-clair);
+	}
+	.flux__jalons button[aria-current='true'] span {
+		background: var(--orange);
+	}
+
+	.flux__plein-ecran {
+		margin-top: 1.25rem;
+		border: 0;
+		background: none;
+		padding: 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 0.85rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--bleu);
+		border-bottom: 2px solid var(--orange);
+		cursor: pointer;
+	}
+	.flux__aide {
+		margin: 0.75rem 0 0;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+
+	.flux__source {
+		margin-top: 1rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+		max-width: 56rem;
+	}
+
+	/* En plein écran, c'est la hauteur qui limite : le schéma prend toute la hauteur
+	   disponible et le panneau se range à sa droite, en colonne. */
+	.flux:fullscreen {
+		background: var(--blanc);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 2rem 3rem;
+	}
+	.flux:fullscreen .flux__cadre {
+		border: 0;
+		padding: 0;
+		grid-template-columns: minmax(0, 1fr) 24rem;
+		gap: 3rem;
+		align-items: center;
+	}
+	.flux:fullscreen .flux__dessin {
+		max-height: calc(100vh - 4rem);
+	}
+	.flux:fullscreen .flux__panneau {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			'rang'
+			'titre'
+			'nombre'
+			'commentaire'
+			'cumul'
+			'commandes'
+			'plein'
+			'aide';
+		border-top: 0;
+		padding-top: 0;
+	}
+	.flux:fullscreen .flux__titre-etape {
+		font-size: 2.2rem;
+	}
+	.flux:fullscreen .flux__commentaire {
+		font-size: 1.3rem;
+	}
+	.flux:fullscreen .flux__nombre :global(.flux__nombre-valeur) {
+		font-size: 4.5rem;
+	}
+	.flux:fullscreen .flux__source {
+		display: none;
+	}
+</style>

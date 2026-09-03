@@ -1,0 +1,68 @@
+---
+// Module « Circulation des matières » : le schéma de flux animé, étape par étape.
+//
+// Premier des modules pensés pour la conférence sur la réversibilité : le dirigeant le
+// pilote au clavier pendant son exposé, et le visiteur du site le parcourt à son rythme.
+// Non indexée tant que les textes d'accompagnement ne sont pas validés.
+import Base from '../../layouts/Base.astro';
+import FluxMatieres from '../../components/modules/FluxMatieres.astro';
+---
+
+<Base
+	titre="Où va la matière ?"
+	description="Ce qui entre chaque année dans l’économie française, ce qui en ressort, ce qui est perdu et ce qui est recyclé. Un schéma de flux animé, étape par étape."
+	noindex={true}
+>
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur entete">
+			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> Outils</p>
+			<p class="surtitre">Outil en préparation</p>
+			<h1>Où va la matière ?</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[à relire]</span> Près d’un milliard de tonnes de matières entrent
+				chaque année dans l’économie française. Une petite part en ressort recyclée. Le reste
+				s’accumule, repart à l’export, ou se perd. Suivez le chemin, étape par étape.
+			</p>
+			<p class="note">
+				<span class="a-rediger">[à relire]</span> Les titres et commentaires des sept étapes
+				sont proposés ; ils se modifient dans <code>content/donnees/flux-matieres.json</code>.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--clair">
+		<div class="bloc__interieur">
+			<FluxMatieres />
+		</div>
+	</section>
+</Base>
+
+<style>
+	.entete {
+		max-width: 46rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+	}
+	.note {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+	.note code {
+		font-size: 0.85em;
+	}
+</style>

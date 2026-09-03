@@ -140,6 +140,18 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      industrielle pour la comparaison : seule la voiture sert de repère. Le lave-linge,
      essayé, a été écarté par le dirigeant comme non pertinent.
 3. Animation réversibilité : module et emplacement prévus, scénario à construire ensemble.
+   **Modules de conférence (2026-09-03)** : le dirigeant réutilise certains modules pendant
+   sa conférence sur la réversibilité. Exigences : pilotage au clavier (flèches, espace),
+   plein écran, gros caractères, fonctionnement hors connexion une fois la page ouverte.
+   - **Flux de matières** (`/outils/flux-matieres`, livré 2026-09-03) : schéma de flux animé
+     en sept étapes, données SDES 2019 dans `content/donnees/flux-matieres.json` (valeurs
+     publiées reprises telles quelles, écart de bouclage d'environ 20 Mt signalé, non
+     corrigé). Dessin original, seules les valeurs sont reprises. Textes d'étapes à relire.
+     Le cumul « perdu » calculé donne 36 % (5,5 + 30,7) ; le dirigeant dit 35 % à l'oral.
+   - **Boucle contre hélice** (à faire) : cycle piloté par les quatre critères de
+     réversibilité (coût, qualité, délai, pertes par cycle). Seuils réglables en direct,
+     validé par le dirigeant. Quand les critères tiennent, la boucle se ferme ; sinon elle
+     dérive en hélice descendante (Bréchet : « économie hélicoïdale »).
 4. **Estimateur d'ordre de prix (idée du dirigeant, 2026-09-02)** : donner un ordre de grandeur
    avant un premier contact. Pistes d'entrées évoquées : encombrement de la machine, nombre de
    robots, niveau de sécurité demandé. Méthode, bornes et avertissements à arrêter avec le
