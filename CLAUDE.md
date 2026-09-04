@@ -203,8 +203,8 @@ s'ajoute à la liste du bloc en même temps qu'il est créé.
      leur valeur par défaut. Le calcul est le même : à réponses égales, l'aperçu et le
      questionnaire entier donnent le même montant. Un bouton renvoie vers l'outil complet.
    - **Livré (2026-09-04)** : `/outils/estimateur-prix`, modèle dans `content/donnees/prix.json`,
-     calcul dans `src/scripts/prix.ts`. Le JSON ne contient aucun client ni prix réel. Page non
-     indexée tant que le dirigeant n'a pas validé les valeurs.
+     calcul dans `src/scripts/prix.ts`. Le JSON ne contient aucun client ni prix réel.
+     **Valeurs validées par le dirigeant le 2026-09-04 : la page est publiée et référencée.**
    - **Marge en clair (décision du dirigeant, 2026-09-04, après avertissement)** : les montants
      du JSON sont des **coûts hors taxes** ; la marge (`marge_pct`) et l'indice vivent dans
      `content/donnees/prix-indice.json`, réglables dans le CMS. Le dirigeant a été averti que
