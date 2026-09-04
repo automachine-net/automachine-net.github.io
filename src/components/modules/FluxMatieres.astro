@@ -787,10 +787,11 @@ const etapes = donnees.etapes.map((e, i) => {
 	/* ── Plein écran ──────────────────────────────────────────────────────────────
 	   Format paysage : bandeau en haut, schéma à gauche sur toute la hauteur restante,
 	   étape à sa droite, commandes dans le coin inférieur droit. */
+	/* Le bas est réservé à la source (gauche) et aux commandes (droite). */
 	.flux:fullscreen {
 		border: 0;
 		border-radius: 0;
-		padding: 1.5rem 3rem 1.25rem;
+		padding: 1.5rem 3rem 3.5rem;
 		gap: 1.25rem 3rem;
 		grid-template-columns: minmax(0, 1fr) 26rem;
 		grid-template-rows: auto minmax(0, 1fr);
@@ -868,7 +869,12 @@ const etapes = donnees.etapes.map((e, i) => {
 	.flux:fullscreen .flux__fleche--coin {
 		display: inline-block;
 	}
+	/* La source reste visible en plein écran, en bas à gauche, en face des commandes. */
 	.flux:fullscreen .flux__source {
-		display: none;
+		position: absolute;
+		left: 3rem;
+		bottom: 1.25rem;
+		max-width: 50%;
+		font-size: 0.85rem;
 	}
 </style>
