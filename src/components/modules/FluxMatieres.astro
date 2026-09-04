@@ -83,7 +83,6 @@ const flux: Flux[] = [
 	},
 
 	{ cle: 'traitement', nature: 'interne', e: ep('traitement'), d: bande(UTILISATION.x + UTILISATION.l, 600.7, TRAITEMENT.x, 600.7) },
-	{ cle: 'accumulation', nature: 'stock', e: ep('accumulation'), d: bande(UTILISATION.x + UTILISATION.l, 699.4, XT, 720) },
 
 	// L'eau part du même point que l'incinération et s'en détache en chemin : dessinée
 	// avant, elle est recouverte à l'origine et n'apparaît qu'où elle diverge.
@@ -105,6 +104,10 @@ const flux: Flux[] = [
 		e: ep('recyclage'),
 		d: `M ${TRAITEMENT.x + TRAITEMENT.l},613.8 C 1235,613.8 1268,660 1268,732 C 1268,860 1190,900 1080,900 L 900,900 C 800,900 728,866 725,782 C 722,732 745,726.6 ${UTILISATION.x},726.6`,
 	},
+
+	// Dessinée en dernier : les boucles la croisent juste avant son extrémité, et ne
+	// doivent pas cacher son arrivée sur la barre.
+	{ cle: 'accumulation', nature: 'stock', e: ep('accumulation'), d: bande(UTILISATION.x + UTILISATION.l, 699.4, XT, 720) },
 ];
 
 /** Barres sombres des nœuds et des extrémités. */
