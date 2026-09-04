@@ -31,7 +31,7 @@ blocs:
     lien_url: ''
     fond: clair
     introduction: ''
-    module: a-venir
+    module: estimateur-prix
     nombre_questions: 3
     attente: ''
   - type: texte-image
