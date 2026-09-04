@@ -1,39 +1,40 @@
 ---
-// Visionneuse d'un modèle glTF (.glb) : rotation à la souris ou au doigt, zoom à la molette.
+// Visionneuse d'un modèle glTF (.glb).
 //
-// `declenchement` : « auto », le modèle se charge quand il approche de l'écran (fiche
-// machine) ; « interaction », il attend un clic ou un toucher (cartes et listes, où plusieurs
-// modèles de plusieurs mégaoctets ne doivent pas se charger d'un coup).
+// Le modèle se charge quand il approche de l'écran, jamais avant. `interactif` : sur une
+// fiche, le visiteur tourne et zoome lui-même ; sur une carte ou dans une liste, le modèle
+// tourne seul et ne capte pas la souris, pour ne pas gêner le défilement de la page ou du
+// carrousel.
 //
 // La bibliothèque elle-même est chargée par src/scripts/visionneuse.ts, à appeler dans le
 // script de la page qui utilise ce composant.
 interface Props {
 	src: string;
 	nom: string;
-	declenchement?: 'auto' | 'interaction';
+	interactif?: boolean;
 }
-const { src, nom, declenchement = 'auto' } = Astro.props;
+const { src, nom, interactif = true } = Astro.props;
+
+// Pour un élément personnalisé, un attribut présent vaut « vrai » quelle que soit sa valeur :
+// on n'écrit que ceux qui s'appliquent.
+const commande = interactif
+	? { 'camera-controls': true }
+	: { 'auto-rotate': true, 'auto-rotate-delay': '0', 'rotation-per-second': '12deg' };
 ---
 
 <model-viewer
 	class="modele"
 	src={src}
 	alt={`Modèle en trois dimensions : ${nom}`}
-	camera-controls
+	{...commande}
 	touch-action="pan-y"
 	loading="lazy"
-	reveal={declenchement}
+	reveal="auto"
 	shadow-intensity="0.6"
 	exposure="1"
 	interaction-prompt="none"
 >
-	<div slot="poster" class="modele__attente">
-		{declenchement === 'interaction' ? (
-			<span class="modele__bouton">Voir en 3D</span>
-		) : (
-			<span>Chargement du modèle…</span>
-		)}
-	</div>
+	<div slot="poster" class="modele__attente">Chargement du modèle…</div>
 	<p slot="progress-bar" hidden></p>
 </model-viewer>
 
@@ -52,18 +53,7 @@ const { src, nom, declenchement = 'auto' } = Astro.props;
 		place-items: center;
 		height: 100%;
 		font-family: var(--titres);
+		font-size: 0.9rem;
 		color: var(--gris-leger);
-		cursor: pointer;
-	}
-	.modele__bouton {
-		font-weight: 600;
-		font-size: 0.85rem;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--bleu);
-		border: 1px solid var(--bleu);
-		border-radius: var(--rayon);
-		padding: 0.55rem 1rem;
-		background: var(--blanc);
 	}
 </style>

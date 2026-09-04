@@ -52,7 +52,7 @@ const choisies = bloc.machines?.length
 						<li class="carte">
 							{m.data.fichier_3d ? (
 								<div class="carte__modele">
-									<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} declenchement="interaction" />
+									<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} interactif={false} />
 								</div>
 							) : (
 								<canvas
@@ -106,6 +106,13 @@ const choisies = bloc.machines?.length
 		const piste = carrousel.querySelector<HTMLElement>('[data-piste]')!;
 		const originaux = [...piste.children] as HTMLElement[];
 		if (originaux.length === 0) return;
+
+		// Pas de boucle quand toutes les cartes tiennent à l'écran ou qu'il n'y en a qu'une : les
+		// dupliquer montrerait la même machine plusieurs fois.
+		if (originaux.length < 2 || piste.scrollWidth <= piste.clientWidth + 1) {
+			monter(piste);
+			return;
+		}
 
 		// Boucle sans fin : on place trois jeux de cartes bout à bout et on se tient au milieu.
 		// Quand on approche d'un bord, on saute d'un jeu entier — invisible, puisque le contenu

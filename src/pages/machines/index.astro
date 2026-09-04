@@ -25,7 +25,7 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 							<img src={m.data.image} alt={m.data.image_alt ?? ''} loading="lazy" decoding="async" />
 						) : m.data.fichier_3d ? (
 							<div class="machine__modele">
-								<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} declenchement="interaction" />
+								<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} />
 							</div>
 						) : (
 							<canvas
