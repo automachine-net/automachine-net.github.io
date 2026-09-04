@@ -199,7 +199,7 @@ const etapes = donnees.etapes.map((e, i) => {
 	<!-- Scène : le schéma au centre, une flèche de chaque côté. -->
 	<div class="flux__scene">
 		<button type="button" class="flux__fleche flux__fleche--scene" data-precedent aria-label="Étape précédente">
-			<span aria-hidden="true">←</span>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg>
 		</button>
 		<svg
 			class="flux__dessin"
@@ -248,7 +248,7 @@ const etapes = donnees.etapes.map((e, i) => {
 			</g>
 		</svg>
 		<button type="button" class="flux__fleche flux__fleche--scene" data-suivant aria-label="Étape suivante">
-			<span aria-hidden="true">→</span>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg>
 		</button>
 	</div>
 
@@ -274,10 +274,10 @@ const etapes = donnees.etapes.map((e, i) => {
 			<span data-plein-ecran-texte>Plein écran</span>
 		</button>
 		<button type="button" class="flux__fleche flux__fleche--coin" data-precedent aria-label="Étape précédente">
-			<span aria-hidden="true">←</span>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg>
 		</button>
 		<button type="button" class="flux__fleche flux__fleche--coin" data-suivant aria-label="Étape suivante">
-			<span aria-hidden="true">→</span>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg>
 		</button>
 	</div>
 
@@ -497,20 +497,33 @@ const etapes = donnees.etapes.map((e, i) => {
 		height: auto;
 		min-width: 0;
 	}
+	/* Flèches dessinées en SVG, centrées par la grille : un glyphe de police ne se centre
+	   jamais exactement dans un rond, ses métriques varient d'une police à l'autre. */
 	.flux__fleche {
 		flex: 0 0 auto;
+		display: grid;
+		place-items: center;
 		width: 2.5rem;
 		height: 2.5rem;
+		padding: 0;
 		border: 1px solid var(--gris-moyen);
 		border-radius: 50%;
 		background: var(--blanc);
 		color: var(--bleu-nuit);
-		font-size: 1.1rem;
-		line-height: 1;
 		cursor: pointer;
 		transition:
 			border-color 0.2s,
 			background 0.2s;
+	}
+	.flux__fleche svg {
+		display: block;
+	}
+	.flux__fleche path {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 	.flux__fleche:hover {
 		border-color: var(--bleu);

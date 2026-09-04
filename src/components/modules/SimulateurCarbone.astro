@@ -707,7 +707,9 @@ const parametres = [
 		cursor: help;
 		display: grid;
 		place-items: center;
-		padding: 0;
+		/* L'encre du « ? » d'IBM Plex Sans tombe un demi-pixel sous le centre du rond :
+		   on la remonte d'autant (mesuré, pas jugé à l'œil). */
+		padding: 0 0 1px;
 		flex: 0 0 auto;
 	}
 	.aide-bouton--petit {
