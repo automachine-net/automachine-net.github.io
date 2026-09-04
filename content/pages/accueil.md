@@ -22,7 +22,7 @@ blocs:
     lien_libelle: Toutes les machines
     lien_url: /machines
     bouton_texte: ''
-    bouton_libelle: Simuler le prix de la vôtre
+    bouton_libelle: Simuler le prix de votre machine
     bouton_url: /outils/estimateur-prix
     fond: clair
     introduction: ''
