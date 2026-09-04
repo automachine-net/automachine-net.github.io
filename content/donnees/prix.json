@@ -195,10 +195,6 @@
     }
   ],
 
-  "regles": {
-    "main_doeuvre_minimum": "Une machine se conçoit et se met au point, elle ne s'achète pas : le travail ne peut pas peser moins que le matériel. Il a été relevé à son niveau."
-  },
-
   "parts": [
     { "cle": "materiel", "libelle": "Matériel et fabrication" },
     { "cle": "etudes", "libelle": "Études" },

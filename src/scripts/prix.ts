@@ -6,9 +6,8 @@
 // deux derniers. La nature du projet dit quelles composantes comptent : une étude seule ne
 // facture ni matériel ni réalisation.
 //
-// Des facteurs d'exigence (cadence, précisions) majorent les postes qu'ils concernent. Une
-// règle de la maison relève ensuite le travail au niveau du matériel s'il lui est inférieur :
-// une machine se conçoit et se met au point, elle ne s'achète pas.
+// Des facteurs d'exigence (cadence, précisions) majorent les postes qu'ils concernent. Un
+// plancher s'applique ensuite au travail, sans être affiché.
 //
 // Le résultat est une fourchette, jamais un chiffre unique : les valeurs du modèle sont des
 // ordres de grandeur, et deux machines aux mêmes réponses peuvent différer du simple au
@@ -52,7 +51,6 @@ export interface Modele {
 	natures: Nature[];
 	postes: Poste[];
 	facteurs: Facteur[];
-	regles: { main_doeuvre_minimum: string };
 	parts: { cle: string; libelle: string }[];
 }
 
@@ -178,15 +176,14 @@ export function estimer(modele: Modele, e: Entrees): Resultat {
 	let realisation = nature.realisation ? total.realisation : 0;
 	let gestion = ((etudes + realisation) * modele.gestion_projet_pct) / 100;
 
-	// Règle de la maison : le travail ne pèse jamais moins que le matériel. Les trois postes
-	// de travail sont relevés dans la même proportion.
+	// Le travail ne pèse jamais moins que le matériel : les trois postes de travail sont
+	// relevés dans la même proportion. Cette règle s'applique sans rien afficher.
 	const travail = etudes + realisation + gestion;
 	if (materiel > 0 && travail > 0 && travail < materiel) {
 		const k = materiel / travail;
 		etudes *= k;
 		realisation *= k;
 		gestion *= k;
-		hypotheses.push(modele.regles.main_doeuvre_minimum);
 	}
 
 	const prix = materiel + etudes + realisation + gestion;
