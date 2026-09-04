@@ -5,6 +5,10 @@ import QuizExtrait from '../modules/QuizExtrait.astro';
 import CompteARebours from '../modules/CompteARebours.astro';
 import SimulateurCarbone from '../modules/SimulateurCarbone.astro';
 import ApercuCarbone from '../modules/ApercuCarbone.astro';
+import EstimateurPrix from '../modules/EstimateurPrix.astro';
+import QuizComplet from '../modules/QuizComplet.astro';
+import FluxMatieres from '../modules/FluxMatieres.astro';
+import BoucleHelice from '../modules/BoucleHelice.astro';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocModule {
@@ -12,7 +16,16 @@ export interface BlocModule {
 	titre?: string;
 	introduction?: string;
 	/** Outil à insérer. */
-	module: 'quiz-extrait' | 'compte-a-rebours' | 'apercu-carbone' | 'simulateur-carbone' | 'a-venir';
+	module:
+		| 'quiz-extrait'
+		| 'quiz-complet'
+		| 'compte-a-rebours'
+		| 'apercu-carbone'
+		| 'simulateur-carbone'
+		| 'estimateur-prix'
+		| 'flux-matieres'
+		| 'reversibilite'
+		| 'a-venir';
 	/** Nombre de questions montrées par l'extrait de quiz. */
 	nombre_questions?: number;
 	lien_libelle?: string;
@@ -34,6 +47,10 @@ const classeFond = classeFond_(bloc.fond);
 		{bloc.module === 'compte-a-rebours' && <CompteARebours carte={bloc.fond !== 'sombre'} />}
 		{bloc.module === 'apercu-carbone' && <ApercuCarbone />}
 		{bloc.module === 'simulateur-carbone' && <SimulateurCarbone compact />}
+		{bloc.module === 'estimateur-prix' && <EstimateurPrix />}
+		{bloc.module === 'quiz-complet' && <QuizComplet />}
+		{bloc.module === 'flux-matieres' && <FluxMatieres />}
+		{bloc.module === 'reversibilite' && <BoucleHelice />}
 		{
 			bloc.module === 'quiz-extrait' && (
 				<QuizExtrait

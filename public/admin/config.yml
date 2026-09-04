@@ -66,7 +66,15 @@ collections:
             fields:
               - { name: surtitre, label: Surtitre, widget: string, required: false }
               - { name: titre, label: Grand titre, widget: string }
-              - { name: chapeau, label: Chapeau, widget: text, required: false }
+              - name: chapeau
+                label: Chapeau
+                widget: markdown
+                required: false
+                buttons: [bold, italic, link]
+                editor_components: []
+                hint: >-
+                  Le paragraphe d'introduction sous le grand titre. Laisser une ligne vide pour
+                  passer au paragraphe suivant.
               - { name: lien_libelle, label: Bouton — texte, widget: string, required: false }
               - { name: lien_url, label: Bouton — adresse, widget: string, required: false }
               - { name: lien_secondaire_libelle, label: Second lien — texte, widget: string, required: false }
@@ -260,10 +268,14 @@ collections:
                 label: Module à insérer
                 widget: select
                 options:
-                  - { label: Extrait du quiz règlement machines, value: quiz-extrait }
+                  - { label: Quiz règlement machines — extrait, value: quiz-extrait }
+                  - { label: Quiz règlement machines — questionnaire entier, value: quiz-complet }
                   - { label: Compte à rebours du 20 janvier 2027, value: compte-a-rebours }
                   - { label: Empreinte carbone — aperçu chiffré et lien, value: apercu-carbone }
                   - { label: Empreinte carbone — simulateur à remplir, value: simulateur-carbone }
+                  - { label: Estimateur d'ordre de prix, value: estimateur-prix }
+                  - { label: Flux de matières — schéma animé, value: flux-matieres }
+                  - { label: Réversibilité — boucle ou hélice, value: reversibilite }
                   - { label: Cadre d'attente (module pas encore construit), value: a-venir }
               - name: nombre_questions
                 label: Nombre de questions du quiz

@@ -136,6 +136,10 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
 Chaque module : composant autonome, URL dédiée, image Open Graph propre, extrait d'intégration
 via le bloc « module ». Aucune donnée personnelle collectée.
 
+**Règle générale (2026-09-04)** : tout module doit être insérable dans n'importe quelle page
+par le bloc « module », sans exception et sans travail supplémentaire. Un nouveau module
+s'ajoute à la liste du bloc en même temps qu'il est créé.
+
 1. Quiz règlement machines. Parcours Pro : règlement (UE) 2023/1230 vs directive 2006/42/CE,
    64 questions fournies en CSV → JSON éditable dans le CMS, retour immédiat coloré au clic.
    Parcours Découverte : court, grand public, à rédiger ensemble. Compte à rebours vers le

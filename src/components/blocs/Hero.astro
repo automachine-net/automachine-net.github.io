@@ -1,12 +1,14 @@
 ---
 // Bloc « en-tête de page ». Surtitre, grand titre, chapeau, un ou deux liens.
 import IconeSecteur from '../IconeSecteur.astro';
+import { marked } from '../../scripts/markdown';
 import reglagesSecteurs from '../../../content/reglages/secteurs.json';
 
 export interface BlocHero {
 	type: 'hero';
 	surtitre?: string;
 	titre: string;
+	/** Chapeau en Markdown : gras, italique, liens, et un paragraphe par ligne vide. */
 	chapeau?: string;
 	lien_libelle?: string;
 	lien_url?: string;
@@ -33,7 +35,7 @@ const phrases = bloc.titre.split(/(?<=[?!])\s+(?=[A-ZÀ-ÖØ-Þ])/u);
 	<div class="bloc__interieur hero__interieur">
 		{bloc.surtitre && <p class="surtitre">{bloc.surtitre}</p>}
 		<Titre>{phrases.map((phrase) => <span class="phrase">{phrase}</span>)}</Titre>
-		{bloc.chapeau && <p class="chapeau" set:html={bloc.chapeau} />}
+		{bloc.chapeau && <div class="chapeau" set:html={marked(bloc.chapeau)} />}
 
 		{
 			bloc.afficher_secteurs && (
@@ -92,6 +94,13 @@ const phrases = bloc.titre.split(/(?<=[?!])\s+(?=[A-ZÀ-ÖØ-Þ])/u);
 	.chapeau {
 		font-size: 1.2rem;
 		line-height: 1.55;
+	}
+	/* Le chapeau vient du Markdown : il peut contenir plusieurs paragraphes. */
+	.chapeau :global(p) {
+		margin: 0 0 0.9em;
+	}
+	.chapeau :global(p:last-child) {
+		margin-bottom: 0;
 	}
 	.hero__actions {
 		display: flex;

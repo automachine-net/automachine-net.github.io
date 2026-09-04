@@ -93,8 +93,30 @@ Dans le champ **Blocs de la page** :
 | **Citation**            | Une phrase mise en avant, avec son auteur.                            |
 | **Appel à l'action**    | Un titre, un texte court et un bouton, centrés.                       |
 | **Questions fréquentes**| Des questions qui se déplient au clic.                                |
-| **Module interactif**   | Le quiz, le compte à rebours, ou un cadre d'attente.                  |
+| **Module interactif**   | N'importe lequel des outils du site, posé dans la page.               |
 | **Logos des clients**   | La bande de logos. Les logos se modifient dans Réglages.              |
+
+### Poser un outil dans une page
+
+Le bloc **Module interactif** insère un outil dans n'importe quelle page. Tous les outils
+sont proposés dans la liste déroulante :
+
+- le quiz règlement machines, en extrait de quelques questions ou en entier ;
+- le compte à rebours du 20 janvier 2027 ;
+- l'empreinte carbone, en aperçu chiffré ou en simulateur à remplir ;
+- l'estimateur d'ordre de prix ;
+- le flux de matières ;
+- la réversibilité, boucle ou hélice ;
+- un cadre d'attente, pour réserver la place d'un outil pas encore construit.
+
+L'outil garde sa page dédiée : le bloc ne le déplace pas, il en pose un exemplaire de plus.
+Ajouter un titre et une introduction au-dessus, et un bouton en dessous si la page doit
+renvoyer vers la version complète.
+
+### Mettre en forme un chapeau
+
+Le chapeau du bloc **En-tête de page** accepte le gras, l'italique et les liens. Pour passer
+au paragraphe suivant, laisser une ligne vide, comme dans les autres champs de texte.
 
 Presque tous les blocs ont un champ **Fond** : blanc, gris clair ou bleu nuit. C'est ce qui
 donne le rythme de la page. Alterner sans excès, deux ou trois fonds sombres par page suffisent.
