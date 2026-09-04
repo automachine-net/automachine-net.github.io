@@ -44,8 +44,6 @@ blocs:
       Mécanique, automatisme, robotique, électrotechnique : notre équipe réunit les compétences nécessaires pour transformer un besoin spécifique en machine fiable, fonctionnelle et adaptée à son environnement.
 
       Notre exigence en matière de qualité s’est notamment traduite par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
-
-      **Un problème à résoudre, une machine à inventer : c’est notre métier.**
     fond: sombre
     image: /images/contenu/DSCF6411.JPG
     image_alt: ''
