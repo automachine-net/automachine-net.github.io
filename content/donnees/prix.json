@@ -236,14 +236,24 @@
       "cle": "encombrement",
       "type": "choix",
       "libelle": "Encombrement",
-      "aide": "Une machine plus grande demande un châssis plus lourd, davantage de montage, de câblage et de transport.",
+      "aide": "Une machine plus grande demande un châssis plus lourd, davantage d’étude d’ensemble, de montage, d’installation et de transport.",
       "options": [
         {
           "cle": "s",
           "libelle": "Sur une table ou un établi",
           "materiel": 0,
           "etudes": 0,
-          "realisation": 0
+          "realisation": 0,
+          "coefficients": {
+            "socle": {
+              "materiel": 0.7,
+              "etudes": 0.5,
+              "realisation": 0.6
+            },
+            "prestations": {
+              "realisation": 0.6
+            }
+          }
         },
         {
           "cle": "m",
@@ -257,7 +267,16 @@
           "libelle": "Une ligne ou plusieurs postes",
           "materiel": 19000,
           "etudes": 7000,
-          "realisation": 7000
+          "realisation": 7000,
+          "coefficients": {
+            "socle": {
+              "etudes": 1.2,
+              "realisation": 1.2
+            },
+            "prestations": {
+              "realisation": 1.6
+            }
+          }
         }
       ]
     },
@@ -342,8 +361,15 @@
           "realisation": 0
         },
         {
+          "cle": "tracabilite",
+          "libelle": "Enregistrement et traçabilité : mesures horodatées, export",
+          "materiel": 1250,
+          "etudes": 4375,
+          "realisation": 875
+        },
+        {
           "cle": "supervision",
-          "libelle": "Supervision, base de données, traçabilité",
+          "libelle": "Supervision et base de données",
           "materiel": 2500,
           "etudes": 10500,
           "realisation": 2625
@@ -375,7 +401,7 @@
           "libelle": "Installation et recette sur votre site",
           "materiel": 3750,
           "etudes": 0,
-          "realisation": 7000,
+          "realisation": 4375,
           "natures": [
             "neuve",
             "retrofit",
