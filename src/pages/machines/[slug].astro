@@ -6,6 +6,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
+import ModeleGltf from '../../components/ModeleGltf.astro';
 import { marked } from '../../scripts/markdown';
 import { typo } from '../../scripts/typographie';
 
@@ -38,21 +39,9 @@ const suivante = toutes[(position + 1) % toutes.length];
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
-							{/* Le modèle ne se charge qu'à l'approche de l'écran : rien de téléchargé pour rien. */}
-							<model-viewer
-								src={d.fichier_3d}
-								alt={`Modèle en trois dimensions : ${d.nom}`}
-								camera-controls
-								touch-action="pan-y"
-								loading="lazy"
-								reveal="auto"
-								shadow-intensity="0.6"
-								exposure="1"
-								interaction-prompt="none"
-							>
-								<div slot="poster" class="visionneuse__attente">Chargement du modèle…</div>
-								<p slot="progress-bar" hidden />
-							</model-viewer>
+							<div class="fiche__modele">
+								<ModeleGltf src={d.fichier_3d} nom={d.nom} declenchement="auto" />
+							</div>
 							<figcaption>
 								<span class="consigne">
 									Faites tourner le modèle avec la souris ou le doigt. Molette ou pincement pour
@@ -128,17 +117,14 @@ const suivante = toutes[(position + 1) % toutes.length];
 
 <script>
 	import { modeles, monterScene } from '../../scripts/filaire';
+	import { chargerVisionneuse } from '../../scripts/visionneuse';
 
 	document.querySelectorAll<HTMLCanvasElement>('[data-visionneuse]').forEach((c) => {
 		const m = modeles.find((x) => x.slug === c.dataset.visionneuse);
 		if (m) monterScene(c, m, { echelle: 0.24 });
 	});
 
-	// La visionneuse glTF (<model-viewer>, servie depuis notre domaine) ne se charge que sur
-	// les fiches qui ont un fichier 3D : les autres n'en paient pas le poids.
-	if (document.querySelector('model-viewer')) {
-		import('@google/model-viewer');
-	}
+	chargerVisionneuse();
 </script>
 
 <style>
@@ -181,20 +167,8 @@ const suivante = toutes[(position + 1) % toutes.length];
 	.fiche__visionneuse canvas.actif {
 		cursor: grabbing;
 	}
-	.fiche__visionneuse model-viewer {
-		display: block;
-		width: 100%;
+	.fiche__modele {
 		aspect-ratio: 1000 / 620;
-		background: var(--gris-clair);
-		border: 1px solid var(--gris-moyen);
-		border-radius: var(--rayon);
-	}
-	.visionneuse__attente {
-		display: grid;
-		place-items: center;
-		height: 100%;
-		font-family: var(--titres);
-		color: var(--gris-leger);
 	}
 	.fiche__visionneuse figcaption {
 		display: flex;

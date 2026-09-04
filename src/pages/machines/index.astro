@@ -4,6 +4,7 @@
 import { getCollection, getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
+import ModeleGltf from '../../components/ModeleGltf.astro';
 import { typo } from '../../scripts/typographie';
 
 const page = await getEntry('pages', 'machines');
@@ -22,11 +23,15 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 					<div class="machine__visuel">
 						{m.data.image ? (
 							<img src={m.data.image} alt={m.data.image_alt ?? ''} loading="lazy" decoding="async" />
+						) : m.data.fichier_3d ? (
+							<div class="machine__modele">
+								<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} declenchement="interaction" />
+							</div>
 						) : (
 							<canvas
 								width="900"
 								height="620"
-								data-slug={m.data.modele_3d ?? m.id}
+								data-slug={m.data.modele_3d || m.id}
 								tabindex="0"
 								aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
 							/>
@@ -64,6 +69,9 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 
 <script>
 	import { modeles, monterScene } from '../../scripts/filaire';
+	import { chargerVisionneuse } from '../../scripts/visionneuse';
+
+	chargerVisionneuse();
 
 	document.querySelectorAll<HTMLCanvasElement>('.machine__visuel canvas').forEach((c) => {
 		const m = modeles.find((x) => x.slug === c.dataset.slug);
@@ -96,6 +104,9 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 		.machine--inverse .machine__visuel {
 			order: 0;
 		}
+	}
+	.machine__modele {
+		aspect-ratio: 900 / 620;
 	}
 	.machine__visuel canvas,
 	.machine__visuel img {

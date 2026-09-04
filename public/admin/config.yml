@@ -325,7 +325,9 @@ collections:
         label: Fichier 3D (.glb)
         widget: file
         required: false
-        media_folder: public/modeles
+        # Chemin absolu depuis la racine du dépôt : relatif, le CMS le résolvait depuis le
+        # dossier des fiches et rangeait le fichier dans content/machines/public/modeles.
+        media_folder: /public/modeles
         public_folder: /modeles
         hint: >-
           Format glTF binaire (.glb) uniquement : ni STEP, ni STL. Entre 2 et 5 Mo, jamais plus

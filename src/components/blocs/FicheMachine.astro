@@ -8,6 +8,7 @@
 import { getCollection } from 'astro:content';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 import { typo } from '../../scripts/typographie';
+import ModeleGltf from '../ModeleGltf.astro';
 
 export interface BlocFicheMachine {
 	type: 'fiche-machine';
@@ -49,13 +50,19 @@ const choisies = bloc.machines?.length
 				{
 					choisies.map((m) => (
 						<li class="carte">
-							<canvas
-								width="480"
-								height="340"
-								data-slug={m.data.modele_3d ?? m.id}
-								tabindex="0"
-								aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
-							/>
+							{m.data.fichier_3d ? (
+								<div class="carte__modele">
+									<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} declenchement="interaction" />
+								</div>
+							) : (
+								<canvas
+									width="480"
+									height="340"
+									data-slug={m.data.modele_3d || m.id}
+									tabindex="0"
+									aria-label={`Volume en trois dimensions : ${m.data.nom}. Flèches du clavier pour le tourner.`}
+								/>
+							)}
 							<div class="carte__corps">
 								<p class="carte__secteur">{m.data.secteur}</p>
 								<h3>
@@ -82,6 +89,9 @@ const choisies = bloc.machines?.length
 
 <script>
 	import { modeles, monterScene } from '../../scripts/filaire';
+	import { chargerVisionneuse } from '../../scripts/visionneuse';
+
+	chargerVisionneuse();
 
 	const monter = (racine: ParentNode) => {
 		racine.querySelectorAll<HTMLCanvasElement>('canvas[data-slug]').forEach((c) => {
@@ -252,6 +262,10 @@ const choisies = bloc.machines?.length
 	}
 
 	/* Flèches : discrètes, hors du flux, cachées tant que JavaScript n'a pas pris la main. */
+	/* Le vrai modèle prend la place du volume d'attente, au même format. */
+	.carte__modele {
+		aspect-ratio: 480 / 340;
+	}
 	.fleche {
 		position: absolute;
 		top: calc(50% - 3rem);
