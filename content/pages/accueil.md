@@ -26,7 +26,7 @@ blocs:
     titre: Combien coûterait votre machine ?
     lien_libelle: ''
     lien_url: ''
-    fond: sombre
+    fond: clair
     introduction: ''
     module: a-venir
     nombre_questions: 3
@@ -42,10 +42,10 @@ blocs:
       Nous faisons un métier de commande : chaque machine part d'un problème que personne
       n'a encore résolu chez le client. Nous prenons en charge la conception, la fabrication,
       l'assemblage et la mise en service.
-    fond: blanc
-    image: ''
+    fond: sombre
+    image: /images/contenu/DSCF6411.JPG
     image_alt: ''
-    image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
+    image_attente: ''
     position_image: droite
     citation: Texte de la citation
     auteur: Moi
