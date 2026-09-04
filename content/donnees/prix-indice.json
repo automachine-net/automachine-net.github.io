@@ -1,5 +1,5 @@
 {
   "indice": 1,
-  "marge_pct": 25,
-  "note": "Indice : coefficient appliqué à tous les montants pour suivre l'inflation, 1 = niveau de septembre 2026. Marge : pourcentage ajouté aux coûts du modèle pour former le prix."
+  "marge_pct": 20,
+  "note": ""
 }
