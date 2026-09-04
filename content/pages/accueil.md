@@ -20,7 +20,8 @@ blocs:
     lien_url: /machines
     fond: clair
     introduction: ''
-    machines: []
+    machines:
+      - bobineuse-esrf
   - type: module
     titre: Quelle sera l’empreinte carbone de votre machine ?
     lien_libelle: Ouvrir le simulateur
