@@ -38,10 +38,6 @@ const postes = modele.postes;
 
 	<fieldset class="section">
 		<legend>Ce que contient la machine</legend>
-		<p class="consigne">
-			Répondez à la louche. Chaque poste qui s’y prête se déplie pour préciser. Ce que vous
-			ne renseignez pas ne compte pas.
-		</p>
 
 		<div class="postes">
 			{
@@ -145,10 +141,6 @@ const postes = modele.postes;
 
 	<fieldset class="section">
 		<legend>Ce qu’on lui demande</legend>
-		<p class="consigne">
-			Ces exigences majorent les postes qu’elles concernent. Laissez la valeur de base si vous
-			ne savez pas encore.
-		</p>
 		<div class="postes">
 			{
 				modele.facteurs.map((f) => (
@@ -191,7 +183,6 @@ const postes = modele.postes;
 		<span data-haut></span>
 		<span class="fourchette__ht">HT</span>
 	</p>
-	<p class="avertissement">{typo(modele.avertissement)}</p>
 
 	<div class="barre-bloc">
 		<div class="barre" data-barre></div>
@@ -200,10 +191,7 @@ const postes = modele.postes;
 	<ul class="legende" data-legende></ul>
 	<ul class="sr-only" data-detail-parts></ul>
 
-	<details class="hypotheses">
-		<summary>Ce que vous avez déclaré</summary>
-		<ul data-hypotheses></ul>
-	</details>
+	<p class="avertissement">{typo(modele.avertissement)}</p>
 </section>
 
 <script>
@@ -293,7 +281,6 @@ const postes = modele.postes;
 		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
 		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
 		const detailParts = resultat.querySelector<HTMLElement>('[data-detail-parts]')!;
-		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
 
 		function recalculer() {
 			const e = lireEntrees();
@@ -358,14 +345,6 @@ const postes = modele.postes;
 				...parts.map((p) => {
 					const li = document.createElement('li');
 					li.textContent = typo(`${p.libelle} : environ ${formaterEuros(p.montant)}.`);
-					return li;
-				})
-			);
-
-			listeHypotheses.replaceChildren(
-				...r.hypotheses.map((h) => {
-					const li = document.createElement('li');
-					li.textContent = typo(h);
 					return li;
 				})
 			);
@@ -483,13 +462,19 @@ const postes = modele.postes;
 	.poste[data-type='cases'] .poste__tete {
 		grid-template-columns: minmax(0, 1fr);
 	}
-	.poste[data-type='nombre']:not(:has([data-detailler])) .poste__tete {
-		grid-template-columns: minmax(0, 1fr) 13rem;
+	/* Tous les postes à nombre partagent la même grille, avec ou sans bouton de détail :
+	   les champs restent alignés d'une ligne à l'autre. Le champ a une largeur fixe et
+	   l'unité prend le reste, pour que les chiffres se lisent sur une même verticale. */
+	.poste[data-type='nombre'] .saisie input {
+		flex: 0 0 7rem;
+		width: 7rem;
+	}
+	.poste[data-type='nombre'] .unite {
+		flex: 1 1 auto;
 	}
 	@media (max-width: 720px) {
 		.poste__tete,
-		.poste[data-type='choix'] .poste__tete,
-		.poste[data-type='nombre']:not(:has([data-detailler])) .poste__tete {
+		.poste[data-type='choix'] .poste__tete {
 			grid-template-columns: minmax(0, 1fr);
 		}
 	}
@@ -705,12 +690,11 @@ const postes = modele.postes;
 		font-weight: 500;
 		color: var(--gris-leger);
 	}
+	/* Discret, sous la barre : une ligne grise, pas un encadré. */
 	.avertissement {
-		margin: 0.75rem 0 1.75rem;
-		padding: 0.7rem 1rem;
-		background: var(--gris-clair);
-		border-left: 3px solid var(--orange);
-		font-size: 0.95rem;
+		margin: 1rem 0 0;
+		font-size: 0.8rem;
+		color: var(--gris-leger);
 		max-width: var(--mesure);
 	}
 
@@ -789,24 +773,6 @@ const postes = modele.postes;
 		height: 0.75rem;
 		border-radius: 2px;
 		flex: 0 0 auto;
-	}
-
-	.hypotheses {
-		margin-top: 1.75rem;
-		font-size: 0.9rem;
-	}
-	.hypotheses summary {
-		cursor: pointer;
-		font-family: var(--titres);
-		font-weight: 600;
-		color: var(--bleu-nuit);
-	}
-	.hypotheses ul {
-		margin: 0.6rem 0 0;
-		padding-left: 1.2rem;
-	}
-	.hypotheses :global(li) {
-		margin-top: 0.2rem;
 	}
 
 	.sr-only {

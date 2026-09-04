@@ -5,6 +5,7 @@
 // public engage l'entreprise. Les valeurs vivent dans content/donnees/prix.json.
 import Base from '../../layouts/Base.astro';
 import EstimateurPrix from '../../components/modules/EstimateurPrix.astro';
+import Appel from '../../components/blocs/Appel.astro';
 ---
 
 <Base
@@ -45,19 +46,28 @@ import EstimateurPrix from '../../components/modules/EstimateurPrix.astro';
 					</p>
 					<p>
 						Les montants du modèle sont des ordres de grandeur tirés de machines que nous avons
-						réellement conçues et livrées. Ils sont arrondis, et la fourchette est volontairement
-						asymétrique : dans notre métier, les dépassements sont plus fréquents que les
-						économies.
+						réellement conçues et livrées.
 					</p>
 					<p>
 						Le calcul se fait dans votre navigateur : rien de ce que vous saisissez ne nous
-						parvient. Pour un chiffrage engageant, il faut un cahier des charges et une
-						discussion : <a href="/contact" class="lien">contactez-nous</a>.
+						parvient.
 					</p>
 				</div>
 			</details>
 		</div>
 	</section>
+
+	<Appel
+		bloc={{
+			type: 'appel',
+			titre: 'Besoin d’un chiffrage précis ?',
+			texte:
+				'Envoyez-nous votre besoin, même en quelques lignes. Nous revenons vers vous avec des questions, puis un chiffrage qui engage.',
+			lien_libelle: 'Contactez-nous',
+			lien_url: '/contact',
+			fond: 'sombre',
+		}}
+	/>
 </Base>
 
 <style>
