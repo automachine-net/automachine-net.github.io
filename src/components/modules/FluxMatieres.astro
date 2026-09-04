@@ -408,13 +408,13 @@ const etapes = donnees.etapes.map((e, i) => {
 	.flux {
 		margin: 0;
 		display: grid;
-		grid-template-columns: minmax(0, 1fr);
+		/* Dernier rang : la source à gauche, les commandes à droite, sur la même ligne. */
+		grid-template-columns: minmax(0, 1fr) auto;
 		grid-template-areas:
-			'entete'
-			'scene'
-			'etape'
-			'coin'
-			'source';
+			'entete entete'
+			'scene scene'
+			'etape etape'
+			'source coin';
 		gap: 1rem;
 		background: var(--blanc);
 		border: 1px solid var(--gris-moyen);
@@ -436,6 +436,10 @@ const etapes = donnees.etapes.map((e, i) => {
 	}
 	.flux__source {
 		grid-area: source;
+		align-self: center;
+	}
+	.flux__coin {
+		align-self: center;
 	}
 
 	/* ── Bandeau : titre centré, jalons centrés juste dessous ─────────────────── */
