@@ -142,6 +142,45 @@ const postes = modele.postes;
 			}
 		</div>
 	</fieldset>
+
+	<fieldset class="section">
+		<legend>Ce qu’on lui demande</legend>
+		<p class="consigne">
+			Ces exigences majorent les postes qu’elles concernent. Laissez la valeur de base si vous
+			ne savez pas encore.
+		</p>
+		<div class="postes">
+			{
+				modele.facteurs.map((f) => (
+					<div class="poste" data-type="choix">
+						<div class="poste__tete">
+							<span class="poste__nom">
+								<label for={`facteur-${f.cle}`}>{f.libelle}</label>
+								<span class="aide" data-aide data-bulle>
+									<button type="button" class="aide-bouton" aria-describedby={`aide-facteur-${f.cle}`}>
+										<span aria-hidden="true">?</span>
+										<span class="sr-only">Que change ce paramètre ?</span>
+									</button>
+									<span class="bulle" role="tooltip" id={`aide-facteur-${f.cle}`}>
+										{typo(f.aide)}
+									</span>
+								</span>
+							</span>
+							<div class="saisie">
+								<select id={`facteur-${f.cle}`} data-facteur={f.cle}>
+									{f.options.map((o, i) => (
+										<option value={o.cle} selected={i === 0}>
+											{typo(o.libelle)}
+										</option>
+									))}
+								</select>
+							</div>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</fieldset>
 </form>
 
 <section class="resultat" data-resultat hidden aria-live="polite">
@@ -235,7 +274,11 @@ const postes = modele.postes;
 					);
 				}
 			}
-			return { nature, nombres, choix, cases };
+			const facteurs: Entrees['facteurs'] = {};
+			for (const f of M.facteurs) {
+				facteurs[f.cle] = form!.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)!.value;
+			}
+			return { nature, nombres, choix, cases, facteurs };
 		}
 
 		/** Les prestations qui n'ont pas de sens pour une étude seule disparaissent. */

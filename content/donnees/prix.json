@@ -51,9 +51,9 @@
       "aide": "Chaque mouvement commandé par un moteur : translation, rotation, déroulage, élévation… Un axe entraîne son moteur, son variateur, sa transmission, ses pièces d'interface, et le temps d'étude, de câblage et de mise au point qui va avec.",
       "louche": { "materiel": 6250, "etudes": 2625, "realisation": 2625 },
       "detail": [
-        { "cle": "petits", "libelle": "Petits axes, jusqu'à 400 W", "materiel": 4400, "etudes": 2190, "realisation": 2190 },
-        { "cle": "moyens", "libelle": "Axes moyens, 400 W à 3 kW", "materiel": 7500, "etudes": 2625, "realisation": 2625 },
-        { "cle": "gros", "libelle": "Gros axes, plus de 3 kW ou forte charge", "materiel": 15000, "etudes": 3500, "realisation": 3500 }
+        { "cle": "petits", "libelle": "Petits axes : jusqu'à 400 W, ou course jusqu'à 300 mm", "materiel": 4400, "etudes": 2190, "realisation": 2190 },
+        { "cle": "moyens", "libelle": "Axes moyens : 400 W à 3 kW, ou course jusqu'à 1,5 m", "materiel": 7500, "etudes": 2625, "realisation": 2625 },
+        { "cle": "gros", "libelle": "Gros axes : plus de 3 kW, course de plus de 1,5 m ou forte charge", "materiel": 15000, "etudes": 3500, "realisation": 3500 }
       ]
     },
     {
@@ -158,6 +158,46 @@
       ]
     }
   ],
+
+  "facteurs": [
+    {
+      "cle": "cadence",
+      "libelle": "Cadence",
+      "aide": "Plus la machine va vite, plus les mouvements demandent de puissance, de rigidité et de mise au point. La cadence majore les axes, les robots, les convoyeurs et le contrôle.",
+      "postes": ["axes_motorises", "axes_fluides", "robots", "convoyeurs", "controle"],
+      "options": [
+        { "cle": "lente", "libelle": "Lente : quelques cycles par minute, ou moins", "coefficient": 1 },
+        { "cle": "moyenne", "libelle": "Moyenne : un cycle toutes les quelques secondes", "coefficient": 1.15 },
+        { "cle": "rapide", "libelle": "Rapide : plusieurs cycles par seconde", "coefficient": 1.4 }
+      ]
+    },
+    {
+      "cle": "positionnement",
+      "libelle": "Précision de mise en position",
+      "aide": "Avec quelle précision la machine doit-elle amener une pièce ou un outil ? Le dixième de millimètre impose des guidages et des mesures plus fins ; le centième change de famille de composants.",
+      "postes": ["axes_motorises", "axes_fluides", "robots", "outillages"],
+      "options": [
+        { "cle": "mm", "libelle": "Au millimètre", "coefficient": 1 },
+        { "cle": "dixieme", "libelle": "Au dixième de millimètre", "coefficient": 1.2 },
+        { "cle": "centieme", "libelle": "Au centième de millimètre", "coefficient": 1.6 }
+      ]
+    },
+    {
+      "cle": "maintien",
+      "libelle": "Précision du maintien en position",
+      "aide": "Une fois en place, la pièce ou l'outil doit-il rester immobile sous un effort : pressage, serrage, usinage ? Plus l'effort est élevé, plus il faut de rigidité, de bridage et de freins.",
+      "postes": ["axes_motorises", "axes_fluides", "outillages"],
+      "options": [
+        { "cle": "aucun", "libelle": "Sans effort particulier", "coefficient": 1 },
+        { "cle": "modere", "libelle": "Sous effort modéré", "coefficient": 1.1 },
+        { "cle": "eleve", "libelle": "Sous effort élevé", "coefficient": 1.3 }
+      ]
+    }
+  ],
+
+  "regles": {
+    "main_doeuvre_minimum": "Une machine se conçoit et se met au point, elle ne s'achète pas : le travail ne peut pas peser moins que le matériel. Il a été relevé à son niveau."
+  },
 
   "parts": [
     { "cle": "materiel", "libelle": "Matériel et fabrication" },
