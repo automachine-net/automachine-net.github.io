@@ -7,7 +7,10 @@ blocs:
   - type: hero
     surtitre: ''
     titre: Votre machine n'existe pas ? Nous la construisons.
-    chapeau: Automachine conçoit et fabrique des machines spéciales à Tours depuis 2011. Vous avez un besoin qu'aucune machine sur le marché ne réalise ? Nous partons de votre besoin, nous concevons la machine, nous la fabriquons et nous vous la livrons en état de marche.
+    chapeau: |-
+      Chez AUTOMACHINE, nous concevons et fabriquons des machines spéciales sur mesure pour répondre aux besoins que les solutions standard ne peuvent pas satisfaire.
+
+      De l’idée à la mise en service, nous transformons vos contraintes en solutions concrètes.
     lien_libelle: Décrire un besoin
     lien_url: /contact
     lien_secondaire_libelle: Voir nos machines
@@ -57,7 +60,7 @@ blocs:
     titre: Un besoin de machine ?
     lien_libelle: Nous contacter
     lien_url: /contact
-    texte: '[à relire] Décrivez-nous l’opération à réaliser, même sommairement. Nous vous dirons rapidement si c’est un sujet pour nous, et ce qu’il faudrait pour aller plus loin.'
+    texte: ''
     fond: blanc
     image: ''
     image_alt: ''
