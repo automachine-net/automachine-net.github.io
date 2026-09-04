@@ -58,7 +58,7 @@ blocs:
     titre: ''
     fond: clair
   - type: appel
-    titre: Un besoin de machine ?
+    titre: Besoin d'une machine ?
     lien_libelle: Nous contacter
     lien_url: /contact
     texte: ''
