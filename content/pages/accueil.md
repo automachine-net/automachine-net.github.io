@@ -56,7 +56,7 @@ blocs:
     fonction: Dire des trucs et faire un test
   - type: clients
     titre: ''
-    fond: clair
+    fond: blanc
   - type: appel
     titre: Besoin d'une machine ?
     lien_libelle: Nous contacter
