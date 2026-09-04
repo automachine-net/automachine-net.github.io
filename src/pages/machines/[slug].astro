@@ -8,6 +8,7 @@ import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
 import ModeleGltf from '../../components/ModeleGltf.astro';
 import VideoBoucle from '../../components/VideoBoucle.astro';
+import { versionWebp } from '../../scripts/images';
 import { marked } from '../../scripts/markdown';
 import { typo } from '../../scripts/typographie';
 
@@ -36,7 +37,27 @@ const suivante = toutes[(position + 1) % toutes.length];
 		</header>
 
 		{
-			d.video && (
+			d.image && (
+				<section class="bloc fiche__visionneuse">
+					<div class="bloc__interieur">
+						<figure>
+							<picture>
+								{versionWebp(d.image) && <source srcset={versionWebp(d.image)} type="image/webp" />}
+								<img
+									class="fiche__image"
+									src={d.image}
+									alt={d.image_alt ?? `${d.nom}, vue d'ensemble`}
+									decoding="async"
+								/>
+							</picture>
+						</figure>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			!d.image && d.video && (
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
@@ -48,7 +69,7 @@ const suivante = toutes[(position + 1) % toutes.length];
 		}
 
 		{
-			!d.video && d.fichier_3d && (
+			!d.image && !d.video && d.fichier_3d && (
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
@@ -68,7 +89,7 @@ const suivante = toutes[(position + 1) % toutes.length];
 		}
 
 		{
-			!d.video && !d.fichier_3d && d.modele_3d && (
+			!d.image && !d.video && !d.fichier_3d && d.modele_3d && (
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
@@ -161,6 +182,13 @@ const suivante = toutes[(position + 1) % toutes.length];
 	.chapeau {
 		font-size: 1.2rem;
 		max-width: 46rem;
+	}
+	.fiche__image {
+		display: block;
+		width: 100%;
+		max-width: 46rem;
+		height: auto;
+		margin: 0 auto;
 	}
 	.fiche__visionneuse {
 		padding-top: 0;

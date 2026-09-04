@@ -5,12 +5,10 @@ secteur: Recherche
 resume: Bobineuse de supraconducteur à tension régulée.
 description: '-'
 client: ESRF - Accélérateur de particules
-video: /videos/bobineuse-esrf.mp4
-video_affiche: /videos/bobineuse-esrf.jpg
 fichier_3d: ''
 modele_3d: bobineuse
 caracteristiques: []
-image: ''
-image_alt: ''
+image: /images/machines/bobineuse-esrf.png
+image_alt: Bobineuse de supraconducteur ESRF. Bâti en profilés aluminium, carters transparents, platine de bobinage et pupitre de commande.
 blocs: []
 ---

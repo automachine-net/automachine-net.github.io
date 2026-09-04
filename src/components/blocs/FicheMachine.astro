@@ -9,6 +9,7 @@ import { getCollection } from 'astro:content';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 import { typo } from '../../scripts/typographie';
 import ModeleGltf from '../ModeleGltf.astro';
+import { versionWebp } from '../../scripts/images';
 
 export interface BlocFicheMachine {
 	type: 'fiche-machine';
@@ -50,7 +51,20 @@ const choisies = bloc.machines?.length
 				{
 					choisies.map((m) => (
 						<li class="carte">
-							{m.data.video_affiche ? (
+							{m.data.image ? (
+								<picture>
+									{versionWebp(m.data.image) && (
+										<source srcset={versionWebp(m.data.image)} type="image/webp" />
+									)}
+									<img
+										class="carte__image"
+										src={m.data.image}
+										alt={m.data.image_alt ?? ''}
+										loading="lazy"
+										decoding="async"
+									/>
+								</picture>
+							) : m.data.video_affiche ? (
 								<img
 									class="carte__image"
 									src={m.data.video_affiche}
@@ -282,7 +296,8 @@ const choisies = bloc.machines?.length
 		display: block;
 		width: 100%;
 		aspect-ratio: 480 / 340;
-		object-fit: cover;
+		object-fit: contain;
+		padding: 0.5rem;
 		border-radius: var(--rayon);
 	}
 	.carte__modele {

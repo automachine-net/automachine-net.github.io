@@ -3,6 +3,7 @@
 // Ni grille, ni filtres, conformément aux décisions du projet.
 import { getCollection, getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { versionWebp } from '../../scripts/images';
 import Blocs from '../../components/Blocs.astro';
 import ModeleGltf from '../../components/ModeleGltf.astro';
 import { typo } from '../../scripts/typographie';
@@ -22,7 +23,17 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 				<div class="machine__interieur">
 					<div class="machine__visuel">
 						{m.data.image ? (
-							<img src={m.data.image} alt={m.data.image_alt ?? ''} loading="lazy" decoding="async" />
+							<picture>
+								{versionWebp(m.data.image) && (
+									<source srcset={versionWebp(m.data.image)} type="image/webp" />
+								)}
+								<img
+									src={m.data.image}
+									alt={m.data.image_alt ?? ''}
+									loading="lazy"
+									decoding="async"
+								/>
+							</picture>
 						) : m.data.video_affiche ? (
 							<img src={m.data.video_affiche} alt="" loading="lazy" decoding="async" />
 						) : m.data.fichier_3d ? (
@@ -117,7 +128,10 @@ const machines = (await getCollection('machines')).sort((a, b) => a.data.ordre -
 		background: var(--gris-clair);
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);
-		object-fit: cover;
+		/* Les rendus sont détourés : les inscrire en entier plutôt que les rogner. */
+		object-fit: contain;
+		padding: 1rem;
+		box-sizing: border-box;
 	}
 	.machine__visuel canvas {
 		cursor: grab;
