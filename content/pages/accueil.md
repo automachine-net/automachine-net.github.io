@@ -10,7 +10,7 @@ blocs:
     chapeau: |-
       Chez AUTOMACHINE, nous concevons et fabriquons des machines spéciales sur mesure pour répondre aux besoins que les solutions standard ne peuvent pas satisfaire.
 
-      **De l’idée à la mise en service, nous transformons vos contraintes en solutions concrètes.**
+      De l’idée à la mise en service, nous transformons vos contraintes en solutions concrètes.
     lien_libelle: Décrire un besoin
     lien_url: /contact
     lien_secondaire_libelle: Voir nos machines
