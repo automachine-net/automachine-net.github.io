@@ -1,13 +1,13 @@
 {
   "nom": "Automachine",
   "baseline": "Machines spéciales",
-  "description": "Automachine conçoit et fabrique des machines spéciales à Tours, pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.",
-  "adresse_voie": "22 rue François Richer",
-  "adresse_code_postal": "37000",
-  "adresse_ville": "Tours",
+  "description": "Automachine conçoit et fabrique des machines spéciales à Tours pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.",
+  "adresse_voie": "5 Rue des Messagers",
+  "adresse_code_postal": "37210",
+  "adresse_ville": "Rochecorbon",
   "adresse_pays": "France",
-  "telephone": "[À COMPLÉTER : numéro à afficher]",
-  "email": "[À COMPLÉTER À LA BASCULE]",
-  "linkedin": "[À COMPLÉTER : adresse de la page LinkedIn, ou laisser vide]",
+  "telephone": "02 47 39 37 07",
+  "email": "moreau@automachine.net",
+  "linkedin": "https://www.linkedin.com/in/stanislas-moreau-4a43a7171/",
   "formulaire_actif": false
 }
