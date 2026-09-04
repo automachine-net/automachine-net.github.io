@@ -23,12 +23,12 @@ blocs:
     machines:
       - bobineuse-esrf
   - type: module
-    titre: Quelle sera l’empreinte carbone de votre machine ?
-    lien_libelle: Ouvrir le simulateur
-    lien_url: /outils/simulateur-carbone
+    titre: Combien coûterait votre machine ?
+    lien_libelle: ''
+    lien_url: ''
     fond: sombre
     introduction: ''
-    module: apercu-carbone
+    module: a-venir
     nombre_questions: 3
     attente: ''
   - type: module
@@ -40,15 +40,6 @@ blocs:
     module: a-venir
     nombre_questions: 3
     attente: '[MODULE À CONSTRUIRE ENSEMBLE] animation interactive sur le principe de réversibilité. Scénario à écrire.'
-  - type: module
-    titre: ''
-    lien_libelle: ''
-    lien_url: ''
-    fond: sombre
-    introduction: ''
-    module: compte-a-rebours
-    nombre_questions: 3
-    attente: ''
   - type: module
     titre: Serez-vous prêt ?
     lien_libelle: Continuer le quiz
