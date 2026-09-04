@@ -43,7 +43,7 @@ blocs:
 
       Mécanique, automatisme, robotique, électrotechnique : notre équipe réunit les compétences nécessaires pour transformer un besoin spécifique en machine fiable, fonctionnelle et adaptée à son environnement.
 
-      Notre démarche s’appuie sur une culture de la qualité et de la rigueur, reconnue notamment par l’obtention des certifications **ISO 9001 et ISO 14001 en 2017**.
+      Notre démarche s’appuie sur une culture de la qualité et de la rigueur, reconnue notamment par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
 
       **Un problème à résoudre, une machine à inventer : c’est notre métier.**
     fond: sombre
