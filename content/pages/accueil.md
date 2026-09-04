@@ -7,7 +7,7 @@ blocs:
   - type: hero
     surtitre: ''
     titre: Votre machine n'existe pas ? Nous la construisons.
-    chapeau: '[à relire] Automachine conçoit et fabrique des machines spéciales à Tours depuis 2011. Vous avez une opération à réaliser et rien sur le marché ne la fait : nous partons de votre besoin, nous concevons la machine, nous la fabriquons et nous vous la livrons en état de marche.'
+    chapeau: Automachine conçoit et fabrique des machines spéciales à Tours depuis 2011. Vous avez un besoin qu'aucune machine sur le marché ne réalise ? Nous partons de votre besoin, nous concevons la machine, nous la fabriquons et nous vous la livrons en état de marche.
     lien_libelle: Décrire un besoin
     lien_url: /contact
     lien_secondaire_libelle: Voir nos machines
@@ -31,27 +31,6 @@ blocs:
     module: a-venir
     nombre_questions: 3
     attente: ''
-  - type: module
-    titre: Une transformation est réversible si on peut l’annuler
-    lien_libelle: Ouvrir l’explication
-    lien_url: /outils/reversibilite
-    fond: blanc
-    introduction: '[à relire] Réverser, c’est ramener à l’état antérieur. Deux critères permettent de juger un choix de conception : des émissions inférieures ou égales à ce que la biosphère peut réverser, et une matière préservée, apte au même usage après usage.'
-    module: a-venir
-    nombre_questions: 3
-    attente: '[MODULE À CONSTRUIRE ENSEMBLE] animation interactive sur le principe de réversibilité. Scénario à écrire.'
-  - type: module
-    titre: Serez-vous prêt ?
-    lien_libelle: Continuer le quiz
-    lien_url: /outils/quiz-reglement-machines
-    fond: sombre
-    introduction: ''
-    module: quiz-extrait
-    nombre_questions: 3
-    attente: ''
-  - type: clients
-    titre: ''
-    fond: blanc
   - type: texte-image
     titre: L’entreprise
     lien_libelle: Découvrir l’entreprise
@@ -71,6 +50,9 @@ blocs:
     citation: Texte de la citation
     auteur: Moi
     fonction: Dire des trucs et faire un test
+  - type: clients
+    titre: ''
+    fond: blanc
   - type: appel
     titre: Un besoin de machine ?
     lien_libelle: Nous contacter
