@@ -22,6 +22,8 @@ export type Option = Montants & {
 	cle: string;
 	libelle: string;
 	natures?: string[];
+	/** Toujours compris : affiché coché et non modifiable, sans montant. */
+	inclus?: boolean;
 	/**
 	 * Majorations que cette option applique à d'autres postes, par composante. La clé
 	 * « socle » vise le socle de la nature du projet. Exemple : l'ATEX renchérit le matériel

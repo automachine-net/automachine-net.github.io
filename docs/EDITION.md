@@ -42,7 +42,7 @@ La colonne de gauche présente quatre rubriques.
 | ------------ | --------------------------------------------------------------------------- |
 | **Pages**    | Les pages du site : accueil, entreprise, machines, contact.                  |
 | **Machines** | Une fiche par machine réalisée.                                             |
-| **Quiz**     | Les questions du quiz sur le règlement machines.                            |
+| **Outils**   | Les réglages des outils : questions du quiz, facteurs du simulateur carbone, indice de l'estimateur de prix, étapes du schéma « Où va la matière ? », critères de « Boucle ou hélice ? ». |
 | **Réglages** | Coordonnées, menus, logos des clients, secteurs, informations légales.       |
 
 ## 3. Modifier un texte

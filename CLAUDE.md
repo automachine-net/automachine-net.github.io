@@ -178,8 +178,13 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      (le dépôt est public). Le JSON ne contient aucun client ni prix réel. Page non indexée
      tant que le dirigeant n'a pas validé les valeurs.
    - **Indice de prix** (`content/donnees/prix-indice.json`, réglable dans le CMS, rubrique
-     Réglages) : un seul coefficient multiplie tous les montants, pour suivre l'inflation sans
+     Outils) : un seul coefficient multiplie tous les montants, pour suivre l'inflation sans
      retoucher le modèle. 1 = niveau de septembre 2026.
+   - **CMS (2026-09-04)** : la collection « Quiz » est remplacée par une collection « Outils »
+     qui regroupe quiz, facteurs carbone, indice de prix, étapes du flux de matières et
+     critères de réversibilité. Le modèle complet de l'estimateur (`prix.json`) n'y est pas
+     exposé : structure trop variable pour être déclarée champ par champ sans risque de perte
+     à l'enregistrement ; il s'édite dans le fichier.
    - **ATEX** : partie fixe (certification, documentation) + coefficients sur le matériel des
      postes à composants électriques (règle du dirigeant : × 2 sur l'électrique et
      l'électronique, × 1,5 sur les robots, appliquée au prorata de la part électrique de chaque

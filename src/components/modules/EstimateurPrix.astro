@@ -100,9 +100,21 @@ const postes = modele.postes;
 						{p.type === 'cases' && (
 							<div class="cases" role="group" aria-labelledby={`poste-${p.cle}-nom`}>
 								{p.options.map((o) => (
-									<label class="case" data-natures={o.natures ? o.natures.join(' ') : undefined}>
-										<input type="checkbox" data-case={p.cle} value={o.cle} />
-										<span>{typo(o.libelle)}</span>
+									<label
+										class={`case ${'inclus' in o && o.inclus ? 'case--incluse' : ''}`}
+										data-natures={o.natures ? o.natures.join(' ') : undefined}
+									>
+										<input
+											type="checkbox"
+											data-case={p.cle}
+											value={o.cle}
+											checked={'inclus' in o && o.inclus}
+											disabled={'inclus' in o && o.inclus}
+										/>
+										<span>
+											{typo(o.libelle)}
+											{'inclus' in o && o.inclus && <span class="case__note">toujours compris</span>}
+										</span>
 									</label>
 								))}
 							</div>
@@ -604,6 +616,19 @@ const postes = modele.postes;
 		margin: 0.25rem 0 0;
 		accent-color: var(--bleu);
 		flex: 0 0 auto;
+	}
+	/* Le minimum, toujours compris : coché, non modifiable, en retrait. */
+	.case--incluse {
+		cursor: default;
+		color: var(--gris-leger);
+	}
+	.case__note {
+		margin-left: 0.4rem;
+		font-family: var(--titres);
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--gris-leger);
 	}
 
 	/* ── Infobulles ───────────────────────────────────────────────────────────── */

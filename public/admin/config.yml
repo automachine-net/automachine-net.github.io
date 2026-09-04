@@ -353,9 +353,9 @@ collections:
         required: false
         types: *blocs
 
-  # ---------------------------------------------------------------- Quiz
-  - name: quiz
-    label: Quiz
+  # ---------------------------------------------------------------- Outils
+  - name: outils
+    label: Outils
     files:
       - name: reglement-machines
         label: Quiz règlement machines
@@ -390,86 +390,6 @@ collections:
                 options: [a, b, c, d]
               - { name: explication, label: Explication, widget: text }
               - { name: reference, label: Référence dans le règlement, widget: string }
-
-  # ---------------------------------------------------------------- Réglages
-  - name: reglages
-    label: Réglages
-    files:
-      - name: site
-        label: Coordonnées et réglages généraux
-        file: content/reglages/site.json
-        fields:
-          - { name: nom, label: Nom de l'entreprise, widget: string }
-          - { name: baseline, label: Accroche courte, widget: string }
-          - { name: description, label: Description du site, widget: text }
-          - { name: adresse_voie, label: Adresse — rue, widget: string }
-          - { name: adresse_code_postal, label: Adresse — code postal, widget: string }
-          - { name: adresse_ville, label: Adresse — ville, widget: string }
-          - { name: adresse_pays, label: Adresse — pays, widget: string }
-          - { name: telephone, label: Téléphone, widget: string }
-          - { name: email, label: Adresse électronique, widget: string }
-          - { name: linkedin, label: Page LinkedIn, widget: string, required: false }
-          - name: formulaire_actif
-            label: Formulaire de contact en service
-            widget: boolean
-            default: false
-            hint: À laisser décoché tant que l'hébergement définitif n'est pas en place.
-
-      - name: navigation
-        label: Menus
-        file: content/reglages/navigation.json
-        fields:
-          - name: principale
-            label: Menu du haut
-            label_singular: Entrée
-            widget: list
-            collapsed: true
-            summary: '{{fields.label}} → {{fields.href}}'
-            fields:
-              - { name: label, label: Texte affiché, widget: string }
-              - { name: href, label: Adresse, widget: string }
-          - name: pied
-            label: Menu du pied de page
-            label_singular: Entrée
-            widget: list
-            collapsed: true
-            summary: '{{fields.label}} → {{fields.href}}'
-            fields:
-              - { name: label, label: Texte affiché, widget: string }
-              - { name: href, label: Adresse, widget: string }
-
-      - name: clients
-        label: Logos des clients
-        file: content/reglages/clients.json
-        fields:
-          - { name: titre, label: Titre du bloc, widget: string }
-          - name: clients
-            label: Clients
-            label_singular: Client
-            widget: list
-            collapsed: true
-            summary: '{{fields.nom}}'
-            fields:
-              - { name: nom, label: Nom, widget: string }
-              - { name: logo, label: Logo, widget: image }
-
-      - name: secteurs
-        label: Secteurs
-        file: content/reglages/secteurs.json
-        fields:
-          - name: secteurs
-            label: Secteurs
-            label_singular: Secteur
-            widget: list
-            collapsed: true
-            summary: '{{fields.nom}}'
-            fields:
-              - name: slug
-                label: Identifiant du pictogramme
-                widget: select
-                options: [industrie, agriculture, recherche, bancs-de-test, tertiaire]
-              - { name: nom, label: Nom affiché, widget: string }
-              - { name: description, label: Description, widget: text }
 
       - name: facteurs-carbone
         label: Facteurs d'émission du simulateur carbone
@@ -557,6 +477,177 @@ collections:
             max: 3
             hint: 1 = niveau des prix à la mise en service de l'outil (septembre 2026). 1,03 = + 3 %, 1,1 = + 10 %.
           - { name: note, label: Note interne, widget: text, required: false }
+
+      - name: flux-matieres
+        label: Où va la matière ? — données et étapes
+        file: content/donnees/flux-matieres.json
+        description: >-
+          Les valeurs viennent du Compte de flux de matières (SDES). Les étapes sont le
+          déroulé de la présentation : titre, commentaire, flux allumés, chiffre mis en avant.
+        fields:
+          - { name: titre, label: Titre du schéma, widget: string }
+          - { name: annee, label: Année des données, widget: string }
+          - { name: unite, label: Unité, widget: string }
+          - { name: source, label: Source, widget: text }
+          - { name: note, label: Note interne (non affichée), widget: text, required: false }
+          - name: flux
+            label: Flux
+            label_singular: Flux
+            widget: list
+            collapsed: true
+            summary: '{{fields.libelle}} — {{fields.valeur}}'
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string, hint: "Ne pas modifier : le dessin s'y réfère." }
+              - { name: libelle, label: Libellé, widget: string }
+              - { name: valeur, label: Valeur (millions de tonnes), widget: number, value_type: float }
+          - name: etapes
+            label: Étapes de la présentation
+            label_singular: Étape
+            widget: list
+            collapsed: true
+            summary: '{{fields.titre}}'
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string }
+              - { name: titre, label: Titre, widget: string }
+              - { name: commentaire, label: Commentaire, widget: text }
+              - name: actifs
+                label: Flux allumés
+                widget: list
+                required: false
+                hint: Identifiants techniques des flux, séparés par des virgules. Vide = tous.
+              - { name: chiffre, label: Flux dont le chiffre est mis en avant, widget: string, required: false }
+              - name: cumul
+                label: Flux additionnés dans l'encadré
+                widget: list
+                required: false
+              - { name: cumul_libelle, label: Texte de l'encadré, widget: string, required: false }
+
+      - name: reversibilite
+        label: Boucle ou hélice ? — critères et verdicts
+        file: content/donnees/reversibilite.json
+        description: Les quatre critères de réversibilité, leurs seuils, et les phrases de verdict.
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: sous_titre, label: Sous-titre, widget: string }
+          - name: criteres
+            label: Critères
+            label_singular: Critère
+            widget: list
+            collapsed: true
+            summary: '{{fields.libelle}}'
+            fields:
+              - { name: cle, label: Identifiant technique, widget: string, hint: "Ne pas modifier : le dessin s'y réfère." }
+              - { name: libelle, label: Libellé, widget: string }
+              - { name: unite, label: Unité, widget: string }
+              - { name: min, label: Minimum du curseur, widget: number, value_type: float }
+              - { name: max, label: Maximum du curseur, widget: number, value_type: float }
+              - { name: pas, label: Pas du curseur, widget: number, value_type: float }
+              - { name: defaut, label: Valeur de départ, widget: number, value_type: float }
+              - { name: seuil, label: Seuil, widget: number, value_type: float }
+              - name: sens
+                label: Le critère est tenu si la valeur est…
+                widget: select
+                options:
+                  - { label: au plus égale au seuil, value: max }
+                  - { label: au moins égale au seuil, value: min }
+              - { name: seuil_reglable, label: Seuil réglable par le public, widget: boolean, default: false }
+              - { name: seuil_min, label: Seuil — minimum, widget: number, value_type: float, required: false }
+              - { name: seuil_max, label: Seuil — maximum, widget: number, value_type: float, required: false }
+              - { name: seuil_pas, label: Seuil — pas, widget: number, value_type: float, required: false }
+              - { name: regle, label: Règle, widget: text }
+              - { name: echec, label: Phrase quand le critère est dépassé, widget: text }
+          - name: verdicts
+            label: Verdicts
+            widget: object
+            fields:
+              - { name: boucle, label: Quand tout est tenu, widget: text }
+              - { name: helice, label: Quand un critère lâche, widget: text }
+          - name: etapes_cycle
+            label: Étapes du cycle, autour du dessin
+            widget: list
+            hint: Trois noms, dans l'ordre du cycle.
+          - { name: sol, label: Nom du sol, widget: string }
+          - { name: tours, label: Nombre de tours dessinés, widget: number, value_type: int }
+
+  # ---------------------------------------------------------------- Réglages
+  - name: reglages
+    label: Réglages
+    files:
+      - name: site
+        label: Coordonnées et réglages généraux
+        file: content/reglages/site.json
+        fields:
+          - { name: nom, label: Nom de l'entreprise, widget: string }
+          - { name: baseline, label: Accroche courte, widget: string }
+          - { name: description, label: Description du site, widget: text }
+          - { name: adresse_voie, label: Adresse — rue, widget: string }
+          - { name: adresse_code_postal, label: Adresse — code postal, widget: string }
+          - { name: adresse_ville, label: Adresse — ville, widget: string }
+          - { name: adresse_pays, label: Adresse — pays, widget: string }
+          - { name: telephone, label: Téléphone, widget: string }
+          - { name: email, label: Adresse électronique, widget: string }
+          - { name: linkedin, label: Page LinkedIn, widget: string, required: false }
+          - name: formulaire_actif
+            label: Formulaire de contact en service
+            widget: boolean
+            default: false
+            hint: À laisser décoché tant que l'hébergement définitif n'est pas en place.
+
+      - name: navigation
+        label: Menus
+        file: content/reglages/navigation.json
+        fields:
+          - name: principale
+            label: Menu du haut
+            label_singular: Entrée
+            widget: list
+            collapsed: true
+            summary: '{{fields.label}} → {{fields.href}}'
+            fields:
+              - { name: label, label: Texte affiché, widget: string }
+              - { name: href, label: Adresse, widget: string }
+          - name: pied
+            label: Menu du pied de page
+            label_singular: Entrée
+            widget: list
+            collapsed: true
+            summary: '{{fields.label}} → {{fields.href}}'
+            fields:
+              - { name: label, label: Texte affiché, widget: string }
+              - { name: href, label: Adresse, widget: string }
+
+      - name: clients
+        label: Logos des clients
+        file: content/reglages/clients.json
+        fields:
+          - { name: titre, label: Titre du bloc, widget: string }
+          - name: clients
+            label: Clients
+            label_singular: Client
+            widget: list
+            collapsed: true
+            summary: '{{fields.nom}}'
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: logo, label: Logo, widget: image }
+
+      - name: secteurs
+        label: Secteurs
+        file: content/reglages/secteurs.json
+        fields:
+          - name: secteurs
+            label: Secteurs
+            label_singular: Secteur
+            widget: list
+            collapsed: true
+            summary: '{{fields.nom}}'
+            fields:
+              - name: slug
+                label: Identifiant du pictogramme
+                widget: select
+                options: [industrie, agriculture, recherche, bancs-de-test, tertiaire]
+              - { name: nom, label: Nom affiché, widget: string }
+              - { name: description, label: Description, widget: text }
 
       - name: legal
         label: Informations légales

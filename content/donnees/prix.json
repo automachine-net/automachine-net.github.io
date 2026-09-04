@@ -261,6 +261,14 @@
       "aide": "Le niveau de protection dépend des dangers de la machine et du lieu. Une enceinte grillagée suffit à une machine lente. Un automate de sécurité s'impose dès qu'un opérateur intervient près d'un mouvement. L'ATEX renchérit tout le matériel électrique et ajoute la certification.",
       "options": [
         {
+          "cle": "base",
+          "libelle": "Carters et arrêts d’urgence",
+          "materiel": 0,
+          "etudes": 0,
+          "realisation": 0,
+          "inclus": true
+        },
+        {
           "cle": "enceinte",
           "libelle": "Enceinte grillagée et portes verrouillées",
           "materiel": 6250,
