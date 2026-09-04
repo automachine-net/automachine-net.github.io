@@ -543,6 +543,21 @@ collections:
                 hint: Tant que la case est décochée, le poste est affiché « non chiffré » et exclu du total.
               - { name: remarque, label: Remarque, widget: text }
 
+      - name: prix-indice
+        label: Estimateur de prix — indice
+        file: content/donnees/prix-indice.json
+        description: Un seul nombre pour suivre l'inflation, sans toucher aux valeurs de l'estimateur.
+        fields:
+          - name: indice
+            label: Indice de prix
+            widget: number
+            value_type: float
+            step: 0.01
+            min: 0.5
+            max: 3
+            hint: 1 = niveau des prix à la mise en service de l'outil (septembre 2026). 1,03 = + 3 %, 1,1 = + 10 %.
+          - { name: note, label: Note interne, widget: text, required: false }
+
       - name: legal
         label: Informations légales
         file: content/reglages/legal.json

@@ -18,7 +18,17 @@
 
 export type Montants = { materiel: number; etudes: number; realisation: number };
 
-export type Option = Montants & { cle: string; libelle: string; natures?: string[] };
+export type Option = Montants & {
+	cle: string;
+	libelle: string;
+	natures?: string[];
+	/**
+	 * Majorations que cette option applique à d'autres postes, par composante. La clé
+	 * « socle » vise le socle de la nature du projet. Exemple : l'ATEX renchérit le matériel
+	 * électrique de chaque poste.
+	 */
+	coefficients?: Record<string, Partial<Montants>>;
+};
 
 export type Poste =
 	| { cle: string; type: 'nombre'; libelle: string; unite: string; aide: string; louche: Montants; detail?: Option[] }
@@ -100,14 +110,21 @@ export function formaterEuros(v: number): string {
 	return `${arrondir(v).toLocaleString('fr-FR')} €`;
 }
 
-export function estimer(modele: Modele, e: Entrees): Resultat {
+/**
+ * @param indice Coefficient global appliqué à tous les montants, réglé dans le CMS pour
+ * suivre l'inflation sans retoucher chaque valeur du modèle.
+ */
+export function estimer(modele: Modele, e: Entrees, indice = 1): Resultat {
 	const nature = modele.natures.find((n) => n.cle === e.nature) ?? modele.natures[0];
 	const hypotheses: string[] = [nature.libelle];
 	let vide = true;
 
-	// Un cumul par poste, pour que les facteurs puissent majorer chacun séparément.
+	// Un cumul par poste, pour que les facteurs puissent majorer chacun séparément. Le socle
+	// est un poste comme un autre, sous la clé « socle ».
 	const parPoste: Record<string, Montants> = {};
 	const cumul = (cle: string) => (parPoste[cle] ??= zero());
+	ajouter(cumul('socle'), nature.socle);
+	const majorations: Record<string, Partial<Montants>>[] = [];
 
 	for (const p of modele.postes) {
 		if (p.type === 'nombre') {
@@ -135,6 +152,7 @@ export function estimer(modele: Modele, e: Entrees): Resultat {
 		} else if (p.type === 'choix') {
 			const o = p.options.find((x) => x.cle === e.choix[p.cle]) ?? p.options[0];
 			ajouter(cumul(p.cle), o);
+			if (o.coefficients) majorations.push(o.coefficients);
 			if (o.materiel + o.etudes + o.realisation > 0) {
 				hypotheses.push(`${p.libelle} : ${initiale(o.libelle)}`);
 				vide = false;
@@ -144,7 +162,10 @@ export function estimer(modele: Modele, e: Entrees): Resultat {
 			const retenues = p.options.filter(
 				(o) => cochees.includes(o.cle) && (!o.natures || o.natures.includes(nature.cle))
 			);
-			for (const o of retenues) ajouter(cumul(p.cle), o);
+			for (const o of retenues) {
+				ajouter(cumul(p.cle), o);
+				if (o.coefficients) majorations.push(o.coefficients);
+			}
 			if (retenues.length) {
 				hypotheses.push(`${p.libelle} : ${retenues.map((o) => initiale(o.libelle)).join(' ; ')}`);
 				vide = false;
@@ -166,14 +187,25 @@ export function estimer(modele: Modele, e: Entrees): Resultat {
 		hypotheses.push(`${f.libelle} : ${initiale(o.libelle)}`);
 	}
 
+	// Les majorations portées par une option (l'ATEX, par exemple) s'appliquent poste par
+	// poste, composante par composante.
+	for (const maj of majorations) {
+		for (const [cle, coef] of Object.entries(maj)) {
+			const m = parPoste[cle];
+			if (!m) continue;
+			if (coef.materiel) m.materiel *= coef.materiel;
+			if (coef.etudes) m.etudes *= coef.etudes;
+			if (coef.realisation) m.realisation *= coef.realisation;
+		}
+	}
+
 	const total = zero();
-	ajouter(total, nature.socle);
 	for (const m of Object.values(parPoste)) ajouter(total, m);
 
-	// La nature du projet décide de ce qui compte.
-	const materiel = nature.materiel ? total.materiel : 0;
-	let etudes = nature.etudes ? total.etudes : 0;
-	let realisation = nature.realisation ? total.realisation : 0;
+	// La nature du projet décide de ce qui compte ; l'indice suit l'inflation.
+	const materiel = (nature.materiel ? total.materiel : 0) * indice;
+	let etudes = (nature.etudes ? total.etudes : 0) * indice;
+	let realisation = (nature.realisation ? total.realisation : 0) * indice;
 	let gestion = ((etudes + realisation) * modele.gestion_projet_pct) / 100;
 
 	// Le travail ne pèse jamais moins que le matériel : les trois postes de travail sont

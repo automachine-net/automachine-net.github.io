@@ -226,35 +226,6 @@
       ]
     },
     {
-      "cle": "securite",
-      "type": "cases",
-      "libelle": "Sécurité et environnement",
-      "aide": "Le niveau de protection dépend des dangers de la machine et du lieu. Une enceinte grillagée suffit à une machine lente. Des barrières immatérielles et un automate de sécurité s'imposent dès qu'un opérateur intervient près d'un mouvement rapide. L'ATEX ajoute la certification et une documentation dédiée.",
-      "options": [
-        {
-          "cle": "enceinte",
-          "libelle": "Enceinte grillagée et portes verrouillées",
-          "materiel": 6250,
-          "etudes": 875,
-          "realisation": 1750
-        },
-        {
-          "cle": "barrieres",
-          "libelle": "Barrières immatérielles et automate de sécurité",
-          "materiel": 11250,
-          "etudes": 2625,
-          "realisation": 2625
-        },
-        {
-          "cle": "atex",
-          "libelle": "Zone ATEX",
-          "materiel": 15000,
-          "etudes": 8750,
-          "realisation": 4375
-        }
-      ]
-    },
-    {
       "cle": "encombrement",
       "type": "choix",
       "libelle": "Encombrement",
@@ -280,6 +251,65 @@
           "materiel": 19000,
           "etudes": 7000,
           "realisation": 7000
+        }
+      ]
+    },
+    {
+      "cle": "securite",
+      "type": "cases",
+      "libelle": "Sécurité",
+      "aide": "Le niveau de protection dépend des dangers de la machine et du lieu. Une enceinte grillagée suffit à une machine lente. Un automate de sécurité s'impose dès qu'un opérateur intervient près d'un mouvement. L'ATEX renchérit tout le matériel électrique et ajoute la certification.",
+      "options": [
+        {
+          "cle": "enceinte",
+          "libelle": "Enceinte grillagée et portes verrouillées",
+          "materiel": 6250,
+          "etudes": 875,
+          "realisation": 1750
+        },
+        {
+          "cle": "automate",
+          "libelle": "Automate de sécurité",
+          "materiel": 5000,
+          "etudes": 1750,
+          "realisation": 1750
+        },
+        {
+          "cle": "barrieres",
+          "libelle": "Barrières immatérielles",
+          "materiel": 6250,
+          "etudes": 875,
+          "realisation": 875
+        },
+        {
+          "cle": "atex",
+          "libelle": "Zone ATEX",
+          "materiel": 5000,
+          "etudes": 8750,
+          "realisation": 4375,
+          "coefficients": {
+            "socle": {
+              "materiel": 1.5
+            },
+            "axes_motorises": {
+              "materiel": 1.4
+            },
+            "axes_fluides": {
+              "materiel": 1.3
+            },
+            "robots": {
+              "materiel": 1.5
+            },
+            "convoyeurs": {
+              "materiel": 1.5
+            },
+            "controle": {
+              "materiel": 2
+            },
+            "logiciel": {
+              "materiel": 2
+            }
+          }
         }
       ]
     },
@@ -406,19 +436,24 @@
       ],
       "options": [
         {
+          "cle": "large",
+          "libelle": "Large : au-delà du millimètre",
+          "coefficient": 1
+        },
+        {
           "cle": "mm",
           "libelle": "Au millimètre",
-          "coefficient": 1
+          "coefficient": 1.15
         },
         {
           "cle": "dixieme",
           "libelle": "Au dixième de millimètre",
-          "coefficient": 1.2
+          "coefficient": 1.35
         },
         {
           "cle": "centieme",
           "libelle": "Au centième de millimètre",
-          "coefficient": 1.6
+          "coefficient": 1.8
         }
       ]
     },

@@ -195,6 +195,7 @@ const postes = modele.postes;
 
 <script>
 	import modele from '../../../content/donnees/prix.json';
+	import indicePrix from '../../../content/donnees/prix-indice.json';
 	import { estimer, formaterEuros, type Modele, type Entrees } from '../../scripts/prix';
 	import { typo } from '../../scripts/typographie';
 	import { recalerLesBulles } from '../../scripts/bulle';
@@ -284,7 +285,7 @@ const postes = modele.postes;
 		function recalculer() {
 			const e = lireEntrees();
 			ajusterALaNature(e.nature);
-			const r = estimer(M, e);
+			const r = estimer(M, e, Number(indicePrix.indice) || 1);
 
 			if (r.vide) {
 				resultat.hidden = true;

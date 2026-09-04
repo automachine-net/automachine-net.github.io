@@ -177,6 +177,14 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      le taux journalier et la marge y sont déjà intégrés et n'apparaissent nulle part
      (le dépôt est public). Le JSON ne contient aucun client ni prix réel. Page non indexée
      tant que le dirigeant n'a pas validé les valeurs.
+   - **Indice de prix** (`content/donnees/prix-indice.json`, réglable dans le CMS, rubrique
+     Réglages) : un seul coefficient multiplie tous les montants, pour suivre l'inflation sans
+     retoucher le modèle. 1 = niveau de septembre 2026.
+   - **ATEX** : partie fixe (certification, documentation) + coefficients sur le matériel des
+     postes à composants électriques (règle du dirigeant : × 2 sur l'électrique et
+     l'électronique, × 1,5 sur les robots, appliquée au prorata de la part électrique de chaque
+     poste). « Mise en position » : « large » au-delà du millimètre, le millimètre est déjà une
+     exigence.
 - Pas de « quiz découverte » : idée abandonnée par le dirigeant, remplacée par des outils
   réellement utiles au client (empreinte carbone, ordre de prix).
 - **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc
