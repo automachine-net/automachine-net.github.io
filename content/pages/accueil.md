@@ -42,7 +42,7 @@ blocs:
       Nous faisons un métier de commande : chaque machine part d'un problème que personne
       n'a encore résolu chez le client. Nous prenons en charge la conception, la fabrication,
       l'assemblage et la mise en service.
-    fond: sombre
+    fond: blanc
     image: ''
     image_alt: ''
     image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
@@ -52,7 +52,7 @@ blocs:
     fonction: Dire des trucs et faire un test
   - type: clients
     titre: ''
-    fond: blanc
+    fond: clair
   - type: appel
     titre: Un besoin de machine ?
     lien_libelle: Nous contacter
