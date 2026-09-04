@@ -14,9 +14,9 @@
       "materiel": true,
       "realisation": true,
       "socle": {
-        "materiel": 11250,
-        "etudes": 13125,
-        "realisation": 6560
+        "materiel": 9000,
+        "etudes": 10500,
+        "realisation": 5248
       }
     },
     {
@@ -27,9 +27,9 @@
       "materiel": true,
       "realisation": true,
       "socle": {
-        "materiel": 7500,
-        "etudes": 10500,
-        "realisation": 7000
+        "materiel": 6000,
+        "etudes": 8400,
+        "realisation": 5600
       }
     },
     {
@@ -41,7 +41,7 @@
       "realisation": false,
       "socle": {
         "materiel": 0,
-        "etudes": 4400,
+        "etudes": 3520,
         "realisation": 0
       }
     },
@@ -53,9 +53,9 @@
       "materiel": true,
       "realisation": true,
       "socle": {
-        "materiel": 10000,
-        "etudes": 1750,
-        "realisation": 7000
+        "materiel": 8000,
+        "etudes": 1400,
+        "realisation": 5600
       }
     }
   ],
@@ -67,31 +67,31 @@
       "unite": "axes",
       "aide": "Chaque mouvement commandé par un moteur : translation, rotation, déroulage, élévation…",
       "louche": {
-        "materiel": 6250,
-        "etudes": 2625,
-        "realisation": 2625
+        "materiel": 5000,
+        "etudes": 2100,
+        "realisation": 2100
       },
       "detail": [
         {
           "cle": "petits",
           "libelle": "Petits axes : jusqu'à 400 W, ou course jusqu'à 300 mm",
-          "materiel": 4400,
-          "etudes": 2190,
-          "realisation": 2190
+          "materiel": 3520,
+          "etudes": 1752,
+          "realisation": 1752
         },
         {
           "cle": "moyens",
           "libelle": "Axes moyens : 400 W à 3 kW, ou course jusqu'à 1,5 m",
-          "materiel": 7500,
-          "etudes": 2625,
-          "realisation": 2625
+          "materiel": 6000,
+          "etudes": 2100,
+          "realisation": 2100
         },
         {
           "cle": "gros",
           "libelle": "Gros axes : plus de 3 kW, course de plus de 1,5 m ou forte charge",
-          "materiel": 15000,
-          "etudes": 3500,
-          "realisation": 3500
+          "materiel": 12000,
+          "etudes": 2800,
+          "realisation": 2800
         }
       ]
     },
@@ -102,31 +102,31 @@
       "unite": "axes",
       "aide": "Vérins, pinces, poussoirs, tables élévatrices.",
       "louche": {
-        "materiel": 2500,
-        "etudes": 875,
-        "realisation": 875
+        "materiel": 2000,
+        "etudes": 700,
+        "realisation": 700
       },
       "detail": [
         {
           "cle": "pneu_petit",
           "libelle": "Pneumatiques, course jusqu’à 300 mm",
-          "materiel": 1900,
-          "etudes": 875,
-          "realisation": 875
+          "materiel": 1520,
+          "etudes": 700,
+          "realisation": 700
         },
         {
           "cle": "pneu_grand",
           "libelle": "Pneumatiques, course de plus de 300 mm ou fort effort",
-          "materiel": 3100,
-          "etudes": 1100,
-          "realisation": 1100
+          "materiel": 2480,
+          "etudes": 880,
+          "realisation": 880
         },
         {
           "cle": "hydraulique",
           "libelle": "Hydrauliques",
-          "materiel": 6250,
-          "etudes": 1750,
-          "realisation": 1750
+          "materiel": 5000,
+          "etudes": 1400,
+          "realisation": 1400
         }
       ]
     },
@@ -137,38 +137,38 @@
       "unite": "robots",
       "aide": "Robot six axes ou cobot, avec sa baie, son socle, son préhenseur et le développement de son application.",
       "louche": {
-        "materiel": 44000,
-        "etudes": 8750,
-        "realisation": 13125
+        "materiel": 35200,
+        "etudes": 7000,
+        "realisation": 10500
       },
       "detail": [
         {
           "cle": "petit",
           "libelle": "Petits, jusqu'à 10 kg",
-          "materiel": 44000,
-          "etudes": 8750,
-          "realisation": 13125
+          "materiel": 35200,
+          "etudes": 7000,
+          "realisation": 10500
         },
         {
           "cle": "moyen",
           "libelle": "Moyens, 10 à 50 kg",
-          "materiel": 69000,
-          "etudes": 10500,
-          "realisation": 15750
+          "materiel": 55200,
+          "etudes": 8400,
+          "realisation": 12600
         },
         {
           "cle": "gros",
           "libelle": "Gros, plus de 50 kg",
-          "materiel": 112500,
-          "etudes": 13125,
-          "realisation": 17500
+          "materiel": 90000,
+          "etudes": 10500,
+          "realisation": 14000
         },
         {
           "cle": "cobot",
           "libelle": "Cobots",
-          "materiel": 44000,
-          "etudes": 7000,
-          "realisation": 10500
+          "materiel": 35200,
+          "etudes": 5600,
+          "realisation": 8400
         }
       ]
     },
@@ -179,9 +179,9 @@
       "unite": "convoyeurs",
       "aide": "Convoyeur à bande ou à rouleaux motorisé, avec son variateur et ses capteurs de présence.",
       "louche": {
-        "materiel": 6250,
-        "etudes": 875,
-        "realisation": 875
+        "materiel": 5000,
+        "etudes": 700,
+        "realisation": 700
       }
     },
     {
@@ -191,9 +191,9 @@
       "unite": "outillages",
       "aide": "Posages, montages d’assemblage, outils de presse, gabarits de contrôle.\nComptez un outillage par opération à équiper.",
       "louche": {
-        "materiel": 1000,
-        "etudes": 2625,
-        "realisation": 440
+        "materiel": 800,
+        "etudes": 2100,
+        "realisation": 352
       }
     },
     {
@@ -212,23 +212,23 @@
         {
           "cle": "capteurs",
           "libelle": "Capteurs simples",
-          "materiel": 2500,
-          "etudes": 1750,
-          "realisation": 875
+          "materiel": 2000,
+          "etudes": 1400,
+          "realisation": 700
         },
         {
           "cle": "vision2d",
           "libelle": "Vision 2D",
-          "materiel": 12500,
-          "etudes": 5250,
-          "realisation": 5250
+          "materiel": 10000,
+          "etudes": 4200,
+          "realisation": 4200
         },
         {
           "cle": "vision3d",
           "libelle": "Vision 3D",
-          "materiel": 69000,
-          "etudes": 8750,
-          "realisation": 13125
+          "materiel": 55200,
+          "etudes": 7000,
+          "realisation": 10500
         }
       ]
     },
@@ -258,16 +258,16 @@
         {
           "cle": "m",
           "libelle": "Une personne peut entrer dans l'enceinte",
-          "materiel": 6250,
-          "etudes": 2625,
-          "realisation": 2625
+          "materiel": 5000,
+          "etudes": 2100,
+          "realisation": 2100
         },
         {
           "cle": "l",
           "libelle": "Une ligne ou plusieurs postes",
-          "materiel": 19000,
-          "etudes": 7000,
-          "realisation": 7000,
+          "materiel": 15200,
+          "etudes": 5600,
+          "realisation": 5600,
           "coefficients": {
             "socle": {
               "etudes": 1.2,
@@ -278,7 +278,8 @@
             }
           }
         }
-      ]
+      ],
+      "defaut": "m"
     },
     {
       "cle": "securite",
@@ -297,30 +298,30 @@
         {
           "cle": "enceinte",
           "libelle": "Enceinte grillagée et portes verrouillées",
-          "materiel": 6250,
-          "etudes": 875,
-          "realisation": 1750
+          "materiel": 5000,
+          "etudes": 700,
+          "realisation": 1400
         },
         {
           "cle": "automate",
           "libelle": "Automate de sécurité",
-          "materiel": 5000,
-          "etudes": 1750,
-          "realisation": 1750
+          "materiel": 4000,
+          "etudes": 1400,
+          "realisation": 1400
         },
         {
           "cle": "barrieres",
           "libelle": "Barrières immatérielles",
-          "materiel": 6250,
-          "etudes": 875,
-          "realisation": 875
+          "materiel": 5000,
+          "etudes": 700,
+          "realisation": 700
         },
         {
           "cle": "atex",
           "libelle": "Zone ATEX",
-          "materiel": 5000,
-          "etudes": 8750,
-          "realisation": 4375,
+          "materiel": 4000,
+          "etudes": 7000,
+          "realisation": 3500,
           "coefficients": {
             "socle": {
               "materiel": 1.5
@@ -357,36 +358,36 @@
           "cle": "ihm",
           "libelle": "Interface riche : recettes, historiques, plusieurs niveaux d'utilisateurs",
           "materiel": 0,
-          "etudes": 8750,
+          "etudes": 7000,
           "realisation": 0
         },
         {
           "cle": "tracabilite",
           "libelle": "Enregistrement et traçabilité : mesures horodatées, export",
-          "materiel": 1250,
-          "etudes": 4375,
-          "realisation": 875
+          "materiel": 1000,
+          "etudes": 3500,
+          "realisation": 700
         },
         {
           "cle": "supervision",
           "libelle": "Supervision et base de données",
-          "materiel": 2500,
-          "etudes": 10500,
-          "realisation": 2625
+          "materiel": 2000,
+          "etudes": 8400,
+          "realisation": 2100
         },
         {
           "cle": "metrologie",
           "libelle": "Mesure et métrologie : calibration, rapports",
-          "materiel": 3750,
-          "etudes": 8750,
-          "realisation": 4375
+          "materiel": 3000,
+          "etudes": 7000,
+          "realisation": 3500
         },
         {
           "cle": "communication",
           "libelle": "Communication avec votre système d'information",
           "materiel": 0,
-          "etudes": 5250,
-          "realisation": 1750
+          "etudes": 4200,
+          "realisation": 1400
         }
       ]
     },
@@ -399,9 +400,9 @@
         {
           "cle": "installation",
           "libelle": "Installation et recette sur votre site",
-          "materiel": 3750,
+          "materiel": 3000,
           "etudes": 0,
-          "realisation": 4375,
+          "realisation": 3500,
           "natures": [
             "neuve",
             "retrofit",
@@ -413,7 +414,7 @@
           "libelle": "Formation des opérateurs",
           "materiel": 0,
           "etudes": 0,
-          "realisation": 1750,
+          "realisation": 1400,
           "natures": [
             "neuve",
             "retrofit",
@@ -423,8 +424,8 @@
         {
           "cle": "certification",
           "libelle": "Certification par un organisme tiers",
-          "materiel": 5000,
-          "etudes": 1750,
+          "materiel": 4000,
+          "etudes": 1400,
           "realisation": 0,
           "natures": [
             "neuve",
@@ -544,5 +545,6 @@
       "cle": "gestion",
       "libelle": "Gestion de projet"
     }
-  ]
+  ],
+  "note_montants": "Montants hors taxes et hors marge : la marge commerciale est appliquée au calcul, depuis prix-indice.json."
 }

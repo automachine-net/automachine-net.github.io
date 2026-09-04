@@ -14,7 +14,8 @@
 // double selon la solution technique. La largeur de la fourchette est asymétrique, parce que
 // les dépassements sont plus fréquents que les économies.
 //
-// Les montants du fichier de données sont des prix de vente hors taxes : rien à ajouter.
+// Les montants du fichier de données sont des coûts hors taxes ; l'indice de prix et la
+// marge, réglés dans le CMS, s'appliquent au calcul.
 
 export type Montants = { materiel: number; etudes: number; realisation: number };
 
@@ -34,7 +35,7 @@ export type Option = Montants & {
 
 export type Poste =
 	| { cle: string; type: 'nombre'; libelle: string; unite: string; aide: string; louche: Montants; detail?: Option[] }
-	| { cle: string; type: 'choix'; libelle: string; aide: string; options: Option[] }
+	| { cle: string; type: 'choix'; libelle: string; aide: string; options: Option[]; defaut?: string }
 	| { cle: string; type: 'cases'; libelle: string; aide: string; options: Option[] };
 
 export interface Facteur {
@@ -115,8 +116,10 @@ export function formaterEuros(v: number): string {
 /**
  * @param indice Coefficient global appliqué à tous les montants, réglé dans le CMS pour
  * suivre l'inflation sans retoucher chaque valeur du modèle.
+ * @param margePct Marge commerciale, en pourcentage des coûts, réglée dans le CMS. Les
+ * montants du modèle sont des coûts : le prix affiché est coût × (1 + marge).
  */
-export function estimer(modele: Modele, e: Entrees, indice = 1): Resultat {
+export function estimer(modele: Modele, e: Entrees, indice = 1, margePct = 0): Resultat {
 	const nature = modele.natures.find((n) => n.cle === e.nature) ?? modele.natures[0];
 	const hypotheses: string[] = [nature.libelle];
 	let vide = true;
@@ -204,10 +207,12 @@ export function estimer(modele: Modele, e: Entrees, indice = 1): Resultat {
 	const total = zero();
 	for (const m of Object.values(parPoste)) ajouter(total, m);
 
-	// La nature du projet décide de ce qui compte ; l'indice suit l'inflation.
-	const materiel = (nature.materiel ? total.materiel : 0) * indice;
-	let etudes = (nature.etudes ? total.etudes : 0) * indice;
-	let realisation = (nature.realisation ? total.realisation : 0) * indice;
+	// La nature du projet décide de ce qui compte ; l'indice suit l'inflation ; la marge
+	// transforme les coûts en prix.
+	const k = indice * (1 + margePct / 100);
+	const materiel = (nature.materiel ? total.materiel : 0) * k;
+	let etudes = (nature.etudes ? total.etudes : 0) * k;
+	let realisation = (nature.realisation ? total.realisation : 0) * k;
 	let gestion = ((etudes + realisation) * modele.gestion_projet_pct) / 100;
 
 	// Le travail ne pèse jamais moins que le matériel : les trois postes de travail sont

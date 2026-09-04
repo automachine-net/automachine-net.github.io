@@ -83,7 +83,7 @@ const postes = modele.postes;
 								<div class="saisie">
 									<select id={`poste-${p.cle}`} data-choix={p.cle}>
 										{p.options.map((o, i) => (
-											<option value={o.cle} selected={i === 0}>
+											<option value={o.cle} selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}>
 												{o.libelle}
 											</option>
 										))}
@@ -297,7 +297,7 @@ const postes = modele.postes;
 		function recalculer() {
 			const e = lireEntrees();
 			ajusterALaNature(e.nature);
-			const r = estimer(M, e, Number(indicePrix.indice) || 1);
+			const r = estimer(M, e, Number(indicePrix.indice) || 1, Number(indicePrix.marge_pct) || 0);
 
 			if (r.vide) {
 				resultat.hidden = true;

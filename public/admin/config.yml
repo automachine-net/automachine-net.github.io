@@ -488,6 +488,14 @@ collections:
             min: 0.5
             max: 3
             hint: 1 = niveau des prix à la mise en service de l'outil (septembre 2026). 1,03 = + 3 %, 1,1 = + 10 %.
+          - name: marge_pct
+            label: Marge commerciale (%)
+            widget: number
+            value_type: float
+            step: 1
+            min: 0
+            max: 100
+            hint: Pourcentage ajouté aux coûts du modèle pour former le prix affiché. Attention, ce nombre est lisible par un visiteur qui inspecte le site.
           - { name: note, label: Note interne, widget: text, required: false }
 
       - name: flux-matieres

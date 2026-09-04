@@ -185,10 +185,14 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      de la machine et la complexité de la solution technique » ; pas de surcoût nucléaire
      (pas de nucléaire pour l'instant).
    - **Livré (2026-09-04)** : `/outils/estimateur-prix`, modèle dans `content/donnees/prix.json`,
-     calcul dans `src/scripts/prix.ts`. **Les montants du JSON sont des prix de vente** :
-     le taux journalier et la marge y sont déjà intégrés et n'apparaissent nulle part
-     (le dépôt est public). Le JSON ne contient aucun client ni prix réel. Page non indexée
-     tant que le dirigeant n'a pas validé les valeurs.
+     calcul dans `src/scripts/prix.ts`. Le JSON ne contient aucun client ni prix réel. Page non
+     indexée tant que le dirigeant n'a pas validé les valeurs.
+   - **Marge en clair (décision du dirigeant, 2026-09-04, après avertissement)** : les montants
+     du JSON sont des **coûts hors taxes** ; la marge (`marge_pct`) et l'indice vivent dans
+     `content/donnees/prix-indice.json`, réglables dans le CMS. Le dirigeant a été averti que
+     la marge est lisible dans le dépôt public et dans le code envoyé au navigateur ; il l'a
+     voulue ainsi. Le taux journalier, lui, n'apparaît nulle part (les jours sont convertis en
+     euros dans le JSON).
    - **Indice de prix** (`content/donnees/prix-indice.json`, réglable dans le CMS, rubrique
      Outils) : un seul coefficient multiplie tous les montants, pour suivre l'inflation sans
      retoucher le modèle. 1 = niveau de septembre 2026.
