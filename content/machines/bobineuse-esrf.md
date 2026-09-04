@@ -5,8 +5,7 @@ secteur: Recherche
 resume: Bobineuse de supraconducteur à tension régulée précise.
 description: '-'
 client: ESRF - Accélérateur de particules
-fichier_3d: /modeles/bobineuse-esrf.glb
-modele_3d: ''
+modele_3d: bobineuse
 caracteristiques: []
 image: ''
 image_alt: ''
