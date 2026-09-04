@@ -21,7 +21,8 @@ blocs:
     titre: Des machines que nous avons construites
     lien_libelle: Toutes les machines
     lien_url: /machines
-    bouton_libelle: Estimer le prix de la vôtre
+    bouton_texte: ''
+    bouton_libelle: Simuler le prix de la vôtre
     bouton_url: /outils/estimateur-prix
     fond: clair
     introduction: ''

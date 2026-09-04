@@ -71,6 +71,7 @@ const bloc = z.discriminatedUnion('type', [
 		lien_url: z.string().optional(),
 		bouton_libelle: z.string().optional(),
 		bouton_url: z.string().optional(),
+		bouton_texte: z.string().optional(),
 		fond,
 	}),
 	z.object({

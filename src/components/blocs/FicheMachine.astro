@@ -21,6 +21,8 @@ export interface BlocFicheMachine {
 	/** Bouton d'action sous le carrousel, distinct du lien discret placé près du titre. */
 	bouton_libelle?: string;
 	bouton_url?: string;
+	/** Phrase d'appel au-dessus du bouton. */
+	bouton_texte?: string;
 	fond?: 'blanc' | 'clair' | 'sombre';
 }
 
@@ -112,14 +114,15 @@ const choisies = bloc.machines?.length
 	
 		{
 			bloc.bouton_url && (
-				<p class="apres">
+				<div class="apres">
+					{bloc.bouton_texte && <p class="apres__texte">{typo(bloc.bouton_texte)}</p>}
 					<a
 						class={bloc.fond === 'sombre' ? 'bouton bouton--clair' : 'bouton'}
 						href={bloc.bouton_url}
 					>
-						{bloc.bouton_libelle ?? 'Estimer le prix de la vôtre'}
+						{bloc.bouton_libelle ?? 'Simuler le prix de la vôtre'}
 					</a>
-				</p>
+				</div>
 			)
 		}
 	</div>
@@ -232,6 +235,12 @@ const choisies = bloc.machines?.length
 	}
 	.apres {
 		margin: 1.75rem 0 0;
+	}
+	.apres__texte {
+		font-family: var(--titres);
+		font-size: 1.1rem;
+		font-weight: 500;
+		margin: 0 0 0.75rem;
 	}
 
 	.carrousel {

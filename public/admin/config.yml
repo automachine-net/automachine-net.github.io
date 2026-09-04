@@ -198,6 +198,13 @@ collections:
                 hint: Laisser vide pour montrer toutes les machines, dans leur ordre.
               - { name: lien_libelle, label: Lien — texte, widget: string, required: false }
               - { name: lien_url, label: Lien — adresse, widget: string, required: false }
+              - name: bouton_texte
+                label: Phrase au-dessus du bouton
+                widget: string
+                required: false
+                hint: >-
+                  Une phrase courte qui annonce ce que fait le bouton. Laisser vide pour n'en
+                  afficher aucune.
               - name: bouton_libelle
                 label: Bouton sous le carrousel — texte
                 widget: string
