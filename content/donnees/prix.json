@@ -444,6 +444,7 @@
       "libelle": "Précision de mise en position",
       "aide": "Avec quelle précision la machine doit-elle amener une pièce ou un outil ? Le dixième de millimètre impose des guidages et des mesures plus fins ; le centième change de famille de composants.",
       "postes": [
+        "socle",
         "axes_motorises",
         "axes_fluides",
         "robots",
