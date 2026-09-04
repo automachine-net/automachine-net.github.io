@@ -62,7 +62,7 @@ blocs:
     lien_libelle: Nous contacter
     lien_url: /contact
     texte: ''
-    fond: blanc
+    fond: clair
     image: ''
     image_alt: ''
     image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
