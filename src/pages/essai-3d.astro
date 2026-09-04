@@ -1,0 +1,154 @@
+---
+// Page d'essai temporaire : quatre rendus du même modèle, à comparer à l'œil.
+// Elle sert à trancher entre poids, aspect et couleur. À supprimer une fois le choix fait,
+// avec les fichiers /modeles/_essai-*.glb.
+import Base from '../layouts/Base.astro';
+
+const essais = [
+	{
+		titre: 'A · Fichier actuel',
+		src: '/modeles/bobineuse-esrf.glb',
+		look: 'mat',
+		poids: '6,9 Mo',
+		triangles: '4 460 000 triangles',
+		note: 'Ce qui est en ligne aujourd’hui. Une seule matière, teintée en gris-bleu à l’ouverture.',
+	},
+	{
+		titre: 'B · Allégé, même teinte',
+		src: '/modeles/_essai-mono.glb',
+		look: 'mat',
+		poids: '1,1 Mo',
+		triangles: '272 000 triangles',
+		note: 'Six fois plus léger. Vérifier si des arrondis ou de petites pièces ont souffert.',
+	},
+	{
+		titre: 'C · Allégé, aspect métal',
+		src: '/modeles/_essai-mono.glb',
+		look: 'metal',
+		poids: '1,1 Mo',
+		triangles: '272 000 triangles',
+		note: 'Même fichier que B, réglé en métal poli plutôt qu’en gris mat.',
+	},
+	{
+		titre: 'D · Allégé, trois teintes',
+		src: '/modeles/_essai-couleur.glb',
+		look: 'aucun',
+		poids: '1,1 Mo',
+		triangles: '273 000 triangles',
+		note: 'Teintes attribuées par taille de pièce : grandes, moyennes, petites. Ces couleurs sont une convention de dessin, pas les couleurs réelles de la machine.',
+	},
+];
+---
+
+<Base titre="Essai de rendu 3D" description="Comparaison de quatre rendus du même modèle" noindex>
+	<section class="bloc">
+		<div class="bloc__interieur">
+			<h1>Essai de rendu 3D</h1>
+			<p class="chapeau">
+				Le même modèle de bobineuse, rendu de quatre façons. Faites tourner chacun et
+				comparez : le poids indiqué est ce que le visiteur télécharge.
+			</p>
+			<div class="grille">
+				{
+					essais.map((e) => (
+						<figure>
+							<figcaption>
+								<strong>{e.titre}</strong>
+								<span class="mesure">
+									{e.poids} · {e.triangles}
+								</span>
+							</figcaption>
+							<model-viewer
+								src={e.src}
+								alt={e.titre}
+								data-look={e.look}
+								camera-controls
+								touch-action="pan-y"
+								environment-image="neutral"
+								shadow-intensity="1"
+								shadow-softness="0.7"
+								exposure="0.9"
+								interaction-prompt="none"
+							>
+								<div slot="poster" class="attente">Chargement…</div>
+								<p slot="progress-bar" hidden />
+							</model-viewer>
+							<p class="note">{e.note}</p>
+						</figure>
+					))
+				}
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	import { ModelViewerElement } from '@google/model-viewer';
+	ModelViewerElement.dracoDecoderLocation = '/decodeurs/draco/';
+	document.querySelectorAll('model-viewer').forEach((v) => {
+		v.addEventListener('load', () => {
+			const look = (v as HTMLElement).dataset.look;
+			if (look === 'aucun') return;
+			const materiaux = (v as unknown as { model?: { materials: any[] } }).model?.materials ?? [];
+			for (const m of materiaux) {
+				const p = m.pbrMetallicRoughness;
+				const [r, g, b] = p.baseColorFactor;
+				if (!(r > 0.85 && g > 0.85 && b > 0.85)) continue;
+				if (look === 'mat') {
+					p.setBaseColorFactor([0.62, 0.7, 0.78, 1]);
+					p.setMetallicFactor(0.1);
+					p.setRoughnessFactor(0.65);
+				} else {
+					p.setBaseColorFactor([0.72, 0.75, 0.78, 1]);
+					p.setMetallicFactor(0.85);
+					p.setRoughnessFactor(0.3);
+				}
+			}
+		});
+	});
+</script>
+
+<style>
+	.grille {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+	figure {
+		margin: 0;
+	}
+	figcaption {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem;
+		font-family: var(--titres);
+		margin-bottom: 0.5rem;
+	}
+	.mesure {
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	model-viewer {
+		display: block;
+		width: 100%;
+		height: 24rem;
+		background: var(--gris-clair);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+	}
+	.attente {
+		display: grid;
+		place-items: center;
+		height: 100%;
+		font-family: var(--titres);
+		color: var(--gris-leger);
+	}
+	.note {
+		margin: 0.6rem 0 0;
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+</style>

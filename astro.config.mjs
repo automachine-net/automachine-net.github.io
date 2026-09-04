@@ -13,7 +13,12 @@ const SITE = 'https://automachine-net.github.io';
  * Pages écrites en dur dans src/pages/ qui ne doivent pas être référencées.
  * Les modules qui ne sont pas encore en service en font partie.
  */
-const PAGES_NON_REFERENCEES = ['/outils/simulateur-carbone', '/outils/reversibilite'];
+const PAGES_NON_REFERENCEES = [
+	'/outils/simulateur-carbone',
+	'/outils/reversibilite',
+	'/outils/estimateur-prix',
+	'/essai-3d',
+];
 
 /**
  * Pages de contenu dont la case « Masquer aux moteurs de recherche » est cochée dans le CMS.
