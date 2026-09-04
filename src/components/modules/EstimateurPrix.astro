@@ -386,10 +386,12 @@ const postes = modele.postes;
 		margin: 0 0 1.5rem;
 	}
 
+	/* Chaque grande section s'annonce franchement : un titre de la taille d'un h2, précédé
+	   d'un trait orange court, et un large espace au-dessus. */
 	.section {
 		border: 0;
 		padding: 0;
-		margin: 0 0 2.5rem;
+		margin: 0 0 3.5rem;
 	}
 	.section:last-of-type {
 		margin-bottom: 0;
@@ -397,10 +399,20 @@ const postes = modele.postes;
 	.section legend {
 		padding: 0;
 		font-family: var(--titres);
-		font-weight: 600;
-		font-size: 1.15rem;
+		font-weight: 700;
+		font-size: 1.5rem;
+		line-height: 1.1;
 		color: var(--bleu-nuit);
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
+	}
+	.section legend::before {
+		content: '';
+		display: block;
+		width: 2.5rem;
+		height: 4px;
+		border-radius: 2px;
+		background: var(--orange);
+		margin-bottom: 0.6rem;
 	}
 	.consigne {
 		margin: 0 0 1.25rem;
@@ -673,6 +685,8 @@ const postes = modele.postes;
 		font-weight: 400;
 		line-height: 1.45;
 		text-align: left;
+		/* Les retours à la ligne du texte d'aide sont respectés : une phrase par ligne. */
+		white-space: pre-line;
 		opacity: 0;
 		visibility: hidden;
 		transition:

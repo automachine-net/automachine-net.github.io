@@ -392,7 +392,7 @@ collections:
               - { name: reference, label: Référence dans le règlement, widget: string }
 
       - name: facteurs-carbone
-        label: Facteurs d'émission du simulateur carbone
+        label: Simulateur carbone
         file: content/donnees/facteurs-carbone.json
         description: >-
           Chaque ligne vient de la Base Empreinte de l'ADEME. Ne jamais saisir une valeur sans
@@ -464,7 +464,7 @@ collections:
               - { name: remarque, label: Remarque, widget: text }
 
       - name: prix-indice
-        label: Estimateur de prix — indice
+        label: Estimateur de prix
         file: content/donnees/prix-indice.json
         description: Un seul nombre pour suivre l'inflation, sans toucher aux valeurs de l'estimateur.
         fields:
@@ -479,7 +479,7 @@ collections:
           - { name: note, label: Note interne, widget: text, required: false }
 
       - name: flux-matieres
-        label: Où va la matière ? — données et étapes
+        label: Où va la matière ?
         file: content/donnees/flux-matieres.json
         description: >-
           Les valeurs viennent du Compte de flux de matières (SDES). Les étapes sont le
@@ -523,7 +523,7 @@ collections:
               - { name: cumul_libelle, label: Texte de l'encadré, widget: string, required: false }
 
       - name: reversibilite
-        label: Boucle ou hélice ? — critères et verdicts
+        label: Boucle ou hélice ?
         file: content/donnees/reversibilite.json
         description: Les quatre critères de réversibilité, leurs seuils, et les phrases de verdict.
         fields:

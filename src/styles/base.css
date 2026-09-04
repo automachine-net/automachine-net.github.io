@@ -48,6 +48,11 @@ input[type='number'] {
 	text-align: right;
 }
 
+/* En-tête des pages d'outils : le chapeau suit le titre de près. */
+.entete h1 {
+	margin-bottom: 0.3em;
+}
+
 html {
 	-webkit-text-size-adjust: 100%;
 	scroll-behavior: smooth;

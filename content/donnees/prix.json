@@ -108,11 +108,18 @@
       },
       "detail": [
         {
-          "cle": "pneumatique",
-          "libelle": "Pneumatiques",
+          "cle": "pneu_petit",
+          "libelle": "Pneumatiques, course jusqu’à 300 mm",
           "materiel": 1900,
           "etudes": 875,
           "realisation": 875
+        },
+        {
+          "cle": "pneu_grand",
+          "libelle": "Pneumatiques, course de plus de 300 mm ou fort effort",
+          "materiel": 3100,
+          "etudes": 1100,
+          "realisation": 1100
         },
         {
           "cle": "hydraulique",
@@ -182,7 +189,7 @@
       "type": "nombre",
       "libelle": "Outillages et posages sans motorisation",
       "unite": "outillages",
-      "aide": "Posages, montages d'assemblage, outils de presse, gabarits de contrôle. Comptez un outillage par opération à équiper.",
+      "aide": "Posages, montages d’assemblage, outils de presse, gabarits de contrôle.\nComptez un outillage par opération à équiper.",
       "louche": {
         "materiel": 1000,
         "etudes": 2625,
@@ -193,7 +200,7 @@
       "cle": "controle",
       "type": "choix",
       "libelle": "Contrôle et vision",
-      "aide": "Ce que la machine doit vérifier ou reconnaître. Des capteurs simples détectent une présence ou une position. La vision 2D lit, mesure ou trie dans un plan. La vision 3D localise des objets en vrac ou de forme variable.",
+      "aide": "Ce que la machine doit vérifier ou reconnaître.\nDes capteurs simples détectent une présence ou une position.\nLa vision 2D lit, mesure ou trie dans un plan.\nLa vision 3D localise des objets en vrac ou de forme variable.",
       "options": [
         {
           "cle": "aucun",
@@ -258,7 +265,7 @@
       "cle": "securite",
       "type": "cases",
       "libelle": "Sécurité",
-      "aide": "Le niveau de protection dépend des dangers de la machine et du lieu. Une enceinte grillagée suffit à une machine lente. Un automate de sécurité s'impose dès qu'un opérateur intervient près d'un mouvement. L'ATEX renchérit tout le matériel électrique et ajoute la certification.",
+      "aide": "Le niveau de protection dépend des dangers de la machine et du lieu.\nUne enceinte grillagée suffit à une machine lente.\nUn automate de sécurité s’impose dès qu’un opérateur intervient près d’un mouvement.",
       "options": [
         {
           "cle": "base",
