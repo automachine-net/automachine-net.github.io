@@ -39,11 +39,11 @@ blocs:
     lien_libelle: Découvrir l’entreprise
     lien_url: /entreprise
     texte: |-
-      Depuis 2011, AUTOMACHINE accompagne les industriels, les acteurs de la recherche et les professionnels de secteurs spécialisés dans la conception et la réalisation de machines sur mesure.
+      Depuis 2011, AUTOMACHINE conçoit et réalise des machines spéciales sur mesure pour l’industrie, la recherche et des secteurs spécialisés.
 
       Mécanique, automatisme, robotique, électrotechnique : notre équipe réunit les compétences nécessaires pour transformer un besoin spécifique en machine fiable, fonctionnelle et adaptée à son environnement.
 
-      Notre démarche s’appuie sur une culture de la qualité et de la rigueur, reconnue notamment par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
+      Notre exigence en matière de qualité s’est notamment traduite par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
 
       **Un problème à résoudre, une machine à inventer : c’est notre métier.**
     fond: sombre
