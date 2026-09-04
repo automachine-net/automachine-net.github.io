@@ -161,6 +161,12 @@ via le bloc « module ». Aucune donnée personnelle collectée.
    robots, niveau de sécurité demandé. Méthode, bornes et avertissements à arrêter avec le
    dirigeant avant toute mise en ligne. Rien n'est développé tant que la méthode n'est pas
    validée : un ordre de prix public engage l'entreprise.
+   - **2026-09-04** : six dossiers de chiffrage déposés dans `ressources/chiffrages/` (exclu du
+     dépôt). Dépouillement et ébauche de méthode dans `ressources/chiffrages/SYNTHESE-prechiffrage.md`
+     (confidentiel, jamais dans le dépôt). Modèle additif par postes (socle, axes, robots, vision,
+     sécurité, encombrement, installation), fourchette −25 % / +35 %, calibré sur cinq machines.
+     Questions en attente : prix vendus manquants, dates et taux journalier à retenir, marge,
+     questions à poser au visiteur, limites de l'outil. Les dossiers CEA restent confidentiels.
 - Pas de « quiz découverte » : idée abandonnée par le dirigeant, remplacée par des outils
   réellement utiles au client (empreinte carbone, ordre de prix).
 - **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc
