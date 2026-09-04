@@ -185,8 +185,12 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	.chapeau {
 		font-size: 1.15rem;
 	}
-	.methode {
-		max-width: 52rem;
+	/* Aligné sur le simulateur au-dessus (pleine largeur) : un conteneur plus étroit se
+	   centrerait et paraîtrait décalé. Ce sont les paragraphes qui gardent une longueur de
+	   ligne confortable, pas le conteneur. */
+	.methodologie__corps p,
+	.methodologie__corps li {
+		max-width: var(--mesure);
 	}
 
 	/* La méthodologie est repliée : elle intéresse qui veut vérifier, pas qui veut estimer. */
