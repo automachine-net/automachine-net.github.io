@@ -29,7 +29,7 @@ blocs:
     titre: Combien coûterait votre machine ?
     lien_libelle: ''
     lien_url: ''
-    fond: clair
+    fond: blanc
     introduction: ''
     module: estimateur-prix
     nombre_questions: 3
