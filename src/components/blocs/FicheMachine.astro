@@ -50,7 +50,15 @@ const choisies = bloc.machines?.length
 				{
 					choisies.map((m) => (
 						<li class="carte">
-							{m.data.fichier_3d ? (
+							{m.data.video_affiche ? (
+								<img
+									class="carte__image"
+									src={m.data.video_affiche}
+									alt=""
+									loading="lazy"
+									decoding="async"
+								/>
+							) : m.data.fichier_3d ? (
 								<div class="carte__modele">
 									<ModeleGltf src={m.data.fichier_3d} nom={m.data.nom} interactif={false} />
 								</div>
@@ -270,6 +278,13 @@ const choisies = bloc.machines?.length
 
 	/* Flèches : discrètes, hors du flux, cachées tant que JavaScript n'a pas pris la main. */
 	/* Le vrai modèle prend la place du volume d'attente, au même format. */
+	.carte__image {
+		display: block;
+		width: 100%;
+		aspect-ratio: 480 / 340;
+		object-fit: cover;
+		border-radius: var(--rayon);
+	}
 	.carte__modele {
 		aspect-ratio: 480 / 340;
 	}

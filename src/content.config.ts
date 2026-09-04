@@ -142,6 +142,10 @@ const machines = defineCollection({
 		description: z.string(),
 		/** Nom du client, uniquement avec son accord écrit. Sinon, laisser vide. */
 		client: z.string().optional(),
+		/** Animation en boucle de la machine (.mp4), téléversée depuis le CMS dans /videos. */
+		video: z.string().optional(),
+		/** Image affichée avant le démarrage de l'animation. */
+		video_affiche: z.string().optional(),
 		/** Chemin du modèle glTF binaire (.glb), téléversé depuis le CMS dans /modeles. */
 		fichier_3d: z.string().optional(),
 		/** Volume d'attente (dessin filaire), tant qu'il n'y a pas de fichier 3D. */

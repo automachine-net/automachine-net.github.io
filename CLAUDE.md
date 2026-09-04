@@ -119,6 +119,15 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
   Décodeur Draco auto-hébergé dans `public/decodeurs/draco/`. Champ CMS en chemin absolu
   (`/public/modeles`). Cartes et liste : modèle chargé au clic seulement (`reveal=interaction`).
   **Go / no-go mobile toujours à faire par le dirigeant.**
+- **2026-09-04, retour du dirigeant sur la 3D** : le rendu est jugé inutilisable. Mesuré dans
+  le fichier : 911 pièces mais une seule matière grise, noms de pièces perdus, apparences de
+  Fusion non exportées. Une couleur ajoutée ici serait inventée. L'allègement agressif
+  (272 000 triangles, 1,1 Mo) casse la géométrie : abandonné. **Décision : passer à
+  l'animation vidéo en boucle**, calculée dans Fusion où les matières et l'éclairage existent
+  déjà. Deux champs CMS par machine (« Animation (.mp4) », « Image d'attente ») ; quand une
+  animation existe, elle remplace la visionneuse sur la fiche. Attentes techniques (poids,
+  durée, boucle fermée) dans `docs/3D.md`. La visionneuse glTF reste en place pour un futur
+  modèle correctement exporté.
 - Cinématiques animées dans Fusion, exportées en vidéo courte, intégrées en boucle muette.
   Procédure complète dans `docs/3D.md`.
 

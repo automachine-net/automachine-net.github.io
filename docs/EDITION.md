@@ -107,7 +107,12 @@ donne le rythme de la page. Alterner sans excès, deux ou trois fonds sombres pa
    laisser vide, et seul le secteur sera affiché.
 4. **Fiche technique** : ajouter autant de lignes que nécessaire, chacune avec un libellé et
    une valeur.
-5. Enregistrer. La machine apparaît automatiquement sur la page Machines et sur l'accueil.
+5. **Animation (.mp4)** : la petite vidéo de la machine, en boucle et sans son. Elle est
+   affichée en haut de la fiche. Ajouter aussi une **image d'attente**, qui s'affiche le
+   temps que la vidéo arrive. Ce que doit contenir la vidéo est décrit dans `docs/3D.md`.
+6. **Fichier 3D (.glb)** : à ne remplir que si le modèle est présentable. Quand une animation
+   existe, elle passe devant le modèle 3D.
+7. Enregistrer. La machine apparaît automatiquement sur la page Machines et sur l'accueil.
 
 ## 7. Changer une coordonnée, un menu, un logo
 

@@ -1,0 +1,110 @@
+---
+// Animation d'une machine, en boucle muette.
+//
+// Elle remplace la manipulation en trois dimensions quand le modèle n'est pas présentable :
+// les couleurs et l'éclairage viennent du logiciel de CAO, qui les connaît, plutôt que d'une
+// teinte appliquée après coup dans le navigateur.
+//
+// Rien ne se télécharge tant que la vidéo n'approche pas de l'écran. Elle ne démarre pas
+// toute seule si le visiteur a demandé à son système de limiter les animations, et un bouton
+// permet toujours de l'arrêter : une animation qui tourne sans pouvoir être arrêtée est un
+// défaut d'accessibilité.
+interface Props {
+	src: string;
+	affiche?: string;
+	nom: string;
+}
+const { src, affiche, nom } = Astro.props;
+---
+
+<div class="video" data-video>
+	<video
+		class="video__film"
+		src={src}
+		poster={affiche}
+		muted
+		loop
+		playsinline
+		preload="none"
+		aria-label={`Animation de la machine : ${nom}`}
+	></video>
+	<button type="button" class="video__bouton" data-bascule aria-pressed="false">
+		<span class="video__libelle">Mettre en pause</span>
+	</button>
+</div>
+
+<script>
+	for (const bloc of document.querySelectorAll<HTMLElement>('[data-video]')) {
+		const film = bloc.querySelector('video')!;
+		const bouton = bloc.querySelector<HTMLButtonElement>('[data-bascule]')!;
+		const libelle = bouton.querySelector<HTMLElement>('.video__libelle')!;
+		const sobre = matchMedia('(prefers-reduced-motion: reduce)');
+
+		const afficher = () => {
+			const enLecture = !film.paused;
+			libelle.textContent = enLecture ? 'Mettre en pause' : 'Lancer l’animation';
+			bouton.setAttribute('aria-pressed', String(!enLecture));
+			bloc.classList.toggle('est-arrete', !enLecture);
+		};
+
+		bouton.addEventListener('click', () => {
+			if (film.paused) film.play();
+			else film.pause();
+			afficher();
+		});
+		film.addEventListener('play', afficher);
+		film.addEventListener('pause', afficher);
+
+		// Le fichier n'est demandé qu'à l'approche de l'écran, et une seule fois.
+		const guetteur = new IntersectionObserver(
+			(entrees) => {
+				for (const e of entrees) {
+					if (!e.isIntersecting) continue;
+					guetteur.disconnect();
+					film.preload = 'auto';
+					film.load();
+					if (!sobre.matches) film.play().catch(() => afficher());
+					else afficher();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+		guetteur.observe(bloc);
+		afficher();
+	}
+</script>
+
+<style>
+	.video {
+		position: relative;
+		background: var(--gris-clair);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		overflow: hidden;
+	}
+	.video__film {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.video__bouton {
+		position: absolute;
+		right: 0.75rem;
+		bottom: 0.75rem;
+		padding: 0.45rem 0.85rem;
+		font-family: var(--titres);
+		font-size: 0.85rem;
+		color: var(--blanc);
+		background: rgb(0 0 0 / 0.55);
+		border: 1px solid rgb(255 255 255 / 0.35);
+		border-radius: var(--rayon);
+		cursor: pointer;
+	}
+	.video__bouton:hover {
+		background: rgb(0 0 0 / 0.75);
+	}
+	.video__bouton:focus-visible {
+		outline: 2px solid var(--orange);
+		outline-offset: 2px;
+	}
+</style>

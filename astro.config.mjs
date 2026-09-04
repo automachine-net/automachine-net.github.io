@@ -17,7 +17,6 @@ const PAGES_NON_REFERENCEES = [
 	'/outils/simulateur-carbone',
 	'/outils/reversibilite',
 	'/outils/estimateur-prix',
-	'/essai-3d',
 ];
 
 /**

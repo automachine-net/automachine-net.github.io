@@ -321,6 +321,25 @@ collections:
         hint: >-
           À ne remplir QUE si le client a donné son accord écrit. Sinon, laisser vide, et seul
           le secteur sera affiché.
+      - name: video
+        label: Animation (.mp4)
+        widget: file
+        required: false
+        media_folder: /public/videos
+        public_folder: /videos
+        hint: >-
+          Animation courte de la machine, en boucle et sans son. Format MP4, moins de 3 Mo.
+          Elle est affichée à la place du modèle 3D quand elle existe. La procédure d'export
+          est dans docs/3D.md.
+      - name: video_affiche
+        label: Image d'attente de l'animation
+        widget: image
+        required: false
+        media_folder: /public/videos
+        public_folder: /videos
+        hint: >-
+          Première image de l'animation, affichée avant qu'elle ne démarre. Sans elle, le
+          cadre reste vide quelques instants.
       - name: fichier_3d
         label: Fichier 3D (.glb)
         widget: file

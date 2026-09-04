@@ -7,6 +7,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
 import ModeleGltf from '../../components/ModeleGltf.astro';
+import VideoBoucle from '../../components/VideoBoucle.astro';
 import { marked } from '../../scripts/markdown';
 import { typo } from '../../scripts/typographie';
 
@@ -35,7 +36,19 @@ const suivante = toutes[(position + 1) % toutes.length];
 		</header>
 
 		{
-			d.fichier_3d && (
+			d.video && (
+				<section class="bloc fiche__visionneuse">
+					<div class="bloc__interieur">
+						<figure>
+							<VideoBoucle src={d.video} affiche={d.video_affiche} nom={d.nom} />
+						</figure>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			!d.video && d.fichier_3d && (
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
@@ -55,7 +68,7 @@ const suivante = toutes[(position + 1) % toutes.length];
 		}
 
 		{
-			!d.fichier_3d && d.modele_3d && (
+			!d.video && !d.fichier_3d && d.modele_3d && (
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
