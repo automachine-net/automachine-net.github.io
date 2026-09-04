@@ -21,19 +21,12 @@ blocs:
     titre: Des machines que nous avons construites
     lien_libelle: Toutes les machines
     lien_url: /machines
+    bouton_libelle: Estimer le prix de la vôtre
+    bouton_url: /outils/estimateur-prix
     fond: clair
     introduction: ''
     machines:
       - bobineuse-esrf
-  - type: module
-    titre: Combien coûterait votre machine ?
-    lien_libelle: ''
-    lien_url: ''
-    fond: blanc
-    introduction: ''
-    module: estimateur-prix
-    nombre_questions: 3
-    attente: ''
   - type: texte-image
     titre: L’ingénierie sur mesure, du concept à la machine
     lien_libelle: Découvrir l’entreprise

@@ -229,6 +229,11 @@ s'ajoute à la liste du bloc en même temps qu'il est créé.
 - **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc
   parapluie « Outils ». Pas de texte parasite (score, thème de question, mentions de nombre
   de questions qui peuvent décourager).
+  - **Exception, décidée le 2026-09-04** : l'estimateur de prix n'a pas de bloc à lui sur
+    l'accueil. Même réduit à cinq questions, il occupait trop de place. Il est appelé par un
+    bouton « Estimer le prix de la vôtre » posé sous le carrousel des machines, où la
+    question se pose naturellement. La version d'aperçu du module reste disponible pour
+    une autre page.
 
 ## Qualité
 

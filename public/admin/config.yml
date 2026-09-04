@@ -198,6 +198,14 @@ collections:
                 hint: Laisser vide pour montrer toutes les machines, dans leur ordre.
               - { name: lien_libelle, label: Lien — texte, widget: string, required: false }
               - { name: lien_url, label: Lien — adresse, widget: string, required: false }
+              - name: bouton_libelle
+                label: Bouton sous le carrousel — texte
+                widget: string
+                required: false
+                hint: >-
+                  Bouton bien visible sous les cartes, en plus du lien discret placé à côté du
+                  titre. Laisser vide pour ne pas en afficher.
+              - { name: bouton_url, label: Bouton sous le carrousel — adresse, widget: string, required: false }
               - *fond
 
           # ------------------------------------------------ Visionneuse 3D

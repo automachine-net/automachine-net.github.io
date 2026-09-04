@@ -69,6 +69,8 @@ const bloc = z.discriminatedUnion('type', [
 		machines: z.array(z.string()).optional(),
 		lien_libelle: z.string().optional(),
 		lien_url: z.string().optional(),
+		bouton_libelle: z.string().optional(),
+		bouton_url: z.string().optional(),
 		fond,
 	}),
 	z.object({
