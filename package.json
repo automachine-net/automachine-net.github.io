@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
+    "@google/model-viewer": "^4.3.1",
     "@sveltia/cms": "0.205.0",
     "astro": "^7.2.10",
     "marked": "18.0.11"

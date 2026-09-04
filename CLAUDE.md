@@ -107,6 +107,13 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
 - Rien de confidentiel dans les modèles publiés : pas de cotes, d'usinage, de marquage client.
 - Une machine de bout en bout d'abord, test mobile réel, go / no-go avant les cinq autres.
   No-go = images fixes calculées depuis les mêmes modèles.
+- **2026-09-04, lot 3 amorcé** : champ « Fichier 3D (.glb) » sur chaque fiche machine dans le
+  CMS (téléversement dans `public/modeles/`), visionneuse `<model-viewer>` (dépendance
+  `@google/model-viewer`, seul composant standard pour glTF, chargé uniquement sur les fiches
+  qui ont un fichier, servi depuis notre domaine). Le dirigeant a exporté un STEP de 33 Mo :
+  inutilisable tel quel, il faut un maillage OBJ nettoyé, converti en `.glb` (obj2gltf +
+  gltf-pipeline, hors projet) ; procédure dans `docs/3D.md`. Décodeur Draco à auto-héberger
+  à la première machine compressée.
 - Cinématiques animées dans Fusion, exportées en vidéo courte, intégrées en boucle muette.
   Procédure complète dans `docs/3D.md`.
 

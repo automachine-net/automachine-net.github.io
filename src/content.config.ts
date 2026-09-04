@@ -142,7 +142,9 @@ const machines = defineCollection({
 		description: z.string(),
 		/** Nom du client, uniquement avec son accord écrit. Sinon, laisser vide. */
 		client: z.string().optional(),
-		/** Identifiant du volume ou modèle 3D à afficher. Vide = pas de visionneuse. */
+		/** Chemin du modèle glTF binaire (.glb), téléversé depuis le CMS dans /modeles. */
+		fichier_3d: z.string().optional(),
+		/** Volume d'attente (dessin filaire), tant qu'il n'y a pas de fichier 3D. */
 		modele_3d: z.string().optional(),
 		/** Lignes de la fiche technique : libellé et valeur. */
 		caracteristiques: z.array(z.object({ libelle: z.string(), valeur: z.string() })).default([]),

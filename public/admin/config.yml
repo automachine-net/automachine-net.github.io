@@ -321,8 +321,18 @@ collections:
         hint: >-
           À ne remplir QUE si le client a donné son accord écrit. Sinon, laisser vide, et seul
           le secteur sera affiché.
+      - name: fichier_3d
+        label: Fichier 3D (.glb)
+        widget: file
+        required: false
+        media_folder: public/modeles
+        public_folder: /modeles
+        hint: >-
+          Format glTF binaire (.glb) uniquement : ni STEP, ni STL. Entre 2 et 5 Mo, jamais plus
+          de 10 Mo. Aucune cote, aucun usinage, aucun marquage client dans le modèle. La
+          procédure de préparation est dans docs/3D.md.
       - name: modele_3d
-        label: Modèle 3D à afficher
+        label: Volume d'attente, tant qu'il n'y a pas de fichier 3D
         widget: select
         required: false
         options:
