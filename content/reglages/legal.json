@@ -1,11 +1,11 @@
 {
   "raison_sociale": "AUTOMACHINE",
   "forme_juridique": "Société à responsabilité limitée (SARL)",
-  "capital_social": "[À COMPLÉTER : montant du capital social, en euros]",
+  "capital_social": "14 000,00 €",
   "siren": "530 875 780",
   "siret_siege": "530 875 780 00062",
   "tva_intracommunautaire": "FR66530875780",
-  "rcs": "[À COMPLÉTER : ville du greffe, par exemple « RCS Tours 530 875 780 »]",
+  "rcs": "530 875 780 R.C.S. Tours",
   "code_ape": "46.69B",
   "libelle_ape": "Commerce de gros (commerce interentreprises) de fournitures et équipements industriels divers",
   "date_creation": "10 mars 2011",
@@ -13,5 +13,5 @@
   "hebergeur_nom": "Infomaniak Network SA",
   "hebergeur_adresse": "Rue Eugène-Marziano 25, 1227 Les Acacias, Genève, Suisse",
   "hebergeur_telephone": "+41 22 820 35 44",
-  "note": "Données d'identification issues du répertoire Sirene (INSEE) au 2 septembre 2026. Le capital social et le greffe ne figurent pas dans ces données ouvertes : à compléter depuis les statuts ou l'extrait Kbis."
+  "note": ""
 }
