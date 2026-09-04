@@ -35,16 +35,17 @@ blocs:
     nombre_questions: 3
     attente: ''
   - type: texte-image
-    titre: L’entreprise
+    titre: L’ingénierie sur mesure, du concept à la machine
     lien_libelle: Découvrir l’entreprise
     lien_url: /entreprise
     texte: |-
-      [à relire] Automachine est née en 2011 sous le nom de Sourcitem et porte son nom actuel
-      depuis 2017. L'entreprise est installée à Tours et dirigée par son fondateur.
+      Depuis 2011, AUTOMACHINE accompagne les industriels, les acteurs de la recherche et les professionnels de secteurs spécialisés dans la conception et la réalisation de machines sur mesure.
 
-      Nous faisons un métier de commande : chaque machine part d'un problème que personne
-      n'a encore résolu chez le client. Nous prenons en charge la conception, la fabrication,
-      l'assemblage et la mise en service.
+      Mécanique, automatisme, robotique, électrotechnique : notre équipe réunit les compétences nécessaires pour transformer un besoin spécifique en machine fiable, fonctionnelle et adaptée à son environnement.
+
+      Notre démarche s’appuie sur une culture de la qualité et de la rigueur, reconnue notamment par l’obtention des certifications **ISO 9001 et ISO 14001 en 2017**.
+
+      **Un problème à résoudre, une machine à inventer : c’est notre métier.**
     fond: sombre
     image: /images/contenu/DSCF6411.JPG
     image_alt: ''
