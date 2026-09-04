@@ -1,0 +1,777 @@
+---
+// Estimateur d'ordre de prix d'une machine spéciale.
+//
+// Le modèle vit dans content/donnees/prix.json, le calcul dans src/scripts/prix.ts et tourne
+// dans le navigateur : aucune donnée saisie ne quitte le poste du visiteur.
+//
+// Comme le simulateur carbone : des réponses à la louche suffisent, et chaque poste qui s'y
+// prête se déplie pour un détail plus fin. Le résultat est une fourchette, jamais un chiffre.
+import modele from '../../../content/donnees/prix.json';
+import { typo } from '../../scripts/typographie';
+
+const natures = modele.natures;
+const postes = modele.postes;
+---
+
+<form class="estimateur" data-estimateur novalidate>
+	<p class="sans-js">
+		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
+		exécuter.
+	</p>
+
+	<fieldset class="section">
+		<legend>De quel projet s’agit-il ?</legend>
+		<div class="natures">
+			{
+				natures.map((n, i) => (
+					<label class="nature">
+						<input type="radio" name="nature" value={n.cle} checked={i === 0} data-nature />
+						<span class="nature__corps">
+							<span class="nature__nom">{n.libelle}</span>
+							<span class="nature__texte">{typo(n.description)}</span>
+						</span>
+					</label>
+				))
+			}
+		</div>
+	</fieldset>
+
+	<fieldset class="section">
+		<legend>Ce que contient la machine</legend>
+		<p class="consigne">
+			Répondez à la louche. Chaque poste qui s’y prête se déplie pour préciser. Ce que vous
+			ne renseignez pas ne compte pas.
+		</p>
+
+		<div class="postes">
+			{
+				postes.map((p) => (
+					<div class="poste" data-poste={p.cle} data-type={p.type}>
+						<div class="poste__tete">
+							<span class="poste__nom">
+								{p.type === 'nombre' ? (
+									<label for={`poste-${p.cle}`}>{p.libelle}</label>
+								) : p.type === 'choix' ? (
+									<label for={`poste-${p.cle}`}>{p.libelle}</label>
+								) : (
+									<span class="poste__libelle" id={`poste-${p.cle}-nom`}>{p.libelle}</span>
+								)}
+								<span class="aide" data-aide data-bulle>
+									<button type="button" class="aide-bouton" aria-describedby={`aide-${p.cle}`}>
+										<span aria-hidden="true">?</span>
+										<span class="sr-only">Que change ce paramètre ?</span>
+									</button>
+									<span class="bulle" role="tooltip" id={`aide-${p.cle}`}>
+										{typo(p.aide)}
+									</span>
+								</span>
+							</span>
+
+							{p.type === 'nombre' && (
+								<div class="saisie">
+									<input
+										type="number"
+										id={`poste-${p.cle}`}
+										data-nombre={p.cle}
+										min="0"
+										step="1"
+										placeholder="0"
+										inputmode="numeric"
+									/>
+									<span class="unite">{p.unite}</span>
+								</div>
+							)}
+							{p.type === 'choix' && (
+								<div class="saisie">
+									<select id={`poste-${p.cle}`} data-choix={p.cle}>
+										{p.options.map((o, i) => (
+											<option value={o.cle} selected={i === 0}>
+												{o.libelle}
+											</option>
+										))}
+									</select>
+								</div>
+							)}
+							{p.type === 'nombre' && 'detail' in p && p.detail && (
+								<button type="button" class="detailler" data-detailler={p.cle} aria-expanded="false">
+									Afficher le détail
+								</button>
+							)}
+						</div>
+
+						{p.type === 'cases' && (
+							<div class="cases" role="group" aria-labelledby={`poste-${p.cle}-nom`}>
+								{p.options.map((o) => (
+									<label class="case" data-natures={o.natures ? o.natures.join(' ') : undefined}>
+										<input type="checkbox" data-case={p.cle} value={o.cle} />
+										<span>{typo(o.libelle)}</span>
+									</label>
+								))}
+							</div>
+						)}
+
+						{p.type === 'nombre' && 'detail' in p && p.detail && (
+							<div class="detail" data-detail={p.cle} hidden>
+								<p class="detail__consigne">
+									Répartissez le nombre par type. Le total se calcule tout seul.
+								</p>
+								<div class="detail__lignes">
+									{p.detail.map((d) => (
+										<div class="champ champ--sous">
+											<label for={`sous-${p.cle}-${d.cle}`}>{d.libelle}</label>
+											<div class="saisie">
+												<input
+													type="number"
+													id={`sous-${p.cle}-${d.cle}`}
+													data-sous={p.cle}
+													data-sous-cle={d.cle}
+													min="0"
+													step="1"
+													placeholder="0"
+													inputmode="numeric"
+												/>
+												<span class="unite">{p.unite}</span>
+											</div>
+										</div>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
+				))
+			}
+		</div>
+	</fieldset>
+</form>
+
+<section class="resultat" data-resultat hidden aria-live="polite">
+	<h2>Ordre de prix</h2>
+	<p class="fourchette">
+		<span data-bas></span>
+		<span class="fourchette__a">à</span>
+		<span data-haut></span>
+		<span class="fourchette__ht">HT</span>
+	</p>
+	<p class="avertissement">{typo(modele.avertissement)}</p>
+
+	<div class="barre-bloc">
+		<div class="barre" data-barre></div>
+		<div class="barre__bulle" data-barre-bulle hidden></div>
+	</div>
+	<ul class="legende" data-legende></ul>
+	<ul class="sr-only" data-detail-parts></ul>
+
+	<details class="hypotheses">
+		<summary>Ce que vous avez déclaré</summary>
+		<ul data-hypotheses></ul>
+	</details>
+</section>
+
+<script>
+	import modele from '../../../content/donnees/prix.json';
+	import { estimer, formaterEuros, type Modele, type Entrees } from '../../scripts/prix';
+	import { typo } from '../../scripts/typographie';
+	import { recalerLesBulles } from '../../scripts/bulle';
+
+	const form = document.querySelector<HTMLFormElement>('[data-estimateur]');
+	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
+
+	if (form && resultat) {
+		form.classList.add('estimateur--actif');
+		recalerLesBulles(form);
+		const M = modele as unknown as Modele;
+
+		const couleurs: Record<string, string> = {
+			materiel: 'var(--bleu)',
+			etudes: 'var(--bleu-sombre)',
+			realisation: 'var(--bleu-clair)',
+			gestion: 'var(--orange)',
+		};
+
+		// ---------------------------------------------------------- Détail des postes
+		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
+			const panneau = form.querySelector<HTMLElement>(`[data-detail="${bouton.dataset.detailler}"]`)!;
+			bouton.addEventListener('click', () => {
+				const ouvert = panneau.hidden;
+				panneau.hidden = !ouvert;
+				bouton.setAttribute('aria-expanded', String(ouvert));
+				bouton.textContent = ouvert ? 'Masquer le détail' : 'Afficher le détail';
+				recalculer();
+			});
+		});
+
+		// ---------------------------------------------------------- Lecture du formulaire
+		function lireEntrees(): Entrees {
+			const nature = form!.querySelector<HTMLInputElement>('[data-nature]:checked')?.value ?? M.natures[0].cle;
+			const nombres: Entrees['nombres'] = {};
+			const choix: Entrees['choix'] = {};
+			const cases: Entrees['cases'] = {};
+
+			for (const p of M.postes) {
+				if (p.type === 'nombre') {
+					const input = form!.querySelector<HTMLInputElement>(`[data-nombre="${p.cle}"]`)!;
+					const panneau = form!.querySelector<HTMLElement>(`[data-detail="${p.cle}"]`);
+					if (panneau && !panneau.hidden) {
+						const detail: Record<string, number> = {};
+						let somme = 0;
+						panneau.querySelectorAll<HTMLInputElement>('[data-sous]').forEach((i) => {
+							const v = Math.max(0, Math.floor(Number(i.value) || 0));
+							detail[i.dataset.sousCle!] = v;
+							somme += v;
+						});
+						// Le total à la louche reflète le détail et ne se saisit plus.
+						input.value = somme ? String(somme) : '';
+						input.readOnly = true;
+						nombres[p.cle] = detail;
+					} else {
+						input.readOnly = false;
+						nombres[p.cle] = Math.max(0, Math.floor(Number(input.value) || 0));
+					}
+				} else if (p.type === 'choix') {
+					choix[p.cle] = form!.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)!.value;
+				} else {
+					cases[p.cle] = [...form!.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`)].map(
+						(i) => i.value
+					);
+				}
+			}
+			return { nature, nombres, choix, cases };
+		}
+
+		/** Les prestations qui n'ont pas de sens pour une étude seule disparaissent. */
+		function ajusterALaNature(nature: string) {
+			form!.querySelectorAll<HTMLElement>('[data-natures]').forEach((el) => {
+				el.hidden = !el.dataset.natures!.split(' ').includes(nature);
+			});
+		}
+
+		// ---------------------------------------------------------- Résultat
+		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
+		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
+		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
+		const detailParts = resultat.querySelector<HTMLElement>('[data-detail-parts]')!;
+		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
+
+		function recalculer() {
+			const e = lireEntrees();
+			ajusterALaNature(e.nature);
+			const r = estimer(M, e);
+
+			if (r.vide) {
+				resultat.hidden = true;
+				return;
+			}
+
+			resultat.querySelector('[data-bas]')!.textContent = formaterEuros(r.bas);
+			resultat.querySelector('[data-haut]')!.textContent = formaterEuros(r.haut);
+
+			const parts = r.parts.filter((p) => p.montant > 0);
+			barre.replaceChildren(
+				...parts.map((p) => {
+					const part = (p.montant / r.prix) * 100;
+					const segment = document.createElement('button');
+					segment.type = 'button';
+					segment.className = 'barre__part';
+					segment.style.width = `${part}%`;
+					segment.style.background = couleurs[p.cle];
+					if (part < 4) segment.classList.add('barre__part--menue');
+					const valeurs = typo(`environ ${formaterEuros(p.montant)}, soit ${part < 1 ? '< 1' : Math.round(part)} % du total`);
+					segment.setAttribute('aria-label', typo(`${p.libelle} : ${valeurs}`));
+					const montrer = () => {
+						const nom = document.createElement('strong');
+						nom.textContent = p.libelle;
+						bulleBarre.replaceChildren(nom, document.createTextNode(typo(` : ${valeurs}`)));
+						bulleBarre.hidden = false;
+						bulleBarre.style.left = `${segment.offsetLeft + segment.offsetWidth / 2}px`;
+						bulleBarre.style.setProperty('--decalage', '0px');
+						const r2 = bulleBarre.getBoundingClientRect();
+						const marge = 8;
+						let d = 0;
+						if (r2.left < marge) d = marge - r2.left;
+						else if (r2.right > innerWidth - marge) d = innerWidth - marge - r2.right;
+						bulleBarre.style.setProperty('--decalage', `${Math.round(d)}px`);
+					};
+					segment.addEventListener('mouseenter', montrer);
+					segment.addEventListener('focus', montrer);
+					segment.addEventListener('mouseleave', () => (bulleBarre.hidden = true));
+					segment.addEventListener('blur', () => (bulleBarre.hidden = true));
+					return segment;
+				})
+			);
+
+			legende.replaceChildren(
+				...parts.map((p) => {
+					const part = (p.montant / r.prix) * 100;
+					const li = document.createElement('li');
+					const pastille = document.createElement('span');
+					pastille.className = 'legende__pastille';
+					pastille.style.background = couleurs[p.cle];
+					li.append(pastille, typo(`${p.libelle} ${part < 1 ? '< 1' : Math.round(part)} %`));
+					return li;
+				})
+			);
+
+			detailParts.replaceChildren(
+				...parts.map((p) => {
+					const li = document.createElement('li');
+					li.textContent = typo(`${p.libelle} : environ ${formaterEuros(p.montant)}.`);
+					return li;
+				})
+			);
+
+			listeHypotheses.replaceChildren(
+				...r.hypotheses.map((h) => {
+					const li = document.createElement('li');
+					li.textContent = typo(h);
+					return li;
+				})
+			);
+
+			resultat.hidden = false;
+		}
+
+		form.addEventListener('input', recalculer);
+		form.addEventListener('change', recalculer);
+		recalculer();
+	}
+</script>
+
+<style>
+	.estimateur {
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: clamp(1.25rem, 3vw, 2rem);
+	}
+	.estimateur--actif .sans-js {
+		display: none;
+	}
+	.sans-js {
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		padding: 0.9rem 1.1rem;
+		margin: 0 0 1.5rem;
+	}
+
+	.section {
+		border: 0;
+		padding: 0;
+		margin: 0 0 2.5rem;
+	}
+	.section:last-of-type {
+		margin-bottom: 0;
+	}
+	.section legend {
+		padding: 0;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.15rem;
+		color: var(--bleu-nuit);
+		margin-bottom: 1rem;
+	}
+	.consigne {
+		margin: 0 0 1.25rem;
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+	}
+
+	/* ── Nature du projet : quatre cartes à cocher ───────────────────────────── */
+	.natures {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 0.75rem;
+	}
+	.nature {
+		display: flex;
+		gap: 0.7rem;
+		align-items: flex-start;
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		cursor: pointer;
+		transition:
+			border-color 0.2s,
+			background 0.2s;
+	}
+	.nature:hover {
+		border-color: var(--bleu);
+	}
+	.nature:has(input:checked) {
+		border-color: var(--bleu-nuit);
+		background: var(--gris-clair);
+	}
+	.nature input {
+		margin: 0.2rem 0 0;
+		accent-color: var(--bleu);
+		flex: 0 0 auto;
+	}
+	.nature__corps {
+		display: grid;
+		gap: 0.2rem;
+	}
+	.nature__nom {
+		font-family: var(--titres);
+		font-weight: 600;
+		color: var(--bleu-nuit);
+	}
+	.nature__texte {
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+
+	/* ── Postes ───────────────────────────────────────────────────────────────── */
+	.postes {
+		display: grid;
+		gap: 1.25rem;
+	}
+	.poste {
+		border-top: 1px solid var(--gris-moyen);
+		padding-top: 1.1rem;
+	}
+	/* Grille fixe : le champ et le bouton ne changent pas de place quand on déplie. */
+	.poste__tete {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 13rem 11.5rem;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.poste[data-type='choix'] .poste__tete {
+		grid-template-columns: minmax(0, 1fr) minmax(13rem, 24.5rem);
+	}
+	.poste[data-type='cases'] .poste__tete {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.poste[data-type='nombre']:not(:has([data-detailler])) .poste__tete {
+		grid-template-columns: minmax(0, 1fr) 13rem;
+	}
+	@media (max-width: 720px) {
+		.poste__tete,
+		.poste[data-type='choix'] .poste__tete,
+		.poste[data-type='nombre']:not(:has([data-detailler])) .poste__tete {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	.poste__nom {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	label,
+	.poste__libelle {
+		font-weight: 500;
+		font-size: 1rem;
+		color: var(--bleu-nuit);
+	}
+	.saisie {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	input[type='number'],
+	select {
+		font: inherit;
+		color: var(--gris);
+		background: var(--blanc);
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.5rem 0.6rem;
+		width: 100%;
+		min-width: 0;
+	}
+	input:focus,
+	select:focus {
+		border-color: var(--bleu);
+	}
+	input:read-only {
+		background: var(--gris-clair);
+		color: var(--gris-leger);
+	}
+	input::placeholder {
+		color: var(--gris-leger);
+		opacity: 0.75;
+	}
+	input[type='number'] {
+		appearance: textfield;
+		-moz-appearance: textfield;
+	}
+	input[type='number']::-webkit-outer-spin-button,
+	input[type='number']::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.unite {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		white-space: nowrap;
+	}
+
+	.detailler {
+		background: none;
+		border: 1px solid var(--gris-moyen);
+		border-radius: var(--rayon);
+		padding: 0.5rem 0.8rem;
+		font-size: 0.85rem;
+		color: var(--bleu);
+		cursor: pointer;
+		white-space: nowrap;
+		width: 100%;
+	}
+	.detailler:hover {
+		border-color: var(--bleu);
+	}
+	.detailler[aria-expanded='true'] {
+		background: var(--bleu-nuit);
+		border-color: var(--bleu-nuit);
+		color: var(--blanc);
+	}
+	@media (max-width: 720px) {
+		.detailler {
+			justify-self: start;
+			width: auto;
+		}
+	}
+
+	.detail {
+		margin-top: 1rem;
+		padding: 1rem 1.25rem;
+		background: var(--gris-clair);
+		border-radius: var(--rayon);
+	}
+	.detail__consigne {
+		margin: 0 0 1rem;
+		font-size: 0.85rem;
+		color: var(--gris-leger);
+	}
+	.detail__lignes {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 1rem;
+		align-items: end;
+	}
+	.champ {
+		display: grid;
+		gap: 0.3rem;
+		align-content: start;
+	}
+	.champ--sous label {
+		font-size: 0.88rem;
+		font-weight: 400;
+	}
+
+	.cases {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+		gap: 0.5rem 1.5rem;
+		margin-top: 0.75rem;
+	}
+	.case {
+		display: flex;
+		gap: 0.6rem;
+		align-items: flex-start;
+		font-weight: 400;
+		font-size: 0.95rem;
+		color: var(--gris);
+		cursor: pointer;
+	}
+	.case input {
+		margin: 0.25rem 0 0;
+		accent-color: var(--bleu);
+		flex: 0 0 auto;
+	}
+
+	/* ── Infobulles ───────────────────────────────────────────────────────────── */
+	.aide {
+		position: relative;
+		display: inline-flex;
+	}
+	.aide-bouton {
+		width: 1.25rem;
+		height: 1.25rem;
+		border-radius: 50%;
+		border: 1px solid var(--gris-moyen);
+		background: var(--blanc);
+		color: var(--bleu);
+		font-size: 0.75rem;
+		font-weight: 700;
+		line-height: 1;
+		cursor: help;
+		display: grid;
+		place-items: center;
+		padding: 0 0 1px;
+		flex: 0 0 auto;
+	}
+	.aide-bouton:hover {
+		background: var(--bleu);
+		color: var(--blanc);
+		border-color: var(--bleu);
+	}
+	.bulle {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 50%;
+		transform: translateX(calc(-50% + var(--decalage, 0px)));
+		z-index: 20;
+		width: max-content;
+		max-width: min(24rem, calc(100vw - 2rem));
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.65rem 0.85rem;
+		border-radius: var(--rayon);
+		font-size: 0.85rem;
+		font-weight: 400;
+		line-height: 1.45;
+		text-align: left;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.15s,
+			visibility 0.15s;
+		pointer-events: none;
+	}
+	.aide:hover .bulle,
+	.aide:focus-within .bulle {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	/* ── Résultat ─────────────────────────────────────────────────────────────── */
+	.resultat {
+		margin-top: 2.5rem;
+	}
+	.resultat h2 {
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--gris-leger);
+		font-weight: 600;
+	}
+	.fourchette {
+		font-family: var(--titres);
+		font-weight: 700;
+		font-size: clamp(1.8rem, 5vw, 3rem);
+		line-height: 1.1;
+		color: var(--bleu-nuit);
+		margin: 0;
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+	.fourchette__a,
+	.fourchette__ht {
+		font-size: 0.5em;
+		font-weight: 500;
+		color: var(--gris-leger);
+	}
+	.avertissement {
+		margin: 0.75rem 0 1.75rem;
+		padding: 0.7rem 1rem;
+		background: var(--gris-clair);
+		border-left: 3px solid var(--orange);
+		font-size: 0.95rem;
+		max-width: var(--mesure);
+	}
+
+	.barre-bloc {
+		position: relative;
+	}
+	.barre {
+		display: flex;
+		height: 1.25rem;
+		border-radius: 2px;
+		overflow: visible;
+		background: var(--gris-clair);
+	}
+	.barre :global(.barre__part) {
+		position: relative;
+		display: block;
+		height: 100%;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		cursor: pointer;
+		appearance: none;
+		min-width: 2px;
+	}
+	.barre :global(.barre__part:first-child) {
+		border-radius: 2px 0 0 2px;
+	}
+	.barre :global(.barre__part:last-child) {
+		border-radius: 0 2px 2px 0;
+	}
+	.barre :global(.barre__part--menue)::after {
+		content: '';
+		position: absolute;
+		inset: -0.5rem -0.6rem;
+		z-index: 2;
+	}
+	.barre :global(.barre__part:hover),
+	.barre :global(.barre__part:focus-visible) {
+		filter: brightness(1.1);
+		outline: none;
+	}
+	.barre__bulle {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		transform: translateX(calc(-50% + var(--decalage, 0px)));
+		z-index: 20;
+		width: max-content;
+		max-width: min(22rem, calc(100vw - 2rem));
+		background: var(--bleu-nuit);
+		color: var(--blanc);
+		padding: 0.55rem 0.8rem;
+		border-radius: var(--rayon);
+		font-size: 0.85rem;
+		line-height: 1.4;
+		pointer-events: none;
+	}
+	.barre__bulle :global(strong) {
+		color: var(--bleu-clair);
+	}
+	.legende {
+		list-style: none;
+		margin: 0.85rem 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		font-size: 0.9rem;
+	}
+	.legende :global(li) {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+	.legende :global(.legende__pastille) {
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 2px;
+		flex: 0 0 auto;
+	}
+
+	.hypotheses {
+		margin-top: 1.75rem;
+		font-size: 0.9rem;
+	}
+	.hypotheses summary {
+		cursor: pointer;
+		font-family: var(--titres);
+		font-weight: 600;
+		color: var(--bleu-nuit);
+	}
+	.hypotheses ul {
+		margin: 0.6rem 0 0;
+		padding-left: 1.2rem;
+	}
+	.hypotheses :global(li) {
+		margin-top: 0.2rem;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+</style>

@@ -165,8 +165,18 @@ via le bloc « module ». Aucune donnée personnelle collectée.
      dépôt). Dépouillement et ébauche de méthode dans `ressources/chiffrages/SYNTHESE-prechiffrage.md`
      (confidentiel, jamais dans le dépôt). Modèle additif par postes (socle, axes, robots, vision,
      sécurité, encombrement, installation), fourchette −25 % / +35 %, calibré sur cinq machines.
-     Questions en attente : prix vendus manquants, dates et taux journalier à retenir, marge,
-     questions à poser au visiteur, limites de l'outil. Les dossiers CEA restent confidentiels.
+     Les dossiers CEA restent confidentiels.
+   - **2026-09-04, réponses du dirigeant** (détail chiffré dans la synthèse, hors dépôt) :
+     l'outil chiffre tout (étude seule, fabrication seule, rétrofit, machine neuve, robots sans
+     limite) ; plus de questions plutôt que pas assez, « à la louche » et « au détail » comme le
+     simulateur carbone ; avertissement : « À titre indicatif : peut fluctuer selon la nature
+     de la machine et la complexité de la solution technique » ; pas de surcoût nucléaire
+     (pas de nucléaire pour l'instant).
+   - **Livré (2026-09-04)** : `/outils/estimateur-prix`, modèle dans `content/donnees/prix.json`,
+     calcul dans `src/scripts/prix.ts`. **Les montants du JSON sont des prix de vente** :
+     le taux journalier et la marge y sont déjà intégrés et n'apparaissent nulle part
+     (le dépôt est public). Le JSON ne contient aucun client ni prix réel. Page non indexée
+     tant que le dirigeant n'a pas validé les valeurs.
 - Pas de « quiz découverte » : idée abandonnée par le dirigeant, remplacée par des outils
   réellement utiles au client (empreinte carbone, ordre de prix).
 - **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc

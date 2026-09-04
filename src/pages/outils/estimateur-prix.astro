@@ -1,0 +1,117 @@
+---
+// Module « Estimateur d'ordre de prix ».
+//
+// Non indexée tant que le dirigeant n'a pas validé les valeurs du modèle : un ordre de prix
+// public engage l'entreprise. Les valeurs vivent dans content/donnees/prix.json.
+import Base from '../../layouts/Base.astro';
+import EstimateurPrix from '../../components/modules/EstimateurPrix.astro';
+---
+
+<Base
+	titre="Ordre de prix d’une machine spéciale"
+	description="Quelques questions sur votre projet, une fourchette de prix hors taxes en retour. Avant même un premier contact."
+	noindex={true}
+>
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur entete">
+			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <a href="/outils">Outils</a></p>
+			<p class="surtitre">Outil en préparation</p>
+			<h1>Combien coûte une machine spéciale ?</h1>
+			<p class="chapeau">
+				<span class="a-rediger">[à relire]</span> Décrivez votre projet en quelques réponses,
+				même approximatives. Vous obtenez une fourchette de prix, pas un devis : de quoi savoir
+				si l’on parle de dizaines ou de centaines de milliers d’euros avant d’aller plus loin.
+			</p>
+		</div>
+	</section>
+
+	<section class="bloc bloc--blanc">
+		<div class="bloc__interieur">
+			<EstimateurPrix />
+		</div>
+	</section>
+
+	<section class="bloc bloc--clair">
+		<div class="bloc__interieur methode">
+			<details class="methodologie">
+				<summary>Comment cette fourchette est calculée</summary>
+				<div class="methodologie__corps">
+					<p>
+						<span class="a-rediger">[à relire]</span> Le calcul additionne un socle, qui dépend
+						de la nature du projet, et un montant par élément déclaré : chaque axe, chaque robot,
+						le niveau de contrôle, la sécurité, l’encombrement, les fonctions logicielles et les
+						prestations. Chaque montant se décompose en matériel, études et réalisation ; la
+						gestion de projet s’ajoute en proportion du travail.
+					</p>
+					<p>
+						Les montants du modèle sont des ordres de grandeur tirés de machines que nous avons
+						réellement conçues et livrées. Ils sont arrondis, et la fourchette est volontairement
+						asymétrique : dans notre métier, les dépassements sont plus fréquents que les
+						économies.
+					</p>
+					<p>
+						Le calcul se fait dans votre navigateur : rien de ce que vous saisissez ne nous
+						parvient. Pour un chiffrage engageant, il faut un cahier des charges et une
+						discussion : <a href="/contact" class="lien">contactez-nous</a>.
+					</p>
+				</div>
+			</details>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.entete {
+		max-width: 46rem;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+	}
+	.methodologie__corps p {
+		max-width: var(--mesure);
+	}
+	.methodologie summary {
+		cursor: pointer;
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.15rem;
+		color: var(--bleu-nuit);
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.methodologie summary::-webkit-details-marker {
+		display: none;
+	}
+	.methodologie summary::before {
+		content: '';
+		width: 0.55rem;
+		height: 0.55rem;
+		border-right: 2px solid var(--bleu);
+		border-bottom: 2px solid var(--bleu);
+		transform: rotate(-45deg);
+		transition: transform 0.2s;
+		flex: 0 0 auto;
+	}
+	.methodologie[open] summary::before {
+		transform: rotate(45deg);
+	}
+	.methodologie__corps {
+		padding-top: 1.5rem;
+	}
+</style>
