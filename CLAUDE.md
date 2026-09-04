@@ -112,8 +112,13 @@ Ce fichier condense les décisions prises par le dirigeant. Elles ne se rediscut
   `@google/model-viewer`, seul composant standard pour glTF, chargé uniquement sur les fiches
   qui ont un fichier, servi depuis notre domaine). Le dirigeant a exporté un STEP de 33 Mo :
   inutilisable tel quel, il faut un maillage OBJ nettoyé, converti en `.glb` (obj2gltf +
-  gltf-pipeline, hors projet) ; procédure dans `docs/3D.md`. Décodeur Draco à auto-héberger
-  à la première machine compressée.
+  gltf-pipeline, hors projet) ; procédure dans `docs/3D.md`.
+- **2026-09-04, première machine affichée** : bobineuse ESRF, `.glb` Draco de 6,9 Mo et
+  4,5 M de triangles fourni par le dirigeant, affiché ; version allégée à 2,4 Mo et 1,06 M de
+  triangles (`gltf-transform optimize`, hors projet) déposée à côté pour comparaison.
+  Décodeur Draco auto-hébergé dans `public/decodeurs/draco/`. Champ CMS en chemin absolu
+  (`/public/modeles`). Cartes et liste : modèle chargé au clic seulement (`reveal=interaction`).
+  **Go / no-go mobile toujours à faire par le dirigeant.**
 - Cinématiques animées dans Fusion, exportées en vidéo courte, intégrées en boucle muette.
   Procédure complète dans `docs/3D.md`.
 
