@@ -1,550 +1,556 @@
 {
-  "avertissement": "À titre indicatif : l'ordre de grandeur peut fluctuer selon la nature de la machine et la complexité de la solution technique.",
-  "gestion_projet_pct": 10,
-  "fourchette": {
-    "bas_pct": -25,
-    "haut_pct": 35
-  },
-  "natures": [
-    {
-      "cle": "neuve",
-      "libelle": "Machine neuve",
-      "description": "Conception, fabrication, mise au point, livraison.",
-      "etudes": true,
-      "materiel": true,
-      "realisation": true,
-      "socle": {
-        "materiel": 9000,
-        "etudes": 10500,
-        "realisation": 5248
-      }
-    },
-    {
-      "cle": "retrofit",
-      "libelle": "Rétrofit d'une machine existante",
-      "description": "Remise à niveau, ajout de fonctions ou de sécurité sur un équipement en place.",
-      "etudes": true,
-      "materiel": true,
-      "realisation": true,
-      "socle": {
-        "materiel": 6000,
-        "etudes": 8400,
-        "realisation": 5600
-      }
-    },
-    {
-      "cle": "etude",
-      "libelle": "Étude seule",
-      "description": "Conception et plans « bon pour fabrication », la réalisation est confiée à vous ou à un tiers.",
-      "etudes": true,
-      "materiel": false,
-      "realisation": false,
-      "socle": {
-        "materiel": 0,
-        "etudes": 3520,
-        "realisation": 0
-      }
-    },
-    {
-      "cle": "fabrication",
-      "libelle": "Fabrication seule",
-      "description": "Approvisionnement, montage, câblage et mise au point d'une machine que vous avez conçue.",
-      "etudes": false,
-      "materiel": true,
-      "realisation": true,
-      "socle": {
-        "materiel": 8000,
-        "etudes": 1400,
-        "realisation": 5600
-      }
-    }
-  ],
-  "postes": [
-    {
-      "cle": "axes_motorises",
-      "type": "nombre",
-      "libelle": "Axes motorisés",
-      "unite": "axes",
-      "aide": "Chaque mouvement commandé par un moteur : translation, rotation, déroulage, élévation…",
-      "louche": {
-        "materiel": 5000,
-        "etudes": 2100,
-        "realisation": 2100
-      },
-      "detail": [
-        {
-          "cle": "petits",
-          "libelle": "Petits axes : jusqu'à 400 W, ou course jusqu'à 300 mm",
-          "materiel": 3520,
-          "etudes": 1752,
-          "realisation": 1752
-        },
-        {
-          "cle": "moyens",
-          "libelle": "Axes moyens : 400 W à 3 kW, ou course jusqu'à 1,5 m",
-          "materiel": 6000,
-          "etudes": 2100,
-          "realisation": 2100
-        },
-        {
-          "cle": "gros",
-          "libelle": "Gros axes : plus de 3 kW, course de plus de 1,5 m ou forte charge",
-          "materiel": 12000,
-          "etudes": 2800,
-          "realisation": 2800
-        }
-      ]
-    },
-    {
-      "cle": "axes_fluides",
-      "type": "nombre",
-      "libelle": "Axes pneumatiques ou hydrauliques",
-      "unite": "axes",
-      "aide": "Vérins, pinces, poussoirs, tables élévatrices.",
-      "louche": {
-        "materiel": 2000,
-        "etudes": 700,
-        "realisation": 700
-      },
-      "detail": [
-        {
-          "cle": "pneu_petit",
-          "libelle": "Pneumatiques, course jusqu’à 300 mm",
-          "materiel": 1520,
-          "etudes": 700,
-          "realisation": 700
-        },
-        {
-          "cle": "pneu_grand",
-          "libelle": "Pneumatiques, course de plus de 300 mm ou fort effort",
-          "materiel": 2480,
-          "etudes": 880,
-          "realisation": 880
-        },
-        {
-          "cle": "hydraulique",
-          "libelle": "Hydrauliques",
-          "materiel": 5000,
-          "etudes": 1400,
-          "realisation": 1400
-        }
-      ]
-    },
-    {
-      "cle": "robots",
-      "type": "nombre",
-      "libelle": "Robots",
-      "unite": "robots",
-      "aide": "Robot six axes ou cobot, avec sa baie, son socle, son préhenseur et le développement de son application.",
-      "louche": {
-        "materiel": 35200,
-        "etudes": 7000,
-        "realisation": 10500
-      },
-      "detail": [
-        {
-          "cle": "petit",
-          "libelle": "Petits, jusqu'à 10 kg",
-          "materiel": 35200,
-          "etudes": 7000,
-          "realisation": 10500
-        },
-        {
-          "cle": "moyen",
-          "libelle": "Moyens, 10 à 50 kg",
-          "materiel": 55200,
-          "etudes": 8400,
-          "realisation": 12600
-        },
-        {
-          "cle": "gros",
-          "libelle": "Gros, plus de 50 kg",
-          "materiel": 90000,
-          "etudes": 10500,
-          "realisation": 14000
-        },
-        {
-          "cle": "cobot",
-          "libelle": "Cobots",
-          "materiel": 35200,
-          "etudes": 5600,
-          "realisation": 8400
-        }
-      ]
-    },
-    {
-      "cle": "convoyeurs",
-      "type": "nombre",
-      "libelle": "Convoyeurs",
-      "unite": "convoyeurs",
-      "aide": "Convoyeur à bande ou à rouleaux motorisé, avec son variateur et ses capteurs de présence.",
-      "louche": {
-        "materiel": 5000,
-        "etudes": 700,
-        "realisation": 700
-      }
-    },
-    {
-      "cle": "outillages",
-      "type": "nombre",
-      "libelle": "Outillages et posages sans motorisation",
-      "unite": "outillages",
-      "aide": "Posages, montages d’assemblage, outils de presse, gabarits de contrôle.\nComptez un outillage par opération à équiper.",
-      "louche": {
-        "materiel": 800,
-        "etudes": 2100,
-        "realisation": 352
-      }
-    },
-    {
-      "cle": "controle",
-      "type": "choix",
-      "libelle": "Contrôle et vision",
-      "aide": "Ce que la machine doit vérifier ou reconnaître.\nDes capteurs simples détectent une présence ou une position.\nLa vision 2D lit, mesure ou trie dans un plan.\nLa vision 3D localise des objets en vrac ou de forme variable.",
-      "options": [
-        {
-          "cle": "aucun",
-          "libelle": "Aucun contrôle particulier",
-          "materiel": 0,
-          "etudes": 0,
-          "realisation": 0
-        },
-        {
-          "cle": "capteurs",
-          "libelle": "Capteurs simples",
-          "materiel": 2000,
-          "etudes": 1400,
-          "realisation": 700
-        },
-        {
-          "cle": "vision2d",
-          "libelle": "Vision 2D",
-          "materiel": 10000,
-          "etudes": 4200,
-          "realisation": 4200
-        },
-        {
-          "cle": "vision3d",
-          "libelle": "Vision 3D",
-          "materiel": 55200,
-          "etudes": 7000,
-          "realisation": 10500
-        }
-      ]
-    },
-    {
-      "cle": "encombrement",
-      "type": "choix",
-      "libelle": "Encombrement",
-      "aide": "Une machine plus grande demande un châssis plus lourd, davantage d’étude d’ensemble, de montage, d’installation et de transport.",
-      "options": [
-        {
-          "cle": "s",
-          "libelle": "Sur une table ou un établi",
-          "materiel": 0,
-          "etudes": 0,
-          "realisation": 0,
-          "coefficients": {
-            "socle": {
-              "materiel": 0.7,
-              "etudes": 0.5,
-              "realisation": 0.6
-            },
-            "prestations": {
-              "realisation": 0.6
-            }
-          }
-        },
-        {
-          "cle": "m",
-          "libelle": "Une personne peut entrer dans l'enceinte",
-          "materiel": 5000,
-          "etudes": 2100,
-          "realisation": 2100
-        },
-        {
-          "cle": "l",
-          "libelle": "Une ligne ou plusieurs postes",
-          "materiel": 15200,
-          "etudes": 5600,
-          "realisation": 5600,
-          "coefficients": {
-            "socle": {
-              "etudes": 1.2,
-              "realisation": 1.2
-            },
-            "prestations": {
-              "realisation": 1.6
-            }
-          }
-        }
-      ],
-      "defaut": "m"
-    },
-    {
-      "cle": "securite",
-      "type": "cases",
-      "libelle": "Sécurité",
-      "aide": "Le niveau de protection dépend des dangers de la machine et du lieu.\nUne enceinte grillagée suffit à une machine lente.\nUn automate de sécurité s’impose dès qu’un opérateur intervient près d’un mouvement.",
-      "options": [
-        {
-          "cle": "base",
-          "libelle": "Carters et arrêts d’urgence",
-          "materiel": 0,
-          "etudes": 0,
-          "realisation": 0,
-          "inclus": true
-        },
-        {
-          "cle": "enceinte",
-          "libelle": "Enceinte grillagée et portes verrouillées",
-          "materiel": 5000,
-          "etudes": 700,
-          "realisation": 1400
-        },
-        {
-          "cle": "automate",
-          "libelle": "Automate de sécurité",
-          "materiel": 4000,
-          "etudes": 1400,
-          "realisation": 1400
-        },
-        {
-          "cle": "barrieres",
-          "libelle": "Barrières immatérielles",
-          "materiel": 5000,
-          "etudes": 700,
-          "realisation": 700
-        },
-        {
-          "cle": "atex",
-          "libelle": "Zone ATEX",
-          "materiel": 4000,
-          "etudes": 7000,
-          "realisation": 3500,
-          "coefficients": {
-            "socle": {
-              "materiel": 1.5
-            },
-            "axes_motorises": {
-              "materiel": 1.4
-            },
-            "axes_fluides": {
-              "materiel": 1.3
-            },
-            "robots": {
-              "materiel": 1.5
-            },
-            "convoyeurs": {
-              "materiel": 1.5
-            },
-            "controle": {
-              "materiel": 2
-            },
-            "logiciel": {
-              "materiel": 2
-            }
-          }
-        }
-      ]
-    },
-    {
-      "cle": "logiciel",
-      "type": "cases",
-      "libelle": "Logiciel et données",
-      "aide": "",
-      "options": [
-        {
-          "cle": "ihm",
-          "libelle": "Interface riche : recettes, historiques, plusieurs niveaux d'utilisateurs",
-          "materiel": 0,
-          "etudes": 7000,
-          "realisation": 0
-        },
-        {
-          "cle": "tracabilite",
-          "libelle": "Enregistrement et traçabilité : mesures horodatées, export",
-          "materiel": 1000,
-          "etudes": 3500,
-          "realisation": 700
-        },
-        {
-          "cle": "supervision",
-          "libelle": "Supervision et base de données",
-          "materiel": 2000,
-          "etudes": 8400,
-          "realisation": 2100
-        },
-        {
-          "cle": "metrologie",
-          "libelle": "Mesure et métrologie : calibration, rapports",
-          "materiel": 3000,
-          "etudes": 7000,
-          "realisation": 3500
-        },
-        {
-          "cle": "communication",
-          "libelle": "Communication avec votre système d'information",
-          "materiel": 0,
-          "etudes": 4200,
-          "realisation": 1400
-        }
-      ]
-    },
-    {
-      "cle": "prestations",
-      "type": "cases",
-      "libelle": "Prestations",
-      "aide": "Ce qui s'ajoute à la livraison de la machine.",
-      "options": [
-        {
-          "cle": "installation",
-          "libelle": "Installation et recette sur votre site",
-          "materiel": 3000,
-          "etudes": 0,
-          "realisation": 3500,
-          "natures": [
-            "neuve",
-            "retrofit",
-            "fabrication"
-          ]
-        },
-        {
-          "cle": "formation",
-          "libelle": "Formation des opérateurs",
-          "materiel": 0,
-          "etudes": 0,
-          "realisation": 1400,
-          "natures": [
-            "neuve",
-            "retrofit",
-            "fabrication"
-          ]
-        },
-        {
-          "cle": "certification",
-          "libelle": "Certification par un organisme tiers",
-          "materiel": 4000,
-          "etudes": 1400,
-          "realisation": 0,
-          "natures": [
-            "neuve",
-            "retrofit",
-            "fabrication"
-          ]
-        }
-      ]
-    }
-  ],
-  "facteurs": [
-    {
-      "cle": "cadence",
-      "libelle": "Cadence",
-      "aide": "Plus la machine va vite, plus les mouvements demandent de puissance, de rigidité et de mise au point. La cadence majore les axes, les robots, les convoyeurs et le contrôle.",
-      "postes": [
-        "axes_motorises",
-        "axes_fluides",
-        "robots",
-        "convoyeurs",
-        "controle"
-      ],
-      "options": [
-        {
-          "cle": "lente",
-          "libelle": "Lente : quelques cycles par minute, ou moins",
-          "coefficient": 1
-        },
-        {
-          "cle": "moyenne",
-          "libelle": "Moyenne : un cycle toutes les quelques secondes",
-          "coefficient": 1.15
-        },
-        {
-          "cle": "rapide",
-          "libelle": "Rapide : plusieurs cycles par seconde",
-          "coefficient": 1.4
-        }
-      ]
-    },
-    {
-      "cle": "positionnement",
-      "libelle": "Précision de mise en position",
-      "aide": "Avec quelle précision la machine doit-elle amener une pièce ou un outil ? Le dixième de millimètre impose des guidages et des mesures plus fins ; le centième change de famille de composants.",
-      "postes": [
-        "socle",
-        "axes_motorises",
-        "axes_fluides",
-        "robots",
-        "outillages"
-      ],
-      "options": [
-        {
-          "cle": "large",
-          "libelle": "Large : au-delà du millimètre",
-          "coefficient": 1
-        },
-        {
-          "cle": "mm",
-          "libelle": "Au millimètre",
-          "coefficient": 1.15
-        },
-        {
-          "cle": "dixieme",
-          "libelle": "Au dixième de millimètre",
-          "coefficient": 1.35
-        },
-        {
-          "cle": "centieme",
-          "libelle": "Au centième de millimètre",
-          "coefficient": 1.8
-        }
-      ]
-    },
-    {
-      "cle": "maintien",
-      "libelle": "Précision du maintien en position",
-      "aide": "Une fois en place, la pièce ou l'outil doit-il rester immobile sous un effort : pressage, serrage, usinage ? Plus l'effort est élevé, plus il faut de rigidité, de bridage et de freins.",
-      "postes": [
-        "axes_motorises",
-        "axes_fluides",
-        "outillages"
-      ],
-      "options": [
-        {
-          "cle": "aucun",
-          "libelle": "Sans effort particulier",
-          "coefficient": 1
-        },
-        {
-          "cle": "modere",
-          "libelle": "Sous effort modéré",
-          "coefficient": 1.1
-        },
-        {
-          "cle": "eleve",
-          "libelle": "Sous effort élevé",
-          "coefficient": 1.3
-        }
-      ]
-    }
-  ],
-  "parts": [
-    {
-      "cle": "materiel",
-      "libelle": "Matériel et fabrication"
-    },
-    {
-      "cle": "etudes",
-      "libelle": "Études"
-    },
-    {
-      "cle": "realisation",
-      "libelle": "Montage, programmation, mise au point"
-    },
-    {
-      "cle": "gestion",
-      "libelle": "Gestion de projet"
-    }
-  ],
-  "note_montants": "Montants hors taxes et hors marge : la marge commerciale est appliquée au calcul, depuis prix-indice.json."
+	"avertissement": "À titre indicatif : l'ordre de grandeur peut fluctuer selon la nature de la machine et la complexité de la solution technique.",
+	"gestion_projet_pct": 10,
+	"fourchette": {
+		"bas_pct": -25,
+		"haut_pct": 35
+	},
+	"apercu": [
+		"robots",
+		"axes_motorises",
+		"controle",
+		"encombrement"
+	],
+	"natures": [
+		{
+			"cle": "neuve",
+			"libelle": "Machine neuve",
+			"description": "Conception, fabrication, mise au point, livraison.",
+			"etudes": true,
+			"materiel": true,
+			"realisation": true,
+			"socle": {
+				"materiel": 9000,
+				"etudes": 10500,
+				"realisation": 5248
+			}
+		},
+		{
+			"cle": "retrofit",
+			"libelle": "Rétrofit d'une machine existante",
+			"description": "Remise à niveau, ajout de fonctions ou de sécurité sur un équipement en place.",
+			"etudes": true,
+			"materiel": true,
+			"realisation": true,
+			"socle": {
+				"materiel": 6000,
+				"etudes": 8400,
+				"realisation": 5600
+			}
+		},
+		{
+			"cle": "etude",
+			"libelle": "Étude seule",
+			"description": "Conception et plans « bon pour fabrication », la réalisation est confiée à vous ou à un tiers.",
+			"etudes": true,
+			"materiel": false,
+			"realisation": false,
+			"socle": {
+				"materiel": 0,
+				"etudes": 3520,
+				"realisation": 0
+			}
+		},
+		{
+			"cle": "fabrication",
+			"libelle": "Fabrication seule",
+			"description": "Approvisionnement, montage, câblage et mise au point d'une machine que vous avez conçue.",
+			"etudes": false,
+			"materiel": true,
+			"realisation": true,
+			"socle": {
+				"materiel": 8000,
+				"etudes": 1400,
+				"realisation": 5600
+			}
+		}
+	],
+	"postes": [
+		{
+			"cle": "axes_motorises",
+			"type": "nombre",
+			"libelle": "Axes motorisés",
+			"unite": "axes",
+			"aide": "Chaque mouvement commandé par un moteur : translation, rotation, déroulage, élévation…",
+			"louche": {
+				"materiel": 5000,
+				"etudes": 2100,
+				"realisation": 2100
+			},
+			"detail": [
+				{
+					"cle": "petits",
+					"libelle": "Petits axes : jusqu'à 400 W, ou course jusqu'à 300 mm",
+					"materiel": 3520,
+					"etudes": 1752,
+					"realisation": 1752
+				},
+				{
+					"cle": "moyens",
+					"libelle": "Axes moyens : 400 W à 3 kW, ou course jusqu'à 1,5 m",
+					"materiel": 6000,
+					"etudes": 2100,
+					"realisation": 2100
+				},
+				{
+					"cle": "gros",
+					"libelle": "Gros axes : plus de 3 kW, course de plus de 1,5 m ou forte charge",
+					"materiel": 12000,
+					"etudes": 2800,
+					"realisation": 2800
+				}
+			]
+		},
+		{
+			"cle": "axes_fluides",
+			"type": "nombre",
+			"libelle": "Axes pneumatiques ou hydrauliques",
+			"unite": "axes",
+			"aide": "Vérins, pinces, poussoirs, tables élévatrices.",
+			"louche": {
+				"materiel": 2000,
+				"etudes": 700,
+				"realisation": 700
+			},
+			"detail": [
+				{
+					"cle": "pneu_petit",
+					"libelle": "Pneumatiques, course jusqu’à 300 mm",
+					"materiel": 1520,
+					"etudes": 700,
+					"realisation": 700
+				},
+				{
+					"cle": "pneu_grand",
+					"libelle": "Pneumatiques, course de plus de 300 mm ou fort effort",
+					"materiel": 2480,
+					"etudes": 880,
+					"realisation": 880
+				},
+				{
+					"cle": "hydraulique",
+					"libelle": "Hydrauliques",
+					"materiel": 5000,
+					"etudes": 1400,
+					"realisation": 1400
+				}
+			]
+		},
+		{
+			"cle": "robots",
+			"type": "nombre",
+			"libelle": "Robots",
+			"unite": "robots",
+			"aide": "Robot six axes ou cobot, avec sa baie, son socle, son préhenseur et le développement de son application.",
+			"louche": {
+				"materiel": 35200,
+				"etudes": 7000,
+				"realisation": 10500
+			},
+			"detail": [
+				{
+					"cle": "petit",
+					"libelle": "Petits, jusqu'à 10 kg",
+					"materiel": 35200,
+					"etudes": 7000,
+					"realisation": 10500
+				},
+				{
+					"cle": "moyen",
+					"libelle": "Moyens, 10 à 50 kg",
+					"materiel": 55200,
+					"etudes": 8400,
+					"realisation": 12600
+				},
+				{
+					"cle": "gros",
+					"libelle": "Gros, plus de 50 kg",
+					"materiel": 90000,
+					"etudes": 10500,
+					"realisation": 14000
+				},
+				{
+					"cle": "cobot",
+					"libelle": "Cobots",
+					"materiel": 35200,
+					"etudes": 5600,
+					"realisation": 8400
+				}
+			]
+		},
+		{
+			"cle": "convoyeurs",
+			"type": "nombre",
+			"libelle": "Convoyeurs",
+			"unite": "convoyeurs",
+			"aide": "Convoyeur à bande ou à rouleaux motorisé, avec son variateur et ses capteurs de présence.",
+			"louche": {
+				"materiel": 5000,
+				"etudes": 700,
+				"realisation": 700
+			}
+		},
+		{
+			"cle": "outillages",
+			"type": "nombre",
+			"libelle": "Outillages et posages sans motorisation",
+			"unite": "outillages",
+			"aide": "Posages, montages d’assemblage, outils de presse, gabarits de contrôle.\nComptez un outillage par opération à équiper.",
+			"louche": {
+				"materiel": 800,
+				"etudes": 2100,
+				"realisation": 352
+			}
+		},
+		{
+			"cle": "controle",
+			"type": "choix",
+			"libelle": "Contrôle et vision",
+			"aide": "Ce que la machine doit vérifier ou reconnaître.\nDes capteurs simples détectent une présence ou une position.\nLa vision 2D lit, mesure ou trie dans un plan.\nLa vision 3D localise des objets en vrac ou de forme variable.",
+			"options": [
+				{
+					"cle": "aucun",
+					"libelle": "Aucun contrôle particulier",
+					"materiel": 0,
+					"etudes": 0,
+					"realisation": 0
+				},
+				{
+					"cle": "capteurs",
+					"libelle": "Capteurs simples",
+					"materiel": 2000,
+					"etudes": 1400,
+					"realisation": 700
+				},
+				{
+					"cle": "vision2d",
+					"libelle": "Vision 2D",
+					"materiel": 10000,
+					"etudes": 4200,
+					"realisation": 4200
+				},
+				{
+					"cle": "vision3d",
+					"libelle": "Vision 3D",
+					"materiel": 55200,
+					"etudes": 7000,
+					"realisation": 10500
+				}
+			]
+		},
+		{
+			"cle": "encombrement",
+			"type": "choix",
+			"libelle": "Encombrement",
+			"aide": "Une machine plus grande demande un châssis plus lourd, davantage d’étude d’ensemble, de montage, d’installation et de transport.",
+			"options": [
+				{
+					"cle": "s",
+					"libelle": "Sur une table ou un établi",
+					"materiel": 0,
+					"etudes": 0,
+					"realisation": 0,
+					"coefficients": {
+						"socle": {
+							"materiel": 0.7,
+							"etudes": 0.5,
+							"realisation": 0.6
+						},
+						"prestations": {
+							"realisation": 0.6
+						}
+					}
+				},
+				{
+					"cle": "m",
+					"libelle": "Une personne peut entrer dans l'enceinte",
+					"materiel": 5000,
+					"etudes": 2100,
+					"realisation": 2100
+				},
+				{
+					"cle": "l",
+					"libelle": "Une ligne ou plusieurs postes",
+					"materiel": 15200,
+					"etudes": 5600,
+					"realisation": 5600,
+					"coefficients": {
+						"socle": {
+							"etudes": 1.2,
+							"realisation": 1.2
+						},
+						"prestations": {
+							"realisation": 1.6
+						}
+					}
+				}
+			],
+			"defaut": "m"
+		},
+		{
+			"cle": "securite",
+			"type": "cases",
+			"libelle": "Sécurité",
+			"aide": "Le niveau de protection dépend des dangers de la machine et du lieu.\nUne enceinte grillagée suffit à une machine lente.\nUn automate de sécurité s’impose dès qu’un opérateur intervient près d’un mouvement.",
+			"options": [
+				{
+					"cle": "base",
+					"libelle": "Carters et arrêts d’urgence",
+					"materiel": 0,
+					"etudes": 0,
+					"realisation": 0,
+					"inclus": true
+				},
+				{
+					"cle": "enceinte",
+					"libelle": "Enceinte grillagée et portes verrouillées",
+					"materiel": 5000,
+					"etudes": 700,
+					"realisation": 1400
+				},
+				{
+					"cle": "automate",
+					"libelle": "Automate de sécurité",
+					"materiel": 4000,
+					"etudes": 1400,
+					"realisation": 1400
+				},
+				{
+					"cle": "barrieres",
+					"libelle": "Barrières immatérielles",
+					"materiel": 5000,
+					"etudes": 700,
+					"realisation": 700
+				},
+				{
+					"cle": "atex",
+					"libelle": "Zone ATEX",
+					"materiel": 4000,
+					"etudes": 7000,
+					"realisation": 3500,
+					"coefficients": {
+						"socle": {
+							"materiel": 1.5
+						},
+						"axes_motorises": {
+							"materiel": 1.4
+						},
+						"axes_fluides": {
+							"materiel": 1.3
+						},
+						"robots": {
+							"materiel": 1.5
+						},
+						"convoyeurs": {
+							"materiel": 1.5
+						},
+						"controle": {
+							"materiel": 2
+						},
+						"logiciel": {
+							"materiel": 2
+						}
+					}
+				}
+			]
+		},
+		{
+			"cle": "logiciel",
+			"type": "cases",
+			"libelle": "Logiciel et données",
+			"aide": "",
+			"options": [
+				{
+					"cle": "ihm",
+					"libelle": "Interface riche : recettes, historiques, plusieurs niveaux d'utilisateurs",
+					"materiel": 0,
+					"etudes": 7000,
+					"realisation": 0
+				},
+				{
+					"cle": "tracabilite",
+					"libelle": "Enregistrement et traçabilité : mesures horodatées, export",
+					"materiel": 1000,
+					"etudes": 3500,
+					"realisation": 700
+				},
+				{
+					"cle": "supervision",
+					"libelle": "Supervision et base de données",
+					"materiel": 2000,
+					"etudes": 8400,
+					"realisation": 2100
+				},
+				{
+					"cle": "metrologie",
+					"libelle": "Mesure et métrologie : calibration, rapports",
+					"materiel": 3000,
+					"etudes": 7000,
+					"realisation": 3500
+				},
+				{
+					"cle": "communication",
+					"libelle": "Communication avec votre système d'information",
+					"materiel": 0,
+					"etudes": 4200,
+					"realisation": 1400
+				}
+			]
+		},
+		{
+			"cle": "prestations",
+			"type": "cases",
+			"libelle": "Prestations",
+			"aide": "Ce qui s'ajoute à la livraison de la machine.",
+			"options": [
+				{
+					"cle": "installation",
+					"libelle": "Installation et recette sur votre site",
+					"materiel": 3000,
+					"etudes": 0,
+					"realisation": 3500,
+					"natures": [
+						"neuve",
+						"retrofit",
+						"fabrication"
+					]
+				},
+				{
+					"cle": "formation",
+					"libelle": "Formation des opérateurs",
+					"materiel": 0,
+					"etudes": 0,
+					"realisation": 1400,
+					"natures": [
+						"neuve",
+						"retrofit",
+						"fabrication"
+					]
+				},
+				{
+					"cle": "certification",
+					"libelle": "Certification par un organisme tiers",
+					"materiel": 4000,
+					"etudes": 1400,
+					"realisation": 0,
+					"natures": [
+						"neuve",
+						"retrofit",
+						"fabrication"
+					]
+				}
+			]
+		}
+	],
+	"facteurs": [
+		{
+			"cle": "cadence",
+			"libelle": "Cadence",
+			"aide": "Plus la machine va vite, plus les mouvements demandent de puissance, de rigidité et de mise au point. La cadence majore les axes, les robots, les convoyeurs et le contrôle.",
+			"postes": [
+				"axes_motorises",
+				"axes_fluides",
+				"robots",
+				"convoyeurs",
+				"controle"
+			],
+			"options": [
+				{
+					"cle": "lente",
+					"libelle": "Lente : quelques cycles par minute, ou moins",
+					"coefficient": 1
+				},
+				{
+					"cle": "moyenne",
+					"libelle": "Moyenne : un cycle toutes les quelques secondes",
+					"coefficient": 1.15
+				},
+				{
+					"cle": "rapide",
+					"libelle": "Rapide : plusieurs cycles par seconde",
+					"coefficient": 1.4
+				}
+			]
+		},
+		{
+			"cle": "positionnement",
+			"libelle": "Précision de mise en position",
+			"aide": "Avec quelle précision la machine doit-elle amener une pièce ou un outil ? Le dixième de millimètre impose des guidages et des mesures plus fins ; le centième change de famille de composants.",
+			"postes": [
+				"socle",
+				"axes_motorises",
+				"axes_fluides",
+				"robots",
+				"outillages"
+			],
+			"options": [
+				{
+					"cle": "large",
+					"libelle": "Large : au-delà du millimètre",
+					"coefficient": 1
+				},
+				{
+					"cle": "mm",
+					"libelle": "Au millimètre",
+					"coefficient": 1.15
+				},
+				{
+					"cle": "dixieme",
+					"libelle": "Au dixième de millimètre",
+					"coefficient": 1.35
+				},
+				{
+					"cle": "centieme",
+					"libelle": "Au centième de millimètre",
+					"coefficient": 1.8
+				}
+			]
+		},
+		{
+			"cle": "maintien",
+			"libelle": "Précision du maintien en position",
+			"aide": "Une fois en place, la pièce ou l'outil doit-il rester immobile sous un effort : pressage, serrage, usinage ? Plus l'effort est élevé, plus il faut de rigidité, de bridage et de freins.",
+			"postes": [
+				"axes_motorises",
+				"axes_fluides",
+				"outillages"
+			],
+			"options": [
+				{
+					"cle": "aucun",
+					"libelle": "Sans effort particulier",
+					"coefficient": 1
+				},
+				{
+					"cle": "modere",
+					"libelle": "Sous effort modéré",
+					"coefficient": 1.1
+				},
+				{
+					"cle": "eleve",
+					"libelle": "Sous effort élevé",
+					"coefficient": 1.3
+				}
+			]
+		}
+	],
+	"parts": [
+		{
+			"cle": "materiel",
+			"libelle": "Matériel et fabrication"
+		},
+		{
+			"cle": "etudes",
+			"libelle": "Études"
+		},
+		{
+			"cle": "realisation",
+			"libelle": "Montage, programmation, mise au point"
+		},
+		{
+			"cle": "gestion",
+			"libelle": "Gestion de projet"
+		}
+	],
+	"note_montants": "Montants hors taxes et hors marge : la marge commerciale est appliquée au calcul, depuis prix-indice.json."
 }

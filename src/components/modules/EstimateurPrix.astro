@@ -9,8 +9,26 @@
 import modele from '../../../content/donnees/prix.json';
 import { typo } from '../../scripts/typographie';
 
+interface Props {
+	/**
+	 * Version d'aperçu, pour poser l'estimateur dans une page : les quelques questions qui
+	 * pèsent le plus, les autres prises à leur valeur par défaut, et un lien vers l'outil
+	 * complet. Le calcul est le même, seule la saisie est raccourcie.
+	 */
+	apercu?: boolean;
+}
+const { apercu = false } = Astro.props;
+
 const natures = modele.natures;
 const postes = modele.postes;
+
+// Les postes retenus pour l'aperçu sont listés dans le modèle, pas ici : ils se changent
+// sans toucher au code.
+const clesApercu: string[] = (modele as { apercu?: string[] }).apercu ?? [];
+const postesApercu = clesApercu
+	.map((cle) => postes.find((p) => p.cle === cle))
+	.filter((p): p is (typeof postes)[number] => Boolean(p));
+const TitreResultat = apercu ? 'h3' : 'h2';
 ---
 
 <form class="estimateur" data-estimateur novalidate>
@@ -19,6 +37,58 @@ const postes = modele.postes;
 		exécuter.
 	</p>
 
+	{apercu ? (
+		<fieldset class="section section--apercu">
+			<legend class="sr-only">Votre projet en quelques réponses</legend>
+			<div class="apercu__grille">
+				<div class="champ">
+					<label for="apercu-nature">De quel projet s’agit-il ?</label>
+					<div class="saisie">
+						<select id="apercu-nature" data-nature-choix>
+							{natures.map((n) => (
+								<option value={n.cle}>{n.libelle}</option>
+							))}
+						</select>
+					</div>
+				</div>
+				{postesApercu.map((p) => (
+					<div class="champ">
+						<label for={`poste-${p.cle}`}>{p.libelle}</label>
+						{p.type === 'nombre' ? (
+							<div class="saisie">
+								<input
+									type="number"
+									id={`poste-${p.cle}`}
+									data-nombre={p.cle}
+									min="0"
+									step="1"
+									placeholder="0"
+									inputmode="numeric"
+								/>
+								<span class="unite">{p.unite}</span>
+							</div>
+						) : (
+							p.type === 'choix' && (
+								<div class="saisie">
+									<select id={`poste-${p.cle}`} data-choix={p.cle}>
+										{p.options.map((o, i) => (
+											<option
+												value={o.cle}
+												selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}
+											>
+												{o.libelle}
+											</option>
+										))}
+									</select>
+								</div>
+							)
+						)}
+					</div>
+				))}
+			</div>
+		</fieldset>
+	) : (
+	<Fragment>
 	<fieldset class="section">
 		<legend>De quel projet s’agit-il ?</legend>
 		<div class="natures">
@@ -184,10 +254,12 @@ const postes = modele.postes;
 			}
 		</div>
 	</fieldset>
+	</Fragment>
+	)}
 </form>
 
-<section class="resultat" data-resultat hidden aria-live="polite">
-	<h2>Ordre de prix</h2>
+<section class={`resultat ${apercu ? 'resultat--apercu' : ''}`} data-resultat hidden aria-live="polite">
+	<TitreResultat>Ordre de prix</TitreResultat>
 	<p class="fourchette">
 		<span data-bas></span>
 		<span class="fourchette__a">à</span>
@@ -203,6 +275,14 @@ const postes = modele.postes;
 	<ul class="sr-only" data-detail-parts></ul>
 
 	<p class="avertissement">{typo(modele.avertissement)}</p>
+
+	{apercu && (
+		<p class="apercu__suite">
+			<a class="bouton" href="/outils/estimateur-prix">
+				Répondre à toutes les questions
+			</a>
+		</p>
+	)}
 </section>
 
 <script>
@@ -241,14 +321,22 @@ const postes = modele.postes;
 
 		// ---------------------------------------------------------- Lecture du formulaire
 		function lireEntrees(): Entrees {
-			const nature = form!.querySelector<HTMLInputElement>('[data-nature]:checked')?.value ?? M.natures[0].cle;
+			const nature =
+				form!.querySelector<HTMLInputElement>('[data-nature]:checked')?.value ??
+				form!.querySelector<HTMLSelectElement>('[data-nature-choix]')?.value ??
+				M.natures[0].cle;
 			const nombres: Entrees['nombres'] = {};
 			const choix: Entrees['choix'] = {};
 			const cases: Entrees['cases'] = {};
 
 			for (const p of M.postes) {
 				if (p.type === 'nombre') {
-					const input = form!.querySelector<HTMLInputElement>(`[data-nombre="${p.cle}"]`)!;
+					// L'aperçu ne montre que quelques postes : les autres restent à zéro.
+					const input = form!.querySelector<HTMLInputElement>(`[data-nombre="${p.cle}"]`);
+					if (!input) {
+						nombres[p.cle] = 0;
+						continue;
+					}
 					const panneau = form!.querySelector<HTMLElement>(`[data-detail="${p.cle}"]`);
 					if (panneau && !panneau.hidden) {
 						const detail: Record<string, number> = {};
@@ -267,7 +355,10 @@ const postes = modele.postes;
 						nombres[p.cle] = Math.max(0, Math.floor(Number(input.value) || 0));
 					}
 				} else if (p.type === 'choix') {
-					choix[p.cle] = form!.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)!.value;
+					// Absent de l'aperçu : on prend la valeur par défaut du modèle.
+					choix[p.cle] =
+						form!.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)?.value ??
+						('defaut' in p && p.defaut ? p.defaut : p.options[0].cle);
 				} else {
 					cases[p.cle] = [...form!.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`)].map(
 						(i) => i.value
@@ -276,7 +367,8 @@ const postes = modele.postes;
 			}
 			const facteurs: Entrees['facteurs'] = {};
 			for (const f of M.facteurs) {
-				facteurs[f.cle] = form!.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)!.value;
+				facteurs[f.cle] =
+					form!.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)?.value ?? f.options[0].cle;
 			}
 			return { nature, nombres, choix, cases, facteurs };
 		}
@@ -371,6 +463,39 @@ const postes = modele.postes;
 </script>
 
 <style>
+	/* Version d’aperçu : les champs sur une grille, sans légendes ni aides. */
+	.section--apercu {
+		border: 0;
+		margin: 0;
+		padding: 0;
+	}
+	.apercu__grille {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		gap: 1rem 1.75rem;
+	}
+	.apercu__grille .champ {
+		display: grid;
+		gap: 0.35rem;
+		align-content: start;
+	}
+	.apercu__grille label {
+		font-family: var(--titres);
+		font-weight: 500;
+		font-size: 0.95rem;
+	}
+	.apercu__grille .saisie {
+		justify-content: start;
+	}
+	.apercu__grille select {
+		width: 100%;
+	}
+	.resultat--apercu {
+		margin-top: 1.5rem;
+	}
+	.apercu__suite {
+		margin: 1.25rem 0 0;
+	}
 	.estimateur {
 		border: 1px solid var(--gris-moyen);
 		border-radius: var(--rayon);

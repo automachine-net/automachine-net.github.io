@@ -47,7 +47,7 @@ const classeFond = classeFond_(bloc.fond);
 		{bloc.module === 'compte-a-rebours' && <CompteARebours carte={bloc.fond !== 'sombre'} />}
 		{bloc.module === 'apercu-carbone' && <ApercuCarbone />}
 		{bloc.module === 'simulateur-carbone' && <SimulateurCarbone compact />}
-		{bloc.module === 'estimateur-prix' && <EstimateurPrix />}
+		{bloc.module === 'estimateur-prix' && <EstimateurPrix apercu />}
 		{bloc.module === 'quiz-complet' && <QuizComplet />}
 		{bloc.module === 'flux-matieres' && <FluxMatieres />}
 		{bloc.module === 'reversibilite' && <BoucleHelice />}

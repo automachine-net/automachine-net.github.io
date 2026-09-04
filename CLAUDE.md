@@ -197,6 +197,11 @@ s'ajoute à la liste du bloc en même temps qu'il est créé.
      simulateur carbone ; avertissement : « À titre indicatif : peut fluctuer selon la nature
      de la machine et la complexité de la solution technique » ; pas de surcoût nucléaire
      (pas de nucléaire pour l'instant).
+   - **Version d'aperçu (2026-09-04)** : posé dans une page par le bloc « module »,
+     l'estimateur se réduit à la nature du projet et aux postes listés dans `apercu` du
+     modèle (robots, axes motorisés, contrôle, encombrement), les autres réponses prises à
+     leur valeur par défaut. Le calcul est le même : à réponses égales, l'aperçu et le
+     questionnaire entier donnent le même montant. Un bouton renvoie vers l'outil complet.
    - **Livré (2026-09-04)** : `/outils/estimateur-prix`, modèle dans `content/donnees/prix.json`,
      calcul dans `src/scripts/prix.ts`. Le JSON ne contient aucun client ni prix réel. Page non
      indexée tant que le dirigeant n'a pas validé les valeurs.

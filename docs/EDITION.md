@@ -104,7 +104,8 @@ sont proposés dans la liste déroulante :
 - le quiz règlement machines, en extrait de quelques questions ou en entier ;
 - le compte à rebours du 20 janvier 2027 ;
 - l'empreinte carbone, en aperçu chiffré ou en simulateur à remplir ;
-- l'estimateur d'ordre de prix ;
+- l'estimateur d'ordre de prix. Posé dans une page, il se réduit aux quatre questions qui
+  pèsent le plus sur le prix, suivies d'un bouton vers le questionnaire entier ;
 - le flux de matières ;
 - la réversibilité, boucle ou hélice ;
 - un cadre d'attente, pour réserver la place d'un outil pas encore construit.
