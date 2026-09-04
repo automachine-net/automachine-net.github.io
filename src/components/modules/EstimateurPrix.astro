@@ -52,15 +52,17 @@ const postes = modele.postes;
 								) : (
 									<span class="poste__libelle" id={`poste-${p.cle}-nom`}>{p.libelle}</span>
 								)}
-								<span class="aide" data-aide data-bulle>
-									<button type="button" class="aide-bouton" aria-describedby={`aide-${p.cle}`}>
-										<span aria-hidden="true">?</span>
-										<span class="sr-only">Que change ce paramètre ?</span>
-									</button>
-									<span class="bulle" role="tooltip" id={`aide-${p.cle}`}>
-										{typo(p.aide)}
+								{p.aide && (
+									<span class="aide" data-aide data-bulle>
+										<button type="button" class="aide-bouton" aria-describedby={`aide-${p.cle}`}>
+											<span aria-hidden="true">?</span>
+											<span class="sr-only">Que change ce paramètre ?</span>
+										</button>
+										<span class="bulle" role="tooltip" id={`aide-${p.cle}`}>
+											{typo(p.aide)}
+										</span>
 									</span>
-								</span>
+								)}
 							</span>
 
 							{p.type === 'nombre' && (
@@ -108,9 +110,6 @@ const postes = modele.postes;
 
 						{p.type === 'nombre' && 'detail' in p && p.detail && (
 							<div class="detail" data-detail={p.cle} hidden>
-								<p class="detail__consigne">
-									Répartissez le nombre par type. Le total se calcule tout seul.
-								</p>
 								<div class="detail__lignes">
 									{p.detail.map((d) => (
 										<div class="champ champ--sous">
