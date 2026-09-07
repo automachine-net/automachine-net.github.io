@@ -4,6 +4,9 @@ import { defineConfig } from 'astro/config';
 // Extension officielle d'Astro : elle génère le plan du site (sitemap.xml) lu par les moteurs
 // de recherche. Elle ne tourne qu'à la construction et n'ajoute rien dans le navigateur.
 import sitemap from '@astrojs/sitemap';
+// Notre propre intégration : une page où un marqueur de relecture est encore visible est
+// écartée des moteurs et retirée du plan du site, sans liste à tenir (voir le fichier).
+import chantier from './src/integrations/chantier.mjs';
 
 // Adresse du site. Elle sert aux adresses canoniques, aux balises de partage et au plan du site.
 // À changer le jour de la bascule vers le domaine définitif (voir docs/BASCULE.md).
@@ -52,6 +55,8 @@ export default defineConfig({
 				return ![...PAGES_NON_REFERENCEES, ...pagesMasqueesParLeCms()].includes(chemin);
 			},
 		}),
+		// Après le plan du site : l'intégration l'élague une fois qu'il est écrit.
+		chantier(),
 	],
 	build: {
 		// Une page = un dossier avec index.html. C'est ce qu'attend un hébergement Apache

@@ -266,6 +266,13 @@ le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (pag
 suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
 
 - **Lot A livré le 2026-09-07.**
+- **Lot B livré le 2026-09-07** : intégration `src/integrations/chantier.mjs`, déclarée
+  après le plan du site dans `astro.config.mjs`. Elle relit chaque page produite ; un
+  marqueur visible (regex `MARQUEUR`, insensible à la casse et aux accents) vaut balise
+  `noindex` et retrait du plan du site. Toute page qui porte `noindex`, d'où qu'il vienne,
+  sort du plan. La liste des pages écartées est imprimée dans le journal de construction.
+  Aucune liste manuelle à tenir : `PAGES_NON_REFERENCEES` ne sert plus qu'aux modules
+  volontairement non publics.
 
 ## Lots
 

@@ -154,6 +154,16 @@ Tout est dans **Réglages** :
 
 ## 8. Les repères à remplir
 
+**Tant qu'un repère est visible sur une page, cette page est cachée des moteurs de
+recherche.** Le site le détecte tout seul à chaque publication : une page qui contient encore
+un « [à relire] », un « [À COMPLÉTER …] » ou un « [MODULE À …] » reçoit la consigne
+« ne pas référencer » et sort du plan du site. Elle reste ouverte à qui a l'adresse, elle
+n'apparaît simplement pas dans les résultats de recherche. Dès que le dernier repère est
+retiré, la page revient toute seule à la publication suivante, sans rien demander.
+
+La liste des pages cachées s'affiche dans le journal de chaque publication, onglet
+« Actions » de GitHub, étape « Construire ».
+
 Le site contient des repères entre crochets, laissés volontairement visibles :
 
 - `[à relire]` : un texte rédigé qui attend votre relecture. À conserver ou à réécrire,
