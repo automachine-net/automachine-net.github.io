@@ -1,6 +1,7 @@
 ---
 // Bloc « galerie ». Des images en grille, avec légendes facultatives.
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import ImageContenu from '../ImageContenu.astro';
 
 export interface BlocGalerie {
 	type: 'galerie';
@@ -25,7 +26,12 @@ const minimum = { 2: '22rem', 3: '17rem', 4: '13rem' }[bloc.colonnes ?? 3];
 					<li>
 						<figure>
 							{i.image ? (
-								<img src={i.image} alt={i.alt ?? ''} loading="lazy" decoding="async" />
+								<ImageContenu
+									src={i.image}
+									alt={i.alt ?? ''}
+									largeurs={[480, 800]}
+									tailles="(max-width: 640px) 100vw, 22rem"
+								/>
 							) : (
 								<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
 									<span>{i.attente ?? '[VISUEL À PRODUIRE]'}</span>

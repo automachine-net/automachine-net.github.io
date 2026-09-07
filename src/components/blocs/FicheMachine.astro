@@ -9,7 +9,7 @@ import { getCollection } from 'astro:content';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 import { typo } from '../../scripts/typographie';
 import ModeleGltf from '../ModeleGltf.astro';
-import { versionWebp } from '../../scripts/images';
+import ImageContenu from '../ImageContenu.astro';
 
 export interface BlocFicheMachine {
 	type: 'fiche-machine';
@@ -57,18 +57,13 @@ const choisies = bloc.machines?.length
 					choisies.map((m) => (
 						<li class="carte">
 							{m.data.image ? (
-								<picture>
-									{versionWebp(m.data.image) && (
-										<source srcset={versionWebp(m.data.image)} type="image/webp" />
-									)}
-									<img
-										class="carte__image"
-										src={m.data.image}
-										alt={m.data.image_alt ?? ''}
-										loading="lazy"
-										decoding="async"
-									/>
-								</picture>
+								<ImageContenu
+									class="carte__image"
+									src={m.data.image}
+									alt={m.data.image_alt ?? ''}
+									largeurs={[320, 480, 800]}
+									tailles="(max-width: 640px) 90vw, 22rem"
+								/>
 							) : m.data.video_affiche ? (
 								<img
 									class="carte__image"

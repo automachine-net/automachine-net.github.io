@@ -8,7 +8,7 @@ import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
 import ModeleGltf from '../../components/ModeleGltf.astro';
 import VideoBoucle from '../../components/VideoBoucle.astro';
-import { versionWebp } from '../../scripts/images';
+import ImageContenu from '../../components/ImageContenu.astro';
 import { marked } from '../../scripts/markdown';
 import { typo } from '../../scripts/typographie';
 
@@ -41,15 +41,14 @@ const suivante = toutes[(position + 1) % toutes.length];
 				<section class="bloc fiche__visionneuse">
 					<div class="bloc__interieur">
 						<figure>
-							<picture>
-								{versionWebp(d.image) && <source srcset={versionWebp(d.image)} type="image/webp" />}
-								<img
-									class="fiche__image"
-									src={d.image}
-									alt={d.image_alt ?? `${d.nom}, vue d'ensemble`}
-									decoding="async"
-								/>
-							</picture>
+							<ImageContenu
+								class="fiche__image"
+								src={d.image}
+								alt={d.image_alt ?? `${d.nom}, vue d'ensemble`}
+								largeurs={[480, 800, 1200, 1600]}
+								tailles="(max-width: 800px) 100vw, 46rem"
+								chargement="eager"
+							/>
 						</figure>
 					</div>
 				</section>

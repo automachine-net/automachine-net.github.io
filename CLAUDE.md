@@ -239,10 +239,33 @@ s'ajoute à la liste du bloc en même temps qu'il est créé.
 
 - Lighthouse ≥ 90 sur les quatre axes, mobile. Accessibilité AA. Éditorial lisible sans JS.
 - Images AVIF/WebP avec repli, dimensionnées, chargement différé.
+  - **Chaîne d'images (lot A, 2026-09-07)** : les images de contenu vivent dans
+    `src/images/` (contenu, machines), jamais dans `public/`. Le CMS y dépose, le contenu
+    garde une adresse `/images/...`, et `src/scripts/images.ts` fait la correspondance.
+    Tout affichage passe par `src/components/ImageContenu.astro` (composant `<Picture>`
+    d'Astro : largeurs réellement affichées, AVIF puis WebP, original en repli, dimensions
+    déclarées). Une largeur jamais supérieure à la plus grande demandée : la photo brute
+    de 4 416 pixels n'est pas servie entière. Les logos clients (SVG) restent dans
+    `public/images/clients`. Le fichier d'origine est copié dans `dist/_astro` par la
+    construction, sans être lié : coût de déploiement, pas de visite.
 - SEO : sitemap, meta et Open Graph par page, URL propres et stables.
 - Redirections 301 : inventaire des URL actuelles, table ancienne → nouvelle validée par le
   dirigeant, générée en `.htaccess`. Aucune URL actuelle en 404 après bascule.
 - Docs (`docs/`) : `EDITION.md`, `DEPLOIEMENT.md`, `3D.md`, `BASCULE.md`, `REPRISE.md`.
+
+## Plan de reprise après relecture critique (validé le 2026-09-07)
+
+Six lots, dans cet ordre, chacun démontré sur l'adresse provisoire avant le suivant :
+A chaîne d'images automatique ; B retrait du référencement des pages qui portent encore
+des marqueurs, détecté à la construction ; C les six machines en rendu ; D corrections de
+fond (phrase ISO de l'accueil, chiffres clés, FAQ du contact, fiche ESRF, téléphone en
+tête du contact) ; E solidité du code (vérification de types dans la construction,
+formateur, modules multi-instances, fin des assertions non nulles, une seule règle pour
+les textes du CMS, en-tête de page commun, schéma strict, réduction des animations sur
+le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (page 404,
+suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
+
+- **Lot A livré le 2026-09-07.**
 
 ## Lots
 

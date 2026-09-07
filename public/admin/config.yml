@@ -13,7 +13,10 @@ backend:
   branch: main
 
 # Emplacement des images téléversées depuis le CMS.
-media_folder: public/images/contenu
+# Les images de contenu vont dans src/images/, pas dans public/ : c'est ce qui permet au
+# site de les redimensionner et de les convertir à la construction. L'adresse écrite dans
+# le contenu reste /images/contenu/..., le site fait la correspondance.
+media_folder: src/images/contenu
 public_folder: /images/contenu
 
 # L'interface est en français.
@@ -362,8 +365,8 @@ collections:
         label: Image d'attente de l'animation
         widget: image
         required: false
-        media_folder: /public/videos
-        public_folder: /videos
+        media_folder: /src/images/machines
+        public_folder: /images/machines
         hint: >-
           Première image de l'animation, affichée avant qu'elle ne démarre. Sans elle, le
           cadre reste vide quelques instants.
@@ -401,8 +404,20 @@ collections:
         fields:
           - { name: libelle, label: Libellé, widget: string }
           - { name: valeur, label: Valeur, widget: string }
-      - { name: image, label: Photo ou rendu, widget: image, required: false }
-      - { name: image_alt, label: Description de l'image, widget: string, required: false }
+      - name: image
+        label: Photo ou rendu
+        widget: image
+        required: false
+        media_folder: /src/images/machines
+        public_folder: /images/machines
+        hint: >-
+          Déposer le fichier tel quel, même lourd : le site le réduit et le convertit tout
+          seul. Un rendu au fond transparent donne le meilleur résultat.
+      - name: image_alt
+        label: Description de l'image
+        widget: string
+        required: false
+        hint: Décrit l'image pour les personnes qui ne la voient pas.
       - name: blocs
         label: Blocs supplémentaires
         label_singular: Bloc

@@ -130,7 +130,8 @@ donne le rythme de la page. Alterner sans excès, deux ou trois fonds sombres pa
    laisser vide, et seul le secteur sera affiché.
 4. **Fiche technique** : ajouter autant de lignes que nécessaire, chacune avec un libellé et
    une valeur.
-5. **Image** : la photo ou le rendu de la machine. C'est ce qui s'affiche en premier, sur la
+5. **Image** : la photo ou le rendu de la machine. Déposer le fichier tel quel, même
+   lourd : le site le réduit et le convertit tout seul. C'est ce qui s'affiche en premier, sur la
    fiche comme sur les cartes. Un rendu au fond transparent donne le meilleur résultat.
    Remplir aussi le texte de remplacement, lu par les personnes qui n'accèdent pas à l'image.
 6. **Animation (.mp4)** : la petite vidéo de la machine, en boucle et sans son. Elle est

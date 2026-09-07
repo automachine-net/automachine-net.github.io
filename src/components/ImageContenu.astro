@@ -1,0 +1,74 @@
+---
+// Image de contenu, servie à la bonne taille et dans les formats modernes.
+//
+// À utiliser pour toute image venue du CMS. Le composant reçoit le chemin tel qu'il est
+// écrit dans le contenu, retrouve le fichier dans src/images/ et laisse Astro produire les
+// déclinaisons : plusieurs largeurs, AVIF puis WebP, le fichier d'origine en repli. Les
+// dimensions sont déclarées, donc la page ne saute pas pendant le chargement.
+//
+// `largeurs` : les largeurs en pixels à produire, à choisir d'après la place que l'image
+// occupe à l'écran. `tailles` : l'attribut sizes, qui dit au navigateur cette place. Une
+// largeur supérieure à celle du fichier est ignorée : on n'agrandit jamais une image.
+//
+// Les attributs non prévus ici (dont celui que pose Astro pour les styles du composant
+// parent) sont transmis à l'élément img : les règles du parent continuent de s'appliquer.
+import { Picture } from 'astro:assets';
+import { imageDeContenu } from '../scripts/images';
+
+interface Props {
+	src: string;
+	alt: string;
+	largeurs?: number[];
+	tailles?: string;
+	chargement?: 'lazy' | 'eager';
+	class?: string;
+}
+const {
+	src,
+	alt,
+	largeurs = [480, 800, 1200, 1600],
+	tailles = '(max-width: 800px) 100vw, 50vw',
+	chargement = 'lazy',
+	class: classe,
+	...reste
+} = Astro.props;
+
+const image = imageDeContenu(src);
+// Les largeurs demandées, sans dépasser celle du fichier. Si le fichier est plus petit que la
+// plus grande largeur demandée, sa largeur réelle sert de dernier palier ; s'il est plus
+// grand, on s'arrête à la plus grande demandée : une photo de 4 000 pixels n'a pas à être
+// servie entière quand la page l'affiche sur 600.
+const plafond = Math.max(...largeurs);
+const largeursUtiles = image
+	? [
+			...new Set([
+				...largeurs.filter((l) => l < image.width),
+				...(image.width <= plafond ? [image.width] : []),
+			]),
+		].sort((a, b) => a - b)
+	: [];
+// Le fichier de repli, pour les navigateurs sans AVIF ni WebP, est produit au plus grand
+// palier retenu, jamais à la taille d'origine. Les dimensions déclarées suivent.
+const largeurRepli = largeursUtiles.at(-1) ?? 0;
+const hauteurRepli = image ? Math.round((image.height * largeurRepli) / image.width) : 0;
+---
+
+{
+	image ? (
+		<Picture
+			src={image}
+			alt={alt}
+			width={largeurRepli}
+			height={hauteurRepli}
+			widths={largeursUtiles}
+			sizes={tailles}
+			formats={['avif', 'webp']}
+			loading={chargement}
+			decoding="async"
+			class={classe}
+			{...reste}
+		/>
+	) : (
+		<img src={src} alt={alt} loading={chargement} decoding="async" class={classe} {...reste} />
+	)
+}

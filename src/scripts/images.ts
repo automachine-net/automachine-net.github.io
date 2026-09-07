@@ -1,17 +1,23 @@
-// Déclinaisons modernes d'une image de contenu.
+// Images de contenu : celles que les éditeurs déposent depuis le CMS.
 //
-// L'éditeur ne dépose qu'un seul fichier dans le CMS. Si une version WebP a été préparée à
-// côté, sous le même nom, elle est proposée en premier et le fichier d'origine sert de repli
-// pour les navigateurs qui ne la lisent pas. Sinon, l'image est servie telle quelle : il n'y
-// a rien à faire côté rédaction, et rien ne casse si les déclinaisons n'existent pas.
+// Elles sont rangées dans src/images/ et non dans public/ : c'est ce qui permet à Astro de
+// les traiter à la construction. Chaque image est redimensionnée aux largeurs réellement
+// affichées et déclinée en AVIF et WebP, le fichier d'origine servant de repli. L'éditeur
+// dépose une photo brute de plusieurs mégaoctets, le visiteur en reçoit quelques dizaines
+// de kilooctets à la bonne taille.
 //
-// La vérification a lieu à la construction du site, jamais dans le navigateur.
-import fs from 'node:fs';
+// Le CMS écrit dans le contenu un chemin de la forme /images/contenu/photo.jpg. Cette
+// fonction retrouve le fichier correspondant dans src/images/. Si le fichier n'y est pas,
+// par exemple une image ancienne restée dans public/, elle renvoie null et l'image est
+// servie telle quelle : rien ne casse, elle n'est simplement pas optimisée.
+import type { ImageMetadata } from 'astro';
 
-/** Chemin de la version WebP si le fichier existe dans public/, sinon null. */
-export function versionWebp(src: string | undefined | null): string | null {
-	if (!src || !src.startsWith('/')) return null;
-	if (/\.webp$/i.test(src)) return null;
-	const chemin = src.replace(/\.[a-z0-9]+$/i, '.webp');
-	return fs.existsSync(`public${chemin}`) ? chemin : null;
+const fichiers = import.meta.glob<{ default: ImageMetadata }>(
+	'/src/images/**/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,avif,gif}',
+	{ eager: true }
+);
+
+export function imageDeContenu(chemin: string | null | undefined): ImageMetadata | null {
+	if (!chemin || !chemin.startsWith('/images/')) return null;
+	return fichiers[`/src${chemin}`]?.default ?? null;
 }

@@ -2,6 +2,7 @@
 // Bloc « texte et image ». L'image peut être à gauche ou à droite ; en dessous sur mobile.
 import { marked } from '../../scripts/markdown';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import ImageContenu from '../ImageContenu.astro';
 
 export interface BlocTexteImage {
 	type: 'texte-image';
@@ -38,7 +39,12 @@ const aGauche = bloc.position_image === 'gauche';
 		<figure class="duo__image">
 			{
 				bloc.image ? (
-					<img src={bloc.image} alt={bloc.image_alt ?? ''} loading="lazy" decoding="async" />
+					<ImageContenu
+						src={bloc.image}
+						alt={bloc.image_alt ?? ''}
+						largeurs={[480, 800, 1200]}
+						tailles="(max-width: 800px) 100vw, 37rem"
+					/>
 				) : (
 					<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
 						<span>{bloc.image_attente ?? '[VISUEL À PRODUIRE]'}</span>

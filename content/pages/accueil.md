@@ -40,7 +40,7 @@ blocs:
       Notre exigence en matière de qualité s’est notamment traduite par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
     fond: sombre
     image: /images/contenu/DSCF6411.JPG
-    image_alt: ''
+    image_alt: L’équipe d’Automachine dans l’atelier, autour d’un robot industriel monté sur palette.
     image_attente: ''
     position_image: droite
     citation: Texte de la citation
