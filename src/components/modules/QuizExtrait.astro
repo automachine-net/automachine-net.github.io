@@ -37,7 +37,6 @@ const selection = choisies?.length
 		})();
 
 const lettres = ['a', 'b', 'c', 'd'] as const;
-const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 ---
 
 {/* <details> : le quiz est replié à l'arrivée et se déroule au clic. Cela fonctionne sans
@@ -46,6 +45,9 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 	<summary class="quiz__bouton">
 		<span>{libelle}</span>
 	</summary>
+
+	{/* Annonce du verdict aux lecteurs d'écran : la couleur seule ne suffit pas. */}
+	<p class="sr-only" data-annonce aria-live="polite" />
 
 	<ol class="quiz__liste">
 		{
@@ -91,6 +93,7 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 		const options = q.querySelectorAll<HTMLButtonElement>('.option');
 		const explication = q.querySelector<HTMLElement>('.question__explication');
 		const verdict = explication?.querySelector<HTMLElement>('[data-verdict]');
+		const annonce = q.closest('[data-quiz]')?.querySelector<HTMLElement>('[data-annonce]');
 		if (!explication || !verdict) return;
 
 		options.forEach((choix) =>
@@ -103,8 +106,13 @@ const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 					if (autre.dataset.lettre === bonne) autre.classList.add('option--bonne');
 					else if (autre === choix) autre.classList.add('option--fausse');
 				});
-				verdict.textContent = juste ? 'Exact. ' : `Non, la bonne réponse est ${bonne!.toUpperCase()}. `;
+				const texte = juste ? 'Exact.' : `Non, la bonne réponse est ${(bonne ?? '').toUpperCase()}.`;
+				verdict.textContent = texte + ' ';
 				explication.hidden = false;
+				if (annonce) {
+					annonce.textContent = '';
+					requestAnimationFrame(() => (annonce.textContent = texte));
+				}
 			})
 		);
 	});

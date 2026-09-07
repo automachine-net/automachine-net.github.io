@@ -8,9 +8,12 @@
   "scripts": {
     "cms": "node -e \"require('fs').copyFileSync('node_modules/@sveltia/cms/dist/sveltia-cms.js','public/admin/sveltia-cms.js')\"",
     "detourer": "node construction/detourer.mjs",
+    "verifier": "astro check",
+    "formater": "prettier --write .",
+    "formater:controler": "prettier --check .",
     "predev": "npm run cms && npm run detourer",
     "dev": "astro dev",
-    "prebuild": "npm run cms && npm run detourer",
+    "prebuild": "npm run cms && npm run detourer && npm run verifier",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -24,5 +27,11 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3"
   }
 }

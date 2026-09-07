@@ -34,10 +34,12 @@ const { src, affiche, nom } = Astro.props;
 </div>
 
 <script>
+	import { element } from '../scripts/dom';
+
 	for (const bloc of document.querySelectorAll<HTMLElement>('[data-video]')) {
-		const film = bloc.querySelector('video')!;
-		const bouton = bloc.querySelector<HTMLButtonElement>('[data-bascule]')!;
-		const libelle = bouton.querySelector<HTMLElement>('.video__libelle')!;
+		const film = element<HTMLVideoElement>(bloc, 'video');
+		const bouton = element<HTMLButtonElement>(bloc, '[data-bascule]');
+		const libelle = element(bouton, '.video__libelle');
 		const sobre = matchMedia('(prefers-reduced-motion: reduce)');
 
 		const afficher = () => {

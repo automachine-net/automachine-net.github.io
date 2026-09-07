@@ -28,6 +28,7 @@ function pagesMasqueesParLeCms() {
 	if (!fs.existsSync(dossier)) return [];
 	// Chaque page a sa propre route : l'accueil est à la racine, les autres portent le nom
 	// de leur fichier (voir src/pages/[...slug].astro).
+	/** @type {Record<string, string>} */
 	const routes = { accueil: '/' };
 	return fs
 		.readdirSync(dossier)

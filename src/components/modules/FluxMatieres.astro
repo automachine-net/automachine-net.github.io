@@ -16,12 +16,6 @@
 import donnees from '../../../content/donnees/flux-matieres.json';
 import { typo } from '../../scripts/typographie';
 
-interface Props {
-	/** Titre de niveau 2 au-dessus du schéma. Absent, le module s'insère sans titre. */
-	titre?: string;
-}
-const { titre } = Astro.props;
-
 const valeur = (cle: string): number =>
 	donnees.flux.find((f) => f.cle === cle)?.valeur ?? 0;
 const libelle = (cle: string): string =>
@@ -288,8 +282,11 @@ const etapes = donnees.etapes.map((e, i) => {
 
 <script is:inline define:vars={{ etapes }}>
 	(() => {
-		const module = document.querySelector('[data-flux-module]');
-		if (!module) return;
+		// Un exemplaire par bloc « module » ; chaque exemplaire inclut ce script, d'où la marque
+		// « monté » qui évite de brancher deux fois le même schéma.
+		document.querySelectorAll('[data-flux-module]').forEach((module) => {
+		if (module.dataset.monte) return;
+		module.dataset.monte = '1';
 
 		const titre = module.querySelector('[data-titre]');
 		const nombre = module.querySelector('[data-nombre]');
@@ -397,6 +394,7 @@ const etapes = donnees.etapes.map((e, i) => {
 		});
 
 		afficher(0);
+		});
 	})();
 </script>
 

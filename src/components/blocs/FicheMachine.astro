@@ -126,8 +126,12 @@ const choisies = bloc.machines?.length
 <script>
 	import { modeles, monterScene } from '../../scripts/filaire';
 	import { chargerVisionneuse } from '../../scripts/visionneuse';
+	import { element } from '../../scripts/dom';
 
 	chargerVisionneuse();
+
+	// Le défilement des flèches est doux, sauf si le visiteur a demandé moins d'animations.
+	const defilement: ScrollBehavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
 	const monter = (racine: ParentNode) => {
 		racine.querySelectorAll<HTMLCanvasElement>('canvas[data-slug]').forEach((c) => {
@@ -139,7 +143,7 @@ const choisies = bloc.machines?.length
 	};
 
 	document.querySelectorAll<HTMLElement>('[data-carrousel]').forEach((carrousel) => {
-		const piste = carrousel.querySelector<HTMLElement>('[data-piste]')!;
+		const piste = element(carrousel, '[data-piste]');
 		const originaux = [...piste.children] as HTMLElement[];
 		if (originaux.length === 0) return;
 
@@ -195,12 +199,12 @@ const choisies = bloc.machines?.length
 		);
 
 		const pas = () => (piste.querySelector('.carte') as HTMLElement).getBoundingClientRect().width + 16;
-		const avant = carrousel.querySelector<HTMLButtonElement>('[data-avant]')!;
-		const apres = carrousel.querySelector<HTMLButtonElement>('[data-apres]')!;
+		const avant = element<HTMLButtonElement>(carrousel, '[data-avant]');
+		const apres = element<HTMLButtonElement>(carrousel, '[data-apres]');
 		avant.hidden = false;
 		apres.hidden = false;
-		avant.addEventListener('click', () => piste.scrollBy({ left: -pas(), behavior: 'smooth' }));
-		apres.addEventListener('click', () => piste.scrollBy({ left: pas(), behavior: 'smooth' }));
+		avant.addEventListener('click', () => piste.scrollBy({ left: -pas(), behavior: defilement }));
+		apres.addEventListener('click', () => piste.scrollBy({ left: pas(), behavior: defilement }));
 	});
 
 	// Cas sans carrousel monté (JavaScript partiel) : les volumes s'affichent quand même.

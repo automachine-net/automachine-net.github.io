@@ -12,7 +12,6 @@ import { lienArticle, libelleArticle } from '../../scripts/reglement';
 import { typo } from '../../scripts/typographie';
 
 const lettres = ['a', 'b', 'c', 'd'] as const;
-const article = (r: string) => r.replace(/^art\.\s*/i, 'article ');
 
 /** Identifiant utilisable dans une adresse, pour les liens vers un thème. */
 const identifiant = (theme: string) =>
@@ -49,6 +48,8 @@ for (const question of quiz.questions) {
 </nav>
 
 <div class="quiz" data-quiz>
+	{/* Annonce du verdict aux lecteurs d'écran : la couleur seule ne suffit pas. */}
+	<p class="sr-only" data-annonce aria-live="polite" />
 	{
 		themes.map((theme) => (
 			<section class="theme" id={theme.id} data-theme>
@@ -94,22 +95,24 @@ for (const question of quiz.questions) {
 <p class="mention">{quiz.mention}</p>
 
 <script>
-	const quiz = document.querySelector<HTMLElement>('[data-quiz]');
-	if (quiz) {
+	import { chaqueExemplaire, element } from '../../scripts/dom';
+
+	chaqueExemplaire('[data-quiz]', (quiz) => {
+		const annonce = element(quiz, '[data-annonce]');
 		// Avec JavaScript, l'explication n'est plus dépliable à la main : elle apparaît quand
 		// on répond. Le résumé « Voir la réponse » n'aurait plus de sens.
 		quiz.classList.add('quiz--interactif');
 
 		quiz.querySelectorAll<HTMLElement>('[data-theme]').forEach((theme) => {
-			const affichageScore = theme.querySelector<HTMLElement>('[data-score]')!;
+			const affichageScore = element(theme, '[data-score]');
 			let justes = 0;
 			let repondues = 0;
 
 			theme.querySelectorAll<HTMLElement>('.question').forEach((question) => {
 				const bonne = question.dataset.bonne;
 				const options = question.querySelectorAll<HTMLButtonElement>('.option');
-				const reponse = question.querySelector<HTMLDetailsElement>('[data-reponse]')!;
-				const verdict = reponse.querySelector<HTMLElement>('[data-verdict]')!;
+				const reponse = element<HTMLDetailsElement>(question, '[data-reponse]');
+				const verdict = element(reponse, '[data-verdict]');
 
 				options.forEach((choix) =>
 					choix.addEventListener('click', () => {
@@ -123,10 +126,12 @@ for (const question of quiz.questions) {
 							else if (autre === choix) autre.classList.add('option--fausse');
 						});
 
-						verdict.textContent = juste
-							? 'Exact. '
-							: `Non, la bonne réponse est ${bonne!.toUpperCase()}. `;
+						const texte = juste ? 'Exact.' : `Non, la bonne réponse est ${(bonne ?? '').toUpperCase()}.`;
+						verdict.textContent = texte + ' ';
 						reponse.open = true;
+						// Vidé puis rempli : un même verdict deux fois de suite doit être annoncé deux fois.
+						annonce.textContent = '';
+						requestAnimationFrame(() => (annonce.textContent = texte));
 
 						repondues++;
 						if (juste) justes++;
@@ -136,7 +141,7 @@ for (const question of quiz.questions) {
 				);
 			});
 		});
-	}
+	});
 </script>
 
 <style>

@@ -42,13 +42,15 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 </header>
 
 <script>
+	import { element } from '../scripts/dom';
+
 	// Menu repliable. Sans JavaScript, le menu reste affiché : rien n'est caché par défaut en CSS
 	// tant que le bouton n'a pas pris la main.
 	const bouton = document.querySelector<HTMLButtonElement>('.bascule');
 	const entete = document.querySelector<HTMLElement>('.entete');
 	if (bouton && entete) {
 		entete.classList.add('entete--repliable');
-		const libelle = bouton.querySelector('.sr-only')!;
+		const libelle = element(bouton, '.sr-only');
 		const basculer = (ouvert: boolean) => {
 			bouton.setAttribute('aria-expanded', String(ouvert));
 			entete.classList.toggle('entete--ouvert', ouvert);

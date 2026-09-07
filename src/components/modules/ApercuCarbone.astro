@@ -100,7 +100,7 @@ const parts = chiffres.map((p) => {
 
 <script>
 	import { recalerLesBulles } from '../../scripts/bulle';
-	recalerLesBulles(document.querySelector('.apercu') ?? document);
+	document.querySelectorAll<HTMLElement>('.apercu').forEach((apercu) => recalerLesBulles(apercu));
 </script>
 
 <style>

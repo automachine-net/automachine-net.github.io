@@ -6,7 +6,9 @@
 // Ces schémas servent de garde-fou : si un champ obligatoire manque ou si un type de bloc
 // est mal orthographié, la construction échoue avec un message clair au lieu de publier
 // une page cassée.
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+// Depuis Astro 7, le validateur de schéma s'importe d'ici, plus de astro:content.
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const fond = z.enum(['blanc', 'clair', 'sombre']).optional();

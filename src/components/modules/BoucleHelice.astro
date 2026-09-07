@@ -139,8 +139,11 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 
 <script is:inline define:vars={{ criteres, verdicts: d.verdicts, tours: d.tours }}>
 	(() => {
-		const module = document.querySelector('[data-helice-module]');
-		if (!module) return;
+		// Un exemplaire par bloc « module » ; chaque exemplaire inclut ce script, d'où la marque
+		// « monté » qui évite de brancher deux fois le même dessin.
+		document.querySelectorAll('[data-helice-module]').forEach((module) => {
+		if (module.dataset.monte) return;
+		module.dataset.monte = '1';
 
 		// ── Géométrie du dessin ──────────────────────────────────────────────────────
 		const CX = 600; // centre horizontal
@@ -446,6 +449,7 @@ const nombre = (v: number) => v.toLocaleString('fr-FR');
 			point.setAttribute('cx', p.x.toFixed(1));
 			point.setAttribute('cy', p.y.toFixed(1));
 		}
+		});
 	})();
 </script>
 

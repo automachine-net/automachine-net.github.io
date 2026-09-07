@@ -60,8 +60,14 @@ const parametres = [
 	{ cle: 'duree', libelle: 'Durée de vie attendue', unite: 'ans', pas: '1' },
 	{ cle: 'distance', libelle: 'Distance de livraison', unite: 'km', pas: '50' },
 ] as const;
+// Identifiant propre à cet exemplaire : deux modules sur une même page ne partagent aucun
+// id, sinon les étiquettes et les bulles d'aide pointeraient toutes sur le premier.
+const compteurs = globalThis as { __exemplaires_carbone?: number };
+compteurs.__exemplaires_carbone = (compteurs.__exemplaires_carbone ?? 0) + 1;
+const uid = `carbone${compteurs.__exemplaires_carbone}`;
 ---
 
+<div data-simulateur-module>
 <form class={`simulateur ${compact ? 'simulateur--compact' : ''}`} data-simulateur novalidate>
 	<p class="sans-js">
 		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
@@ -81,19 +87,19 @@ const parametres = [
 
 			<div class="champ champ--masse" data-champ-masse hidden>
 				<div class="champ__tete">
-					<label for="masse">Masse totale</label>
+					<label for={`${uid}-masse`}>Masse totale</label>
 					<span class="aide" data-aide data-bulle>
-						<button type="button" class="aide-bouton" aria-describedby="aide-masse">
+						<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-masse`}>
 							<span aria-hidden="true">?</span>
 							<span class="sr-only">Que change ce paramètre ?</span>
 						</button>
-						<span class="bulle" role="tooltip" id="aide-masse">{typo(aides.masse)}</span>
+						<span class="bulle" role="tooltip" id={`${uid}-aide-masse`}>{typo(aides.masse)}</span>
 					</span>
 				</div>
 				<div class="saisie">
 					<input
 						type="number"
-						id="masse"
+						id={`${uid}-masse`}
 						data-valeur="masse"
 						placeholder={String(exemples.masse)}
 						min="1"
@@ -104,8 +110,8 @@ const parametres = [
 			</div>
 
 			<div class="champ champ--ajustement" data-champ-ajustement hidden>
-				<label for="ajustee">Catégorie qui complète à 100 %</label>
-				<select id="ajustee" data-ajustee>
+				<label for={`${uid}-ajustee`}>Catégorie qui complète à 100 %</label>
+				<select id={`${uid}-ajustee`} data-ajustee>
 					{
 						facteurs.categories.map((c) => (
 							<option value={c.cle} selected={c.cle === 'plastiques'}>
@@ -127,13 +133,13 @@ const parametres = [
 					<div class="categorie" data-categorie={c.cle}>
 						<div class="categorie__tete">
 							<span class="categorie__nom">
-								<label for={`cat-${c.cle}`}>{c.libelle}</label>
+								<label for={`${uid}-cat-${c.cle}`}>{c.libelle}</label>
 								<span class="aide" data-aide data-bulle>
-									<button type="button" class="aide-bouton" aria-describedby={`aide-${c.cle}`}>
+									<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-${c.cle}`}>
 										<span aria-hidden="true">?</span>
 										<span class="sr-only">Que change ce paramètre ?</span>
 									</button>
-									<span class="bulle" role="tooltip" id={`aide-${c.cle}`}>
+									<span class="bulle" role="tooltip" id={`${uid}-aide-${c.cle}`}>
 										{typo(aides[c.cle])}
 									</span>
 								</span>
@@ -141,7 +147,7 @@ const parametres = [
 							<div class="saisie saisie--categorie">
 								<input
 									type="number"
-									id={`cat-${c.cle}`}
+									id={`${uid}-cat-${c.cle}`}
 									data-categorie-valeur={c.cle}
 									placeholder={String(exemples.kg[c.cle as keyof typeof exemples.kg])}
 									min="0"
@@ -166,18 +172,18 @@ const parametres = [
 								{c.sous.map((s) => (
 									<div class="champ champ--sous">
 										<span class="champ--sous__tete">
-											<label for={`sous-${c.cle}-${s.cle}`}>{s.libelle}</label>
+											<label for={`${uid}-sous-${c.cle}-${s.cle}`}>{s.libelle}</label>
 											{s.exemples && (
 												<span class="aide" data-aide data-bulle>
 													<button
 														type="button"
 														class="aide-bouton aide-bouton--petit"
-														aria-describedby={`ex-${c.cle}-${s.cle}`}
+														aria-describedby={`${uid}-ex-${c.cle}-${s.cle}`}
 													>
 														<span aria-hidden="true">?</span>
 														<span class="sr-only">Exemples</span>
 													</button>
-													<span class="bulle" role="tooltip" id={`ex-${c.cle}-${s.cle}`}>
+													<span class="bulle" role="tooltip" id={`${uid}-ex-${c.cle}-${s.cle}`}>
 														{typo(s.exemples)}
 														{s.approche && <span class="bulle__note">{typo(s.note_courte)}</span>}
 													</span>
@@ -187,7 +193,7 @@ const parametres = [
 										<div class="saisie">
 											<input
 												type="number"
-												id={`sous-${c.cle}-${s.cle}`}
+												id={`${uid}-sous-${c.cle}-${s.cle}`}
 												data-sous={c.cle}
 												data-sous-cle={s.cle}
 												min="0"
@@ -215,13 +221,13 @@ const parametres = [
 				parametres.map((champ) => (
 					<div class="champ" hidden={compact && champ.cle === 'distance'}>
 						<div class="champ__tete">
-							<label for={champ.cle}>{champ.libelle}</label>
+							<label for={`${uid}-${champ.cle}`}>{champ.libelle}</label>
 							<span class="aide" data-aide data-bulle>
-								<button type="button" class="aide-bouton" aria-describedby={`aide-${champ.cle}`}>
+								<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-${champ.cle}`}>
 									<span aria-hidden="true">?</span>
 									<span class="sr-only">Que change ce paramètre ?</span>
 								</button>
-								<span class="bulle" role="tooltip" id={`aide-${champ.cle}`}>
+								<span class="bulle" role="tooltip" id={`${uid}-aide-${champ.cle}`}>
 									{typo(aides[champ.cle])}
 								</span>
 							</span>
@@ -229,7 +235,7 @@ const parametres = [
 						<div class="saisie">
 							<input
 								type="number"
-								id={champ.cle}
+								id={`${uid}-${champ.cle}`}
 								data-valeur={champ.cle}
 								placeholder={String(exemples[champ.cle])}
 								min="0"
@@ -269,16 +275,18 @@ const parametres = [
 		<ul data-hypotheses></ul>
 	</details>
 </section>
+</div>
 
 <script>
 	import { calculer, formaterCO2e, arrondiParlant } from '../../scripts/carbone';
 	import { typo } from '../../scripts/typographie';
 	import { recalerLesBulles } from '../../scripts/bulle';
+	import { chaqueExemplaire, element } from '../../scripts/dom';
 
-	const form = document.querySelector<HTMLFormElement>('[data-simulateur]');
-	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
-
-	if (form && resultat) {
+	// Un exemplaire par bloc « module » posé dans la page : chacun a son formulaire et son résultat.
+	chaqueExemplaire('[data-simulateur-module]', (racine) => {
+		const form = element<HTMLFormElement>(racine, '[data-simulateur]');
+		const resultat = element(racine, '[data-resultat]');
 		form.classList.add('simulateur--actif');
 
 		const CATEGORIES = ['metaux', 'plastiques', 'electrique'];
@@ -288,7 +296,7 @@ const parametres = [
 		};
 		let unite: 'kg' | 'pct' = 'kg';
 
-		const champ = (sel: string) => form.querySelector<HTMLInputElement>(sel)!;
+		const champ = (sel: string) => element<HTMLInputElement>(form, sel);
 		/** Valeur saisie, ou valeur d'exemple affichée en filigrane si le champ est vide. */
 		const lire = (input: HTMLInputElement) =>
 			input.value.trim() === '' ? Number(input.placeholder) || 0 : Number(input.value) || 0;
@@ -299,7 +307,7 @@ const parametres = [
 
 		// ---------------------------------------------------------- Détail des catégories
 		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
-			const panneau = form.querySelector<HTMLElement>(`[data-detail="${bouton.dataset.detailler}"]`)!;
+			const panneau = element(form, `[data-detail="${bouton.dataset.detailler}"]`);
 			bouton.addEventListener('click', () => {
 				const ouvert = panneau.hidden;
 				panneau.hidden = !ouvert;
@@ -310,9 +318,9 @@ const parametres = [
 		});
 
 		// ---------------------------------------------------------- Kilogrammes ou pourcentage
-		const champMasse = form.querySelector<HTMLElement>('[data-champ-masse]')!;
-		const champAjustement = form.querySelector<HTMLElement>('[data-champ-ajustement]')!;
-		const selectAjustee = form.querySelector<HTMLSelectElement>('[data-ajustee]')!;
+		const champMasse = element(form, '[data-champ-masse]');
+		const champAjustement = element(form, '[data-champ-ajustement]');
+		const selectAjustee = element<HTMLSelectElement>(form, '[data-ajustee]');
 
 		form.querySelectorAll<HTMLButtonElement>('[data-unite]').forEach((bouton) => {
 			bouton.addEventListener('click', () => {
@@ -324,7 +332,7 @@ const parametres = [
 					u.textContent = unite === 'kg' ? 'kg' : '%';
 				});
 				CATEGORIES.forEach((c) => {
-					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
+					const input = element<HTMLInputElement>(form, `[data-categorie-valeur="${c}"]`);
 					input.placeholder = String(EXEMPLES[unite][c as keyof typeof EXEMPLES.kg]);
 					input.value = '';
 					input.readOnly = false;
@@ -335,13 +343,13 @@ const parametres = [
 		selectAjustee.addEventListener('change', recalculer);
 
 		// ---------------------------------------------------------- Calcul
-		const bilan = form.querySelector<HTMLElement>('[data-bilan]')!;
-		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
-		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
-		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
-		const detailPostes = resultat.querySelector<HTMLElement>('[data-detail-postes]')!;
-		const listeComparaisons = resultat.querySelector<HTMLElement>('[data-comparaisons]')!;
-		const listeHypotheses = resultat.querySelector<HTMLElement>('[data-hypotheses]')!;
+		const bilan = element(form, '[data-bilan]');
+		const barre = element(resultat, '[data-barre]');
+		const bulleBarre = element(resultat, '[data-barre-bulle]');
+		const legende = element(resultat, '[data-legende]');
+		const detailPostes = element(resultat, '[data-detail-postes]');
+		const listeComparaisons = element(resultat, '[data-comparaisons]');
+		const listeHypotheses = element(resultat, '[data-hypotheses]');
 		const couleurs: Record<string, string> = {
 			fabrication: 'var(--bleu)',
 			transport: 'var(--bleu-clair)',
@@ -354,19 +362,19 @@ const parametres = [
 
 			const details: Record<string, Record<string, number>> = {};
 			for (const c of CATEGORIES) {
-				const panneau = form.querySelector<HTMLElement>(`[data-detail="${c}"]`)!;
+				const panneau = element(form, `[data-detail="${c}"]`);
 				if (panneau.hidden) continue;
 				const lignes: Record<string, number> = {};
 				panneau.querySelectorAll<HTMLInputElement>('[data-sous]').forEach((i) => {
 					const v = Number(i.value) || 0;
-					if (v > 0) lignes[i.dataset.sousCle!] = unite === 'kg' ? v : (v / 100) * masseSaisie;
+					if (v > 0) lignes[i.dataset.sousCle ?? ''] = unite === 'kg' ? v : (v / 100) * masseSaisie;
 				});
 				if (Object.keys(lignes).length) details[c] = lignes;
 			}
 
 			const brutes: Record<string, number> = {};
 			for (const c of CATEGORIES) {
-				const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${c}"]`)!;
+				const input = element<HTMLInputElement>(form, `[data-categorie-valeur="${c}"]`);
 				if (details[c]) {
 					const somme = Object.values(details[c]).reduce((a, b) => a + b, 0);
 					input.value =
@@ -386,7 +394,7 @@ const parametres = [
 				if (ajustee && !details[ajustee]) {
 					const autres = CATEGORIES.filter((c) => c !== ajustee).reduce((s, c) => s + (brutes[c] ?? 0), 0);
 					brutes[ajustee] = Math.max(0, 100 - autres);
-					const input = form.querySelector<HTMLInputElement>(`[data-categorie-valeur="${ajustee}"]`)!;
+					const input = element<HTMLInputElement>(form, `[data-categorie-valeur="${ajustee}"]`);
 					input.value = String(Math.round(brutes[ajustee]));
 					input.readOnly = true;
 				}
@@ -423,8 +431,8 @@ const parametres = [
 				return;
 			}
 
-			resultat.querySelector('[data-total-bas]')!.textContent = formaterCO2e(r.totalBas);
-			resultat.querySelector('[data-total-haut]')!.textContent = formaterCO2e(r.totalHaut);
+			element(resultat, '[data-total-bas]').textContent = formaterCO2e(r.totalBas);
+			element(resultat, '[data-total-haut]').textContent = formaterCO2e(r.totalHaut);
 
 			listeComparaisons.replaceChildren(
 				...r.comparaisons.map((c) => {
@@ -437,7 +445,7 @@ const parametres = [
 			);
 
 			const chiffres = r.postes.filter((p) => p.bas !== null && p.haut !== null);
-			const milieu = (p: { bas: number | null; haut: number | null }) => (p.bas! + p.haut!) / 2;
+			const milieu = (p: { bas: number | null; haut: number | null }) => ((p.bas ?? 0) + (p.haut ?? 0)) / 2;
 			const totalMilieu = chiffres.reduce((s, p) => s + milieu(p), 0);
 
 			barre.replaceChildren(
@@ -455,7 +463,7 @@ const parametres = [
 						if (part < 4) segment.classList.add('barre__part--menue');
 						// Le libellé du poste est gardé à part : dans la bulle, il est en gras.
 						const valeurs = typo(
-							`${formaterCO2e(p.bas!)} à ${formaterCO2e(p.haut!)}, soit ${
+							`${formaterCO2e(p.bas ?? 0)} à ${formaterCO2e(p.haut ?? 0)}, soit ${
 								part < 1 ? '< 1' : Math.round(part)
 							} % du total`
 						);
@@ -502,7 +510,7 @@ const parametres = [
 					li.textContent = typo(
 						p.bas === null
 							? `${p.libelle} : non chiffré.`
-							: `${p.libelle} : ${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut!)}.`
+							: `${p.libelle} : ${formaterCO2e(p.bas)} à ${formaterCO2e(p.haut ?? 0)}.`
 					);
 					return li;
 				})
@@ -521,7 +529,7 @@ const parametres = [
 
 		form.addEventListener('input', recalculer);
 		recalculer();
-	}
+	});
 </script>
 
 <style>

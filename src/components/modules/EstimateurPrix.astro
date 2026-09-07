@@ -8,6 +8,7 @@
 // prête se déplie pour un détail plus fin. Le résultat est une fourchette, jamais un chiffre.
 import modele from '../../../content/donnees/prix.json';
 import { typo } from '../../scripts/typographie';
+import type { Nature, Poste } from '../../scripts/prix';
 
 interface Props {
 	/**
@@ -19,8 +20,10 @@ interface Props {
 }
 const { apercu = false } = Astro.props;
 
-const natures = modele.natures;
-const postes = modele.postes;
+// Le JSON est typé par sa forme ; on lui donne le type du modèle pour que le gabarit sache
+// quelles propriétés existent selon le type de poste.
+const natures = modele.natures as Nature[];
+const postes = modele.postes as Poste[];
 
 // Les postes retenus pour l'aperçu sont listés dans le modèle, pas ici : ils se changent
 // sans toucher au code.
@@ -29,8 +32,14 @@ const postesApercu = clesApercu
 	.map((cle) => postes.find((p) => p.cle === cle))
 	.filter((p): p is (typeof postes)[number] => Boolean(p));
 const TitreResultat = apercu ? 'h3' : 'h2';
+// Identifiant propre à cet exemplaire : deux modules sur une même page ne partagent aucun
+// id, sinon les étiquettes et les bulles d'aide pointeraient toutes sur le premier.
+const compteurs = globalThis as { __exemplaires_prix?: number };
+compteurs.__exemplaires_prix = (compteurs.__exemplaires_prix ?? 0) + 1;
+const uid = `prix${compteurs.__exemplaires_prix}`;
 ---
 
+<div data-estimateur-module>
 <form class="estimateur" data-estimateur novalidate>
 	<p class="sans-js">
 		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
@@ -42,9 +51,9 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 			<legend class="sr-only">Votre projet en quelques réponses</legend>
 			<div class="apercu__grille">
 				<div class="champ">
-					<label for="apercu-nature">De quel projet s’agit-il ?</label>
+					<label for={`${uid}-apercu-nature`}>De quel projet s’agit-il ?</label>
 					<div class="saisie">
-						<select id="apercu-nature" data-nature-choix>
+						<select id={`${uid}-apercu-nature`} data-nature-choix>
 							{natures.map((n) => (
 								<option value={n.cle}>{n.libelle}</option>
 							))}
@@ -53,12 +62,12 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 				</div>
 				{postesApercu.map((p) => (
 					<div class="champ">
-						<label for={`poste-${p.cle}`}>{p.libelle}</label>
+						<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
 						{p.type === 'nombre' ? (
 							<div class="saisie">
 								<input
 									type="number"
-									id={`poste-${p.cle}`}
+									id={`${uid}-poste-${p.cle}`}
 									data-nombre={p.cle}
 									min="0"
 									step="1"
@@ -70,7 +79,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 						) : (
 							p.type === 'choix' && (
 								<div class="saisie">
-									<select id={`poste-${p.cle}`} data-choix={p.cle}>
+									<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
 										{p.options.map((o, i) => (
 											<option
 												value={o.cle}
@@ -116,19 +125,19 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 						<div class="poste__tete">
 							<span class="poste__nom">
 								{p.type === 'nombre' ? (
-									<label for={`poste-${p.cle}`}>{p.libelle}</label>
+									<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
 								) : p.type === 'choix' ? (
-									<label for={`poste-${p.cle}`}>{p.libelle}</label>
+									<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
 								) : (
-									<span class="poste__libelle" id={`poste-${p.cle}-nom`}>{p.libelle}</span>
+									<span class="poste__libelle" id={`${uid}-poste-${p.cle}-nom`}>{p.libelle}</span>
 								)}
 								{p.aide && (
 									<span class="aide" data-aide data-bulle>
-										<button type="button" class="aide-bouton" aria-describedby={`aide-${p.cle}`}>
+										<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-${p.cle}`}>
 											<span aria-hidden="true">?</span>
 											<span class="sr-only">Que change ce paramètre ?</span>
 										</button>
-										<span class="bulle" role="tooltip" id={`aide-${p.cle}`}>
+										<span class="bulle" role="tooltip" id={`${uid}-aide-${p.cle}`}>
 											{typo(p.aide)}
 										</span>
 									</span>
@@ -139,7 +148,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 								<div class="saisie">
 									<input
 										type="number"
-										id={`poste-${p.cle}`}
+										id={`${uid}-poste-${p.cle}`}
 										data-nombre={p.cle}
 										min="0"
 										step="1"
@@ -151,7 +160,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 							)}
 							{p.type === 'choix' && (
 								<div class="saisie">
-									<select id={`poste-${p.cle}`} data-choix={p.cle}>
+									<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
 										{p.options.map((o, i) => (
 											<option value={o.cle} selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}>
 												{o.libelle}
@@ -168,7 +177,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 						</div>
 
 						{p.type === 'cases' && (
-							<div class="cases" role="group" aria-labelledby={`poste-${p.cle}-nom`}>
+							<div class="cases" role="group" aria-labelledby={`${uid}-poste-${p.cle}-nom`}>
 								{p.options.map((o) => (
 									<label
 										class={`case ${'inclus' in o && o.inclus ? 'case--incluse' : ''}`}
@@ -195,11 +204,11 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 								<div class="detail__lignes">
 									{p.detail.map((d) => (
 										<div class="champ champ--sous">
-											<label for={`sous-${p.cle}-${d.cle}`}>{d.libelle}</label>
+											<label for={`${uid}-sous-${p.cle}-${d.cle}`}>{d.libelle}</label>
 											<div class="saisie">
 												<input
 													type="number"
-													id={`sous-${p.cle}-${d.cle}`}
+													id={`${uid}-sous-${p.cle}-${d.cle}`}
 													data-sous={p.cle}
 													data-sous-cle={d.cle}
 													min="0"
@@ -228,19 +237,19 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 					<div class="poste" data-type="choix">
 						<div class="poste__tete">
 							<span class="poste__nom">
-								<label for={`facteur-${f.cle}`}>{f.libelle}</label>
+								<label for={`${uid}-facteur-${f.cle}`}>{f.libelle}</label>
 								<span class="aide" data-aide data-bulle>
-									<button type="button" class="aide-bouton" aria-describedby={`aide-facteur-${f.cle}`}>
+									<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-facteur-${f.cle}`}>
 										<span aria-hidden="true">?</span>
 										<span class="sr-only">Que change ce paramètre ?</span>
 									</button>
-									<span class="bulle" role="tooltip" id={`aide-facteur-${f.cle}`}>
+									<span class="bulle" role="tooltip" id={`${uid}-aide-facteur-${f.cle}`}>
 										{typo(f.aide)}
 									</span>
 								</span>
 							</span>
 							<div class="saisie">
-								<select id={`facteur-${f.cle}`} data-facteur={f.cle}>
+								<select id={`${uid}-facteur-${f.cle}`} data-facteur={f.cle}>
 									{f.options.map((o, i) => (
 										<option value={o.cle} selected={i === 0}>
 											{typo(o.libelle)}
@@ -284,6 +293,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 		</p>
 	)}
 </section>
+</div>
 
 <script>
 	import modele from '../../../content/donnees/prix.json';
@@ -291,11 +301,12 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 	import { estimer, formaterEuros, type Modele, type Entrees } from '../../scripts/prix';
 	import { typo } from '../../scripts/typographie';
 	import { recalerLesBulles } from '../../scripts/bulle';
+	import { chaqueExemplaire, element } from '../../scripts/dom';
 
-	const form = document.querySelector<HTMLFormElement>('[data-estimateur]');
-	const resultat = document.querySelector<HTMLElement>('[data-resultat]');
-
-	if (form && resultat) {
+	// Un exemplaire par bloc « module » posé dans la page : chacun a son formulaire et son résultat.
+	chaqueExemplaire('[data-estimateur-module]', (racine) => {
+		const form = element<HTMLFormElement>(racine, '[data-estimateur]');
+		const resultat = element(racine, '[data-resultat]');
 		form.classList.add('estimateur--actif');
 		recalerLesBulles(form);
 		const M = modele as unknown as Modele;
@@ -309,7 +320,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 
 		// ---------------------------------------------------------- Détail des postes
 		form.querySelectorAll<HTMLButtonElement>('[data-detailler]').forEach((bouton) => {
-			const panneau = form.querySelector<HTMLElement>(`[data-detail="${bouton.dataset.detailler}"]`)!;
+			const panneau = element(form, `[data-detail="${bouton.dataset.detailler}"]`);
 			bouton.addEventListener('click', () => {
 				const ouvert = panneau.hidden;
 				panneau.hidden = !ouvert;
@@ -322,8 +333,8 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 		// ---------------------------------------------------------- Lecture du formulaire
 		function lireEntrees(): Entrees {
 			const nature =
-				form!.querySelector<HTMLInputElement>('[data-nature]:checked')?.value ??
-				form!.querySelector<HTMLSelectElement>('[data-nature-choix]')?.value ??
+				form.querySelector<HTMLInputElement>('[data-nature]:checked')?.value ??
+				form.querySelector<HTMLSelectElement>('[data-nature-choix]')?.value ??
 				M.natures[0].cle;
 			const nombres: Entrees['nombres'] = {};
 			const choix: Entrees['choix'] = {};
@@ -332,18 +343,18 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 			for (const p of M.postes) {
 				if (p.type === 'nombre') {
 					// L'aperçu ne montre que quelques postes : les autres restent à zéro.
-					const input = form!.querySelector<HTMLInputElement>(`[data-nombre="${p.cle}"]`);
+					const input = form.querySelector<HTMLInputElement>(`[data-nombre="${p.cle}"]`);
 					if (!input) {
 						nombres[p.cle] = 0;
 						continue;
 					}
-					const panneau = form!.querySelector<HTMLElement>(`[data-detail="${p.cle}"]`);
+					const panneau = form.querySelector<HTMLElement>(`[data-detail="${p.cle}"]`);
 					if (panneau && !panneau.hidden) {
 						const detail: Record<string, number> = {};
 						let somme = 0;
 						panneau.querySelectorAll<HTMLInputElement>('[data-sous]').forEach((i) => {
 							const v = Math.max(0, Math.floor(Number(i.value) || 0));
-							detail[i.dataset.sousCle!] = v;
+							detail[i.dataset.sousCle ?? ''] = v;
 							somme += v;
 						});
 						// Le total à la louche reflète le détail et ne se saisit plus.
@@ -357,10 +368,10 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 				} else if (p.type === 'choix') {
 					// Absent de l'aperçu : on prend la valeur par défaut du modèle.
 					choix[p.cle] =
-						form!.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)?.value ??
+						form.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)?.value ??
 						('defaut' in p && p.defaut ? p.defaut : p.options[0].cle);
 				} else {
-					cases[p.cle] = [...form!.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`)].map(
+					cases[p.cle] = [...form.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`)].map(
 						(i) => i.value
 					);
 				}
@@ -368,23 +379,23 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 			const facteurs: Entrees['facteurs'] = {};
 			for (const f of M.facteurs) {
 				facteurs[f.cle] =
-					form!.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)?.value ?? f.options[0].cle;
+					form.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)?.value ?? f.options[0].cle;
 			}
 			return { nature, nombres, choix, cases, facteurs };
 		}
 
 		/** Les prestations qui n'ont pas de sens pour une étude seule disparaissent. */
 		function ajusterALaNature(nature: string) {
-			form!.querySelectorAll<HTMLElement>('[data-natures]').forEach((el) => {
-				el.hidden = !el.dataset.natures!.split(' ').includes(nature);
+			form.querySelectorAll<HTMLElement>('[data-natures]').forEach((el) => {
+				el.hidden = !(el.dataset.natures ?? '').split(' ').includes(nature);
 			});
 		}
 
 		// ---------------------------------------------------------- Résultat
-		const barre = resultat.querySelector<HTMLElement>('[data-barre]')!;
-		const bulleBarre = resultat.querySelector<HTMLElement>('[data-barre-bulle]')!;
-		const legende = resultat.querySelector<HTMLElement>('[data-legende]')!;
-		const detailParts = resultat.querySelector<HTMLElement>('[data-detail-parts]')!;
+		const barre = element(resultat, '[data-barre]');
+		const bulleBarre = element(resultat, '[data-barre-bulle]');
+		const legende = element(resultat, '[data-legende]');
+		const detailParts = element(resultat, '[data-detail-parts]');
 
 		function recalculer() {
 			const e = lireEntrees();
@@ -396,8 +407,8 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 				return;
 			}
 
-			resultat.querySelector('[data-bas]')!.textContent = formaterEuros(r.bas);
-			resultat.querySelector('[data-haut]')!.textContent = formaterEuros(r.haut);
+			element(resultat, '[data-bas]').textContent = formaterEuros(r.bas);
+			element(resultat, '[data-haut]').textContent = formaterEuros(r.haut);
 
 			const parts = r.parts.filter((p) => p.montant > 0);
 			barre.replaceChildren(
@@ -459,7 +470,7 @@ const TitreResultat = apercu ? 'h3' : 'h2';
 		form.addEventListener('input', recalculer);
 		form.addEventListener('change', recalculer);
 		recalculer();
-	}
+	});
 </script>
 
 <style>

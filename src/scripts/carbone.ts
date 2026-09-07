@@ -65,7 +65,8 @@ function bornes(valeur: number, incertitudePct: number) {
 
 /** Bornes d'une catégorie renseignée sans détail : du moins au plus émetteur. */
 function bornesCategorie(cle: string) {
-	const categorie = facteurs.categories.find((c) => c.cle === cle)!;
+	const categorie = facteurs.categories.find((c) => c.cle === cle);
+	if (!categorie) throw new Error(`Catégorie de matériaux inconnue : ${cle}`);
 	const toutes = categorie.sous.map((s) => bornes(s.valeur, s.incertitude_pct));
 	return {
 		bas: Math.min(...toutes.map((b) => b.bas)),
