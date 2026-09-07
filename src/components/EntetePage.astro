@@ -1,0 +1,74 @@
+---
+// En-tête d'une page écrite en code : fil d'Ariane, surtitre, grand titre, chapeau.
+//
+// Les pages d'outils et les fiches machines répétaient chacune ce même en-tête avec ses
+// styles. Il vit ici une fois pour toutes, et applique la typographie française aux textes
+// qu'il reçoit. Les pages composées dans le CMS ont leur propre bloc « en-tête de page ».
+import { typo } from '../scripts/typographie';
+
+interface Etape {
+	libelle: string;
+	/** Absent pour la page courante, qui n'est pas un lien. */
+	href?: string;
+}
+interface Props {
+	fil?: Etape[];
+	surtitre?: string;
+	titre: string;
+	chapeau?: string;
+	/** Moins d'espace sous l'en-tête, quand un visuel suit immédiatement. */
+	serre?: boolean;
+}
+const { fil = [], surtitre, titre, chapeau, serre = false } = Astro.props;
+---
+
+<header class={`bloc bloc--blanc entete ${serre ? 'entete--serree' : ''}`}>
+	<div class="bloc__interieur entete__interieur">
+		{
+			fil.length > 0 && (
+				<p class="fil">
+					{fil.map((etape, i) => (
+						<Fragment>
+							{i > 0 && <span aria-hidden="true"> › </span>}
+							{etape.href ? <a href={etape.href}>{typo(etape.libelle)}</a> : typo(etape.libelle)}
+						</Fragment>
+					))}
+				</p>
+			)
+		}
+		{surtitre && <p class="surtitre">{typo(surtitre)}</p>}
+		<h1>{typo(titre)}</h1>
+		{chapeau && <p class="chapeau">{typo(chapeau)}</p>}
+	</div>
+</header>
+
+<style>
+	.entete--serree {
+		padding-bottom: 1rem;
+	}
+	.entete__interieur {
+		max-width: 46rem;
+	}
+	.entete h1 {
+		margin-bottom: 0.3em;
+	}
+	.fil {
+		font-size: 0.9rem;
+		color: var(--gris-leger);
+		margin-bottom: 1.25rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+		line-height: 1.55;
+		margin: 0;
+	}
+</style>

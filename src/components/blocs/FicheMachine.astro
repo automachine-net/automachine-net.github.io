@@ -39,13 +39,13 @@ const choisies = bloc.machines?.length
 	<div class="bloc__interieur">
 		<div class="tete">
 			<div>
-				{bloc.titre && <h2>{bloc.titre}</h2>}
-				{bloc.introduction && <p class="introduction">{bloc.introduction}</p>}
+				{bloc.titre && <h2>{typo(bloc.titre)}</h2>}
+				{bloc.introduction && <p class="introduction">{typo(bloc.introduction)}</p>}
 			</div>
 			{
 				bloc.lien_url && (
 					<a class="lien tete__lien" href={bloc.lien_url}>
-						{bloc.lien_libelle ?? 'Toutes les machines'}
+						{typo(bloc.lien_libelle ?? 'Toutes les machines')}
 					</a>
 				)
 			}
@@ -115,7 +115,7 @@ const choisies = bloc.machines?.length
 						class={bloc.fond === 'sombre' ? 'bouton bouton--clair' : 'bouton'}
 						href={bloc.bouton_url}
 					>
-						{bloc.bouton_libelle ?? 'Simuler le prix de votre machine'}
+						{typo(bloc.bouton_libelle ?? 'Simuler le prix de votre machine')}
 					</a>
 				</div>
 			)

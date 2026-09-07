@@ -2,6 +2,7 @@
 // Bloc « questions fréquentes ». Chaque réponse se déplie. Sans JavaScript, les balises
 // <details> fonctionnent quand même : le contenu reste accessible.
 import { marked } from '../../scripts/markdown';
+import { typo } from '../../scripts/typographie';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocFaq {
@@ -17,12 +18,12 @@ const classeFond = classeFond_(bloc.fond);
 
 <section class={`bloc ${classeFond}`}>
 	<div class="bloc__interieur faq__interieur">
-		{bloc.titre && <h2>{bloc.titre}</h2>}
+		{bloc.titre && <h2>{typo(bloc.titre)}</h2>}
 		<div class="faq">
 			{
 				bloc.questions.map((q) => (
 					<details>
-						<summary>{q.question}</summary>
+						<summary>{typo(q.question)}</summary>
 						<div class="prose" set:html={marked(q.reponse)} />
 					</details>
 				))

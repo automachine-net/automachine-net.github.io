@@ -1,6 +1,7 @@
 ---
 // Bloc « citation ». Une phrase mise en avant, son auteur, sa fonction.
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import { typo } from '../../scripts/typographie';
 
 export interface BlocCitation {
 	type: 'citation';
@@ -18,12 +19,12 @@ const classeFond = classeFond_(bloc.fond);
 	<div class="bloc__interieur">
 		<figure class="citation">
 			<blockquote>
-				<p>{bloc.citation}</p>
+				<p>{typo(bloc.citation)}</p>
 			</blockquote>
 			{
 				(bloc.auteur || bloc.fonction) && (
 					<figcaption>
-						{bloc.auteur && <strong>{bloc.auteur}</strong>}
+						{bloc.auteur && <strong>{typo(bloc.auteur)}</strong>}
 						{bloc.auteur && bloc.fonction && ' — '}
 						{bloc.fonction}
 					</figcaption>

@@ -5,6 +5,7 @@
 // fichiers glTF issus de la CAO. Au lot 3, ce composant recevra <model-viewer> et le volume
 // filaire deviendra l'image d'attente pendant le chargement du vrai modèle.
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import { typo } from '../../scripts/typographie';
 
 export interface BlocVisionneuse3d {
 	type: 'visionneuse-3d';
@@ -21,7 +22,7 @@ const classeFond = classeFond_(bloc.fond);
 
 <section class={`bloc ${classeFond}`}>
 	<div class="bloc__interieur">
-		{bloc.titre && <h2>{bloc.titre}</h2>}
+		{bloc.titre && <h2>{typo(bloc.titre)}</h2>}
 		<figure class="visionneuse">
 			<canvas
 				width="1000"
@@ -31,7 +32,7 @@ const classeFond = classeFond_(bloc.fond);
 				aria-label="Volume en trois dimensions. Flèches du clavier pour le tourner."></canvas>
 			<figcaption>
 				<span class="consigne">Faites tourner le volume avec la souris, le doigt ou les flèches du clavier.</span>
-				{bloc.legende && <span>{bloc.legende}</span>}
+				{bloc.legende && <span>{typo(bloc.legende)}</span>}
 			</figcaption>
 		</figure>
 	</div>

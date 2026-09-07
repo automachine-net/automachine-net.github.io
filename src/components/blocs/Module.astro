@@ -10,6 +10,7 @@ import QuizComplet from '../modules/QuizComplet.astro';
 import FluxMatieres from '../modules/FluxMatieres.astro';
 import BoucleHelice from '../modules/BoucleHelice.astro';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
+import { typo } from '../../scripts/typographie';
 
 export interface BlocModule {
 	type: 'module';
@@ -41,8 +42,8 @@ const classeFond = classeFond_(bloc.fond);
 
 <section class={`bloc ${classeFond}`}>
 	<div class="bloc__interieur">
-		{bloc.titre && <h2>{bloc.titre}</h2>}
-		{bloc.introduction && <p class="introduction" set:html={bloc.introduction} />}
+		{bloc.titre && <h2>{typo(bloc.titre)}</h2>}
+		{bloc.introduction && <p class="introduction">{typo(bloc.introduction)}</p>}
 
 		{bloc.module === 'compte-a-rebours' && <CompteARebours carte={bloc.fond !== 'sombre'} />}
 		{bloc.module === 'apercu-carbone' && <ApercuCarbone />}
@@ -63,7 +64,7 @@ const classeFond = classeFond_(bloc.fond);
 		{
 			bloc.module === 'a-venir' && (
 				<div class={`visuel visuel--module ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
-					<span>{bloc.attente ?? 'Outil à venir'}</span>
+					<span>{typo(bloc.attente ?? 'Outil à venir')}</span>
 				</div>
 			)
 		}
@@ -73,7 +74,7 @@ const classeFond = classeFond_(bloc.fond);
 			bloc.lien_url && bloc.module !== 'quiz-extrait' && (
 				<p class="apres">
 					<a class={`bouton ${bloc.fond === 'sombre' ? 'bouton--clair' : ''}`} href={bloc.lien_url}>
-						{bloc.lien_libelle ?? 'Ouvrir l’outil'}
+						{typo(bloc.lien_libelle ?? 'Ouvrir l’outil')}
 					</a>
 				</p>
 			)

@@ -1,6 +1,7 @@
 ---
 // Bloc « appel à l'action ». Un titre, un texte court, un bouton.
 import { marked } from '../../scripts/markdown';
+import { typo } from '../../scripts/typographie';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 
 export interface BlocAppel {
@@ -18,7 +19,7 @@ const classeFond = classeFond_(bloc.fond);
 
 <section class={`bloc ${classeFond} appel`}>
 	<div class="bloc__interieur appel__interieur">
-		<h2>{bloc.titre}</h2>
+		<h2>{typo(bloc.titre)}</h2>
 		{bloc.texte && <div class="prose" set:html={marked(bloc.texte)} />}
 		<p class="appel__action">
 			<a class={`bouton ${classeFond === 'bloc--sombre' ? 'bouton--clair' : ''}`} href={bloc.lien_url}>

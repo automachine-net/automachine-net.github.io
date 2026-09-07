@@ -1,6 +1,7 @@
 ---
 // Bloc « texte et image ». L'image peut être à gauche ou à droite ; en dessous sur mobile.
 import { marked } from '../../scripts/markdown';
+import { typo } from '../../scripts/typographie';
 import { classeFond as classeFond_ } from '../../scripts/blocs';
 import ImageContenu from '../ImageContenu.astro';
 
@@ -26,12 +27,12 @@ const aGauche = bloc.position_image === 'gauche';
 <section class={`bloc ${classeFond}`}>
 	<div class={`bloc__interieur duo ${aGauche ? 'duo--inverse' : ''}`}>
 		<div class="duo__texte">
-			{bloc.titre && <h2>{bloc.titre}</h2>}
+			{bloc.titre && <h2>{typo(bloc.titre)}</h2>}
 			<div class="prose" set:html={marked(bloc.texte)} />
 			{
 				bloc.lien_url && (
 					<p class="duo__lien">
-						<a class="lien" href={bloc.lien_url}>{bloc.lien_libelle ?? 'En savoir plus'}</a>
+						<a class="lien" href={bloc.lien_url}>{typo(bloc.lien_libelle ?? 'En savoir plus')}</a>
 					</p>
 				)
 			}
@@ -47,7 +48,7 @@ const aGauche = bloc.position_image === 'gauche';
 					/>
 				) : (
 					<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
-						<span>{bloc.image_attente ?? 'Visuel à venir'}</span>
+						<span>{typo(bloc.image_attente ?? 'Visuel à venir')}</span>
 					</div>
 				)
 			}

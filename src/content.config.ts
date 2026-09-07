@@ -3,9 +3,11 @@
 // Le contenu vit dans le dossier `content/` à la racine du dépôt, en Markdown et JSON,
 // pour rester éditable avec un simple éditeur de texte si tous les outils disparaissent.
 //
-// Ces schémas servent de garde-fou : si un champ obligatoire manque ou si un type de bloc
-// est mal orthographié, la construction échoue avec un message clair au lieu de publier
-// une page cassée.
+// Ces schémas servent de garde-fou : si un champ obligatoire manque, si un type de bloc
+// est mal orthographié ou si un champ inconnu traîne dans un fichier, la construction
+// échoue avec un message clair au lieu de publier une page cassée. Les schémas sont stricts :
+// chaque champ accepté est déclaré ici et dans public/admin/config.yml, les deux listes
+// doivent rester identiques.
 import { defineCollection } from 'astro:content';
 // Depuis Astro 7, le validateur de schéma s'importe d'ici, plus de astro:content.
 import { z } from 'astro/zod';
@@ -25,13 +27,13 @@ const bloc = z.discriminatedUnion('type', [
 		lien_secondaire_url: z.string().optional(),
 		afficher_secteurs: z.boolean().optional(),
 		titre_principal: z.boolean().optional(),
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('texte'),
 		titre: z.string().optional(),
 		texte: z.string(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('texte-image'),
 		titre: z.string().optional(),
@@ -43,7 +45,7 @@ const bloc = z.discriminatedUnion('type', [
 		lien_libelle: z.string().optional(),
 		lien_url: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('galerie'),
 		titre: z.string().optional(),
@@ -57,13 +59,13 @@ const bloc = z.discriminatedUnion('type', [
 		),
 		colonnes: z.union([z.literal(2), z.literal(3), z.literal(4)]).optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('chiffres'),
 		titre: z.string().optional(),
-		chiffres: z.array(z.object({ valeur: z.string(), legende: z.string() })),
+		chiffres: z.array(z.object({ valeur: z.string(), legende: z.string() }).strict()),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('fiche-machine'),
 		titre: z.string().optional(),
@@ -75,21 +77,21 @@ const bloc = z.discriminatedUnion('type', [
 		bouton_url: z.string().optional(),
 		bouton_texte: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('visionneuse-3d'),
 		titre: z.string().optional(),
 		modele: z.string(),
 		legende: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('citation'),
 		citation: z.string(),
 		auteur: z.string().optional(),
 		fonction: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('appel'),
 		titre: z.string(),
@@ -97,13 +99,13 @@ const bloc = z.discriminatedUnion('type', [
 		lien_libelle: z.string(),
 		lien_url: z.string(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('faq'),
 		titre: z.string().optional(),
-		questions: z.array(z.object({ question: z.string(), reponse: z.string() })),
+		questions: z.array(z.object({ question: z.string(), reponse: z.string() }).strict()),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('module'),
 		titre: z.string().optional(),
@@ -124,12 +126,12 @@ const bloc = z.discriminatedUnion('type', [
 		lien_url: z.string().optional(),
 		attente: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 	z.object({
 		type: z.literal('clients'),
 		titre: z.string().optional(),
 		fond,
-	}),
+	}).strict(),
 ]);
 
 const pages = defineCollection({
@@ -142,7 +144,7 @@ const pages = defineCollection({
 		/** Retire la page des moteurs de recherche (module non public, page en chantier). */
 		noindex: z.boolean().optional(),
 		blocs: z.array(bloc).default([]),
-	}),
+	}).strict(),
 });
 
 const machines = defineCollection({
@@ -166,11 +168,11 @@ const machines = defineCollection({
 		/** Volume d'attente (dessin filaire), tant qu'il n'y a pas de fichier 3D. */
 		modele_3d: z.string().optional(),
 		/** Lignes de la fiche technique : libellé et valeur. */
-		caracteristiques: z.array(z.object({ libelle: z.string(), valeur: z.string() })).default([]),
+		caracteristiques: z.array(z.object({ libelle: z.string(), valeur: z.string() }).strict()).default([]),
 		image: z.string().optional(),
 		image_alt: z.string().optional(),
 		blocs: z.array(bloc).default([]),
-	}),
+	}).strict(),
 });
 
 export const collections = { pages, machines };

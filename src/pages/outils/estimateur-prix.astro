@@ -1,9 +1,10 @@
 ---
 // Module « Estimateur d'ordre de prix ».
 //
-// Non indexée tant que le dirigeant n'a pas validé les valeurs du modèle : un ordre de prix
-// public engage l'entreprise. Les valeurs vivent dans content/donnees/prix.json.
+// Les valeurs du modèle vivent dans content/donnees/prix.json ; elles ont été validées par
+// le dirigeant avant publication, car un ordre de prix public engage l'entreprise.
 import Base from '../../layouts/Base.astro';
+import EntetePage from '../../components/EntetePage.astro';
 import EstimateurPrix from '../../components/modules/EstimateurPrix.astro';
 import Appel from '../../components/blocs/Appel.astro';
 ---
@@ -12,14 +13,12 @@ import Appel from '../../components/blocs/Appel.astro';
 	titre="Quel est le prix de votre machine ?"
 	description="Quelques questions sur votre projet, une fourchette de prix hors taxes en retour. Avant même un premier contact."
 >
-	<section class="bloc bloc--blanc">
-		<div class="bloc__interieur entete">
-			<p class="fil"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <a href="/outils">Outils</a></p>
-			<p class="surtitre">Outil</p>
-			<h1>Quel est le prix de votre machine ?</h1>
-			<p class="chapeau">Décrivez votre projet en quelques minutes et obtenez une estimation de prix.</p>
-		</div>
-	</section>
+	<EntetePage
+	fil={[{ libelle: 'Accueil', href: '/' }, { libelle: 'Outils', href: '/outils' }]}
+	surtitre="Outil"
+	titre="Quel est le prix de votre machine ?"
+	chapeau="Décrivez votre projet en quelques minutes et obtenez une estimation de prix."
+/>
 
 	<section class="bloc bloc--blanc">
 		<div class="bloc__interieur">
@@ -59,26 +58,6 @@ import Appel from '../../components/blocs/Appel.astro';
 </Base>
 
 <style>
-	.entete {
-		max-width: 46rem;
-	}
-	.fil {
-		font-size: 0.9rem;
-		color: var(--gris-leger);
-		margin-bottom: 1.25rem;
-	}
-	.surtitre {
-		font-family: var(--titres);
-		font-weight: 500;
-		color: var(--bleu);
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-size: 0.85rem;
-		margin-bottom: 0.75rem;
-	}
-	.chapeau {
-		font-size: 1.15rem;
-	}
 	.methodologie__corps p {
 		max-width: var(--mesure);
 	}

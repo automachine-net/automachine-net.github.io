@@ -6,6 +6,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Blocs from '../../components/Blocs.astro';
+import EntetePage from '../../components/EntetePage.astro';
 import ModeleGltf from '../../components/ModeleGltf.astro';
 import VideoBoucle from '../../components/VideoBoucle.astro';
 import ImageContenu from '../../components/ImageContenu.astro';
@@ -25,16 +26,15 @@ const position = toutes.findIndex((m) => m.id === machine.id);
 const suivante = toutes[(position + 1) % toutes.length];
 ---
 
-<Base titre={d.nom} description={d.resume.replace(/^\[à relire\]\s*/i, '')}>
+<Base titre={d.nom} description={d.resume}>
 	<article>
-		<header class="bloc fiche__entete">
-			<div class="bloc__interieur">
-				<p class="fil"><a href="/machines">Machines</a> <span aria-hidden="true">›</span> {d.nom}</p>
-				<p class="surtitre">{d.client ? `${d.secteur} · ${d.client}` : d.secteur}</p>
-				<h1>{typo(d.nom)}</h1>
-				<p class="chapeau">{typo(d.resume)}</p>
-			</div>
-		</header>
+		<EntetePage
+			serre
+			fil={[{ libelle: 'Machines', href: '/machines' }, { libelle: d.nom }]}
+			surtitre={d.client ? `${d.secteur} · ${d.client}` : d.secteur}
+			titre={d.nom}
+			chapeau={d.resume}
+		/>
 
 		{
 			d.image && (
@@ -163,27 +163,6 @@ const suivante = toutes[(position + 1) % toutes.length];
 </script>
 
 <style>
-	.fiche__entete {
-		padding-bottom: 1rem;
-	}
-	.fil {
-		font-size: 0.9rem;
-		color: var(--gris-leger);
-		margin-bottom: 1.25rem;
-	}
-	.surtitre {
-		font-family: var(--titres);
-		font-weight: 500;
-		color: var(--bleu);
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-size: 0.85rem;
-		margin-bottom: 0.75rem;
-	}
-	.chapeau {
-		font-size: 1.2rem;
-		max-width: 46rem;
-	}
 	.fiche__image {
 		display: block;
 		width: 100%;
