@@ -15,9 +15,17 @@ interface Props {
 	image?: string;
 }
 
-const { titre, description = site.description, noindex = false, image } = Astro.props;
+const {
+	titre,
+	description = site.description,
+	noindex = false,
+	// Sans image propre, la page partage la vignette générique du site (voir
+	// construction/images-de-partage.mjs). Toutes nos vignettes font 1200 × 630.
+	image = '/images/partage/site.png',
+} = Astro.props;
 const url = new URL(Astro.url.pathname, Astro.site ?? 'https://automachine-net.github.io');
 const imageAbsolue = image ? new URL(image, url).href : undefined;
+const vignetteMaison = image?.startsWith('/images/partage/');
 const titrePropre = typo(titre);
 const descriptionPropre = typo(description);
 const titreComplet =
@@ -42,6 +50,8 @@ const titreComplet =
 		<meta property="og:description" content={descriptionPropre} />
 		<meta property="og:url" content={url.href} />
 		{imageAbsolue && <meta property="og:image" content={imageAbsolue} />}
+		{vignetteMaison && <meta property="og:image:width" content="1200" />}
+		{vignetteMaison && <meta property="og:image:height" content="630" />}
 		<meta name="twitter:card" content={imageAbsolue ? 'summary_large_image' : 'summary'} />
 
 		<link rel="icon" type="image/svg+xml" href="/images/logo/sans-texte.svg" />

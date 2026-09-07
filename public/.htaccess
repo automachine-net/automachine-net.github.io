@@ -1,0 +1,33 @@
+# Réglages Apache pour l'hébergement définitif (Infomaniak). GitHub Pages ignore ce fichier.
+#
+# 1. Page d'erreur dans la charte du site.
+# 2. Redirections permanentes depuis les adresses de l'ancien site : aucune adresse connue
+#    des moteurs ne doit tomber en erreur après la bascule. La table ci-dessous est celle
+#    proposée dans docs/BASCULE.md ; elle doit être validée par le dirigeant avant la bascule.
+
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Accueil et ses variantes.
+RewriteRule ^accueil-automachine-concepteur-et-fabricant-de-machine-speciale/?$ / [R=301,L]
+RewriteRule ^plan-du-siteautomachine/?$ / [R=301,L]
+
+# L'entreprise : histoire, équipe, méthode, secteurs, moyens, politique.
+RewriteRule ^notre-histoire/?$ /entreprise [R=301,L]
+RewriteRule ^notre-equipe/?$ /entreprise [R=301,L]
+RewriteRule ^notre-politique/?$ /entreprise [R=301,L]
+RewriteRule ^les-prestations-d-automachine/?$ /entreprise [R=301,L]
+RewriteRule ^les-moyens-utilises/?$ /entreprise [R=301,L]
+RewriteRule ^nos-domaines-de-competences(-automachine-conception-fabrication-de-machine-speciale)?/?$ /entreprise [R=301,L]
+RewriteRule ^(les|nos)-secteurs-d-interventions/?$ /entreprise [R=301,L]
+RewriteRule ^ils-nous-ont-fait-confiance(-automachine-concepteur-fabricant-de-machine-speciale)?/?$ /entreprise [R=301,L]
+
+# Les machines.
+RewriteRule ^portfolio(-automachine-concepteur-et-fabricant-machines-speciales)?/?$ /machines [R=301,L]
+RewriteRule ^bobineuse-supraconducteur-automachine(-copy)?/?$ /machines/bobineuse-esrf [R=301,L]
+
+# Contact et pages légales.
+RewriteRule ^contact-automachine/?$ /contact [R=301,L]
+RewriteRule ^politique-de-confidentialite/?$ /confidentialite [R=301,L]
+# /mentions-legales garde la même adresse.

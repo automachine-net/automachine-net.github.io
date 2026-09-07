@@ -6,10 +6,6 @@ node_modules/
 # Fichiers copiés ou générés, jamais écrits à la main.
 public/admin/sveltia-cms.js
 public/decodeurs/
-public/fonts/fonts.css
 
 # Contenu rédigé dans le CMS : on ne reformate pas ce que les éditeurs écrivent.
 content/
-
-# Maquettes du lot 1, vouées à disparaître.
-src/pages/maquettes/

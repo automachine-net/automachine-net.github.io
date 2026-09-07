@@ -48,8 +48,8 @@ export default defineConfig({
 		sitemap({
 			filter: (page) => {
 				const chemin = new URL(page).pathname.replace(/\/$/, '') || '/';
-				// Les maquettes du lot 1 et l'administration ne sont pas des pages du site.
-				if (chemin.startsWith('/maquettes') || chemin.startsWith('/admin')) return false;
+				// L'administration n'est pas une page du site.
+				if (chemin.startsWith('/admin')) return false;
 				return ![...PAGES_NON_REFERENCEES, ...pagesMasqueesParLeCms()].includes(chemin);
 			},
 		}),

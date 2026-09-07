@@ -8,6 +8,7 @@
   "scripts": {
     "cms": "node -e \"require('fs').copyFileSync('node_modules/@sveltia/cms/dist/sveltia-cms.js','public/admin/sveltia-cms.js')\"",
     "detourer": "node construction/detourer.mjs",
+    "partage": "node construction/images-de-partage.mjs",
     "verifier": "astro check",
     "formater": "prettier --write .",
     "formater:controler": "prettier --check .",

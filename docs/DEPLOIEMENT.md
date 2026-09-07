@@ -48,3 +48,12 @@ stockée.
 
 L'adresse d'envoi Infomaniak du formulaire de contact devra être ajoutée à l'enregistrement
 SPF du domaine `automachine.net`. Voir `docs/BASCULE.md`.
+
+## Fichiers publiés avec le site, utiles seulement chez Infomaniak
+
+- `public/.htaccess` : page d'erreur 404 dans la charte, et redirections permanentes depuis
+  les adresses de l'ancien site (table dans `docs/BASCULE.md`). GitHub Pages l'ignore, il ne
+  gêne pas la phase de test.
+- `public/images/partage/` : les vignettes affichées quand on colle un lien du site dans une
+  messagerie ou sur un réseau. Produites par `npm run partage` après l'ajout d'un rendu de
+  machine, puis ajoutées au dépôt.

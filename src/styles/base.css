@@ -7,7 +7,9 @@
      En texte uniquement sur --bleu-nuit (5,51:1 et 6,35:1).
    - fonds pleins sombres : --bleu-nuit ou --bleu-sombre, texte blanc. */
 
-@import url('/fonts/fonts.css');
+/* Les déclarations des polices sont regroupées dans la même feuille à la construction :
+   un seul fichier CSS à charger avant la première lettre. */
+@import './polices.css';
 
 :root {
 	--blanc: #ffffff;

@@ -267,6 +267,17 @@ le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (pag
 suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
 
 - **Lot A livré le 2026-09-07.**
+- **Lot F livré le 2026-09-07** : page 404 dans la charte (`src/pages/404.astro`, servie par
+  GitHub Pages, et par `ErrorDocument` dans `public/.htaccess` chez Infomaniak) ; maquettes du
+  lot 1 supprimées (pages, gabarit, données, exclusions) ; déclarations des polices
+  regroupées dans la feuille principale (`src/styles/polices.css`), plus de chaîne d'imports ;
+  images de partage sans texte, 1200 × 630, produites par `npm run partage`
+  (`construction/images-de-partage.mjs`) et versionnées dans `public/images/partage/` :
+  générique pour toutes les pages, une par machine dont le rendu existe ; `docs/BASCULE.md`
+  écrit, avec la table des redirections 301 de l'ancien site (inventaire du plan de site
+  d'automachine.net fait le 2026-09-07, **à valider par le dirigeant**) et `public/.htaccess`
+  correspondant ; `README.md` à la racine. **Le plan de reprise validé le 2026-09-07 est
+  entièrement livré**, hors lot C qui attend les rendus.
 - **Lot E livré le 2026-09-07**, en six commits :
   1. Vérification de types dans la construction (`astro check` dans `prebuild`, donc aussi
      dans l'intégration continue) ; `tsconfig.json` restreint aux sources, sans quoi la

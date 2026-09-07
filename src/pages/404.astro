@@ -1,0 +1,64 @@
+---
+// Page d'erreur : une adresse qui ne mène nulle part.
+//
+// GitHub Pages sert automatiquement ce fichier (404.html) ; sur l'hébergement définitif,
+// c'est la directive ErrorDocument du .htaccess qui le fait (voir docs/BASCULE.md).
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+	titre="Page introuvable"
+	description="Cette adresse ne mène à aucune page du site Automachine."
+	noindex
+>
+	<section class="bloc bloc--blanc introuvable">
+		<div class="bloc__interieur">
+			<p class="surtitre">Erreur 404</p>
+			<h1>Cette page n’existe pas</h1>
+			<p class="chapeau">
+				L’adresse est peut-être mal recopiée, ou la page a changé de place depuis l’ancien site.
+				Rien n’est perdu : tout ce que nous faisons tient en quelques pages.
+			</p>
+			<ul class="pistes">
+				<li><a href="/">L’accueil</a></li>
+				<li><a href="/machines">Les machines que nous avons construites</a></li>
+				<li><a href="/outils">Les outils : simulateur de prix, quiz, empreinte carbone</a></li>
+				<li><a href="/contact">Nous contacter</a></li>
+			</ul>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.introuvable {
+		min-height: 55vh;
+	}
+	.introuvable .bloc__interieur {
+		max-width: 46rem;
+	}
+	.surtitre {
+		font-family: var(--titres);
+		font-weight: 500;
+		color: var(--bleu);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+	.chapeau {
+		font-size: 1.15rem;
+		line-height: 1.55;
+	}
+	.pistes {
+		list-style: none;
+		padding: 0;
+		margin: 2rem 0 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+	.pistes a {
+		font-family: var(--titres);
+		font-weight: 600;
+		font-size: 1.05rem;
+	}
+</style>

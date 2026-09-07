@@ -2,6 +2,7 @@
 // Fiche détaillée d'une machine : visionneuse 3D, description, caractéristiques.
 // Le nom du client n'apparaît que s'il est renseigné, c'est-à-dire uniquement avec son
 // accord écrit. Sinon, seul le secteur est indiqué.
+import fs from 'node:fs';
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -24,9 +25,13 @@ const d = machine.data;
 const toutes = (await getCollection('machines')).sort((a, b) => a.data.ordre - b.data.ordre);
 const position = toutes.findIndex((m) => m.id === machine.id);
 const suivante = toutes[(position + 1) % toutes.length];
+
+// Vignette de partage propre à la machine, si elle a été produite (npm run partage).
+const cheminVignette = `/images/partage/machines/${machine.id}.png`;
+const vignette = fs.existsSync(`public${cheminVignette}`) ? cheminVignette : undefined;
 ---
 
-<Base titre={d.nom} description={d.resume}>
+<Base titre={d.nom} description={d.resume} image={vignette}>
 	<article>
 		<EntetePage
 			serre
