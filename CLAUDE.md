@@ -266,6 +266,11 @@ le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (pag
 suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
 
 - **Lot A livré le 2026-09-07.**
+- **Lot D livré le 2026-09-07** : les corrections de fond prévues (phrase ISO, chiffres clés,
+  FAQ, fiche ESRF) ont été absorbées par la passe éditoriale du même jour ; il restait le
+  téléphone en tête de la page Contact. Composant `src/components/Coordonnees.astro` :
+  téléphone en grand, adresse postale, LinkedIn, et l'adresse électronique seulement si elle
+  est renseignée. Placé entre l'en-tête et le formulaire.
 - **Lot C engagé le 2026-09-07** : détourage automatique des PNG transparents de
   `src/images/machines` avant chaque construction (`construction/detourer.mjs`, scripts
   `predev` et `prebuild`, bibliothèque sharp déjà présente). Le dépôt d'un rendu brut
