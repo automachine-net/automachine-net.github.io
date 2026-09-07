@@ -106,7 +106,7 @@ const choisies = bloc.machines?.length
 				<span class="sr-only">Machine suivante</span>
 			</button>
 		</div>
-	
+
 		{
 			bloc.bouton_url && (
 				<div class="apres">
@@ -131,7 +131,9 @@ const choisies = bloc.machines?.length
 	chargerVisionneuse();
 
 	// Le défilement des flèches est doux, sauf si le visiteur a demandé moins d'animations.
-	const defilement: ScrollBehavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+	const defilement: ScrollBehavior = matchMedia('(prefers-reduced-motion: reduce)').matches
+		? 'auto'
+		: 'smooth';
 
 	const monter = (racine: ParentNode) => {
 		racine.querySelectorAll<HTMLCanvasElement>('canvas[data-slug]').forEach((c) => {
@@ -198,7 +200,8 @@ const choisies = bloc.machines?.length
 			{ passive: true }
 		);
 
-		const pas = () => (piste.querySelector('.carte') as HTMLElement).getBoundingClientRect().width + 16;
+		const pas = () =>
+			(piste.querySelector('.carte') as HTMLElement).getBoundingClientRect().width + 16;
 		const avant = element<HTMLButtonElement>(carrousel, '[data-avant]');
 		const apres = element<HTMLButtonElement>(carrousel, '[data-apres]');
 		avant.hidden = false;

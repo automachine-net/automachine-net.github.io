@@ -40,177 +40,120 @@ const uid = `prix${compteurs.__exemplaires_prix}`;
 ---
 
 <div data-estimateur-module>
-<form class="estimateur" data-estimateur novalidate>
-	<p class="sans-js">
-		Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
-		exécuter.
-	</p>
+	<form class="estimateur" data-estimateur novalidate>
+		<p class="sans-js">
+			Le calcul se fait dans votre navigateur et demande JavaScript, que le vôtre semble ne pas
+			exécuter.
+		</p>
 
-	{apercu ? (
-		<fieldset class="section section--apercu">
-			<legend class="sr-only">Votre projet en quelques réponses</legend>
-			<div class="apercu__grille">
-				<div class="champ">
-					<label for={`${uid}-apercu-nature`}>De quel projet s’agit-il ?</label>
-					<div class="saisie">
-						<select id={`${uid}-apercu-nature`} data-nature-choix>
-							{natures.map((n) => (
-								<option value={n.cle}>{n.libelle}</option>
-							))}
-						</select>
-					</div>
-				</div>
-				{postesApercu.map((p) => (
-					<div class="champ">
-						<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
-						{p.type === 'nombre' ? (
+		{
+			apercu ? (
+				<fieldset class="section section--apercu">
+					<legend class="sr-only">Votre projet en quelques réponses</legend>
+					<div class="apercu__grille">
+						<div class="champ">
+							<label for={`${uid}-apercu-nature`}>De quel projet s’agit-il ?</label>
 							<div class="saisie">
-								<input
-									type="number"
-									id={`${uid}-poste-${p.cle}`}
-									data-nombre={p.cle}
-									min="0"
-									step="1"
-									placeholder="0"
-									inputmode="numeric"
-								/>
-								<span class="unite">{p.unite}</span>
+								<select id={`${uid}-apercu-nature`} data-nature-choix>
+									{natures.map((n) => (
+										<option value={n.cle}>{n.libelle}</option>
+									))}
+								</select>
 							</div>
-						) : (
-							p.type === 'choix' && (
-								<div class="saisie">
-									<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
-										{p.options.map((o, i) => (
-											<option
-												value={o.cle}
-												selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}
-											>
-												{o.libelle}
-											</option>
-										))}
-									</select>
-								</div>
-							)
-						)}
-					</div>
-				))}
-			</div>
-		</fieldset>
-	) : (
-	<Fragment>
-	<fieldset class="section">
-		<legend>De quel projet s’agit-il ?</legend>
-		<div class="natures">
-			{
-				natures.map((n, i) => (
-					<label class="nature">
-						<input type="radio" name="nature" value={n.cle} checked={i === 0} data-nature />
-						<span class="nature__corps">
-							<span class="nature__nom">{n.libelle}</span>
-							<span class="nature__texte">{typo(n.description)}</span>
-						</span>
-					</label>
-				))
-			}
-		</div>
-	</fieldset>
-
-	<fieldset class="section">
-		<legend>Ce que contient la machine</legend>
-
-		<div class="postes">
-			{
-				postes.map((p) => (
-					<div class="poste" data-poste={p.cle} data-type={p.type}>
-						<div class="poste__tete">
-							<span class="poste__nom">
-								{p.type === 'nombre' ? (
-									<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
-								) : p.type === 'choix' ? (
-									<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
-								) : (
-									<span class="poste__libelle" id={`${uid}-poste-${p.cle}-nom`}>{p.libelle}</span>
-								)}
-								{p.aide && (
-									<span class="aide" data-aide data-bulle>
-										<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-${p.cle}`}>
-											<span aria-hidden="true">?</span>
-											<span class="sr-only">Que change ce paramètre ?</span>
-										</button>
-										<span class="bulle" role="tooltip" id={`${uid}-aide-${p.cle}`}>
-											{typo(p.aide)}
-										</span>
-									</span>
-								)}
-							</span>
-
-							{p.type === 'nombre' && (
-								<div class="saisie">
-									<input
-										type="number"
-										id={`${uid}-poste-${p.cle}`}
-										data-nombre={p.cle}
-										min="0"
-										step="1"
-										placeholder="0"
-										inputmode="numeric"
-									/>
-									<span class="unite">{p.unite}</span>
-								</div>
-							)}
-							{p.type === 'choix' && (
-								<div class="saisie">
-									<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
-										{p.options.map((o, i) => (
-											<option value={o.cle} selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}>
-												{o.libelle}
-											</option>
-										))}
-									</select>
-								</div>
-							)}
-							{p.type === 'nombre' && 'detail' in p && p.detail && (
-								<button type="button" class="detailler" data-detailler={p.cle} aria-expanded="false">
-									Afficher le détail
-								</button>
-							)}
 						</div>
-
-						{p.type === 'cases' && (
-							<div class="cases" role="group" aria-labelledby={`${uid}-poste-${p.cle}-nom`}>
-								{p.options.map((o) => (
-									<label
-										class={`case ${'inclus' in o && o.inclus ? 'case--incluse' : ''}`}
-										data-natures={o.natures ? o.natures.join(' ') : undefined}
-									>
+						{postesApercu.map((p) => (
+							<div class="champ">
+								<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
+								{p.type === 'nombre' ? (
+									<div class="saisie">
 										<input
-											type="checkbox"
-											data-case={p.cle}
-											value={o.cle}
-											checked={'inclus' in o && o.inclus}
-											disabled={'inclus' in o && o.inclus}
+											type="number"
+											id={`${uid}-poste-${p.cle}`}
+											data-nombre={p.cle}
+											min="0"
+											step="1"
+											placeholder="0"
+											inputmode="numeric"
 										/>
-										<span>
-											{typo(o.libelle)}
-											{'inclus' in o && o.inclus && <span class="case__note">toujours compris</span>}
-										</span>
-									</label>
-								))}
+										<span class="unite">{p.unite}</span>
+									</div>
+								) : (
+									p.type === 'choix' && (
+										<div class="saisie">
+											<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
+												{p.options.map((o, i) => (
+													<option
+														value={o.cle}
+														selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}
+													>
+														{o.libelle}
+													</option>
+												))}
+											</select>
+										</div>
+									)
+								)}
 							</div>
-						)}
+						))}
+					</div>
+				</fieldset>
+			) : (
+				<Fragment>
+					<fieldset class="section">
+						<legend>De quel projet s’agit-il ?</legend>
+						<div class="natures">
+							{natures.map((n, i) => (
+								<label class="nature">
+									<input type="radio" name="nature" value={n.cle} checked={i === 0} data-nature />
+									<span class="nature__corps">
+										<span class="nature__nom">{n.libelle}</span>
+										<span class="nature__texte">{typo(n.description)}</span>
+									</span>
+								</label>
+							))}
+						</div>
+					</fieldset>
 
-						{p.type === 'nombre' && 'detail' in p && p.detail && (
-							<div class="detail" data-detail={p.cle} hidden>
-								<div class="detail__lignes">
-									{p.detail.map((d) => (
-										<div class="champ champ--sous">
-											<label for={`${uid}-sous-${p.cle}-${d.cle}`}>{d.libelle}</label>
+					<fieldset class="section">
+						<legend>Ce que contient la machine</legend>
+
+						<div class="postes">
+							{postes.map((p) => (
+								<div class="poste" data-poste={p.cle} data-type={p.type}>
+									<div class="poste__tete">
+										<span class="poste__nom">
+											{p.type === 'nombre' ? (
+												<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
+											) : p.type === 'choix' ? (
+												<label for={`${uid}-poste-${p.cle}`}>{p.libelle}</label>
+											) : (
+												<span class="poste__libelle" id={`${uid}-poste-${p.cle}-nom`}>
+													{p.libelle}
+												</span>
+											)}
+											{p.aide && (
+												<span class="aide" data-aide data-bulle>
+													<button
+														type="button"
+														class="aide-bouton"
+														aria-describedby={`${uid}-aide-${p.cle}`}
+													>
+														<span aria-hidden="true">?</span>
+														<span class="sr-only">Que change ce paramètre ?</span>
+													</button>
+													<span class="bulle" role="tooltip" id={`${uid}-aide-${p.cle}`}>
+														{typo(p.aide)}
+													</span>
+												</span>
+											)}
+										</span>
+
+										{p.type === 'nombre' && (
 											<div class="saisie">
 												<input
 													type="number"
-													id={`${uid}-sous-${p.cle}-${d.cle}`}
-													data-sous={p.cle}
-													data-sous-cle={d.cle}
+													id={`${uid}-poste-${p.cle}`}
+													data-nombre={p.cle}
 													min="0"
 													step="1"
 													placeholder="0"
@@ -218,81 +161,161 @@ const uid = `prix${compteurs.__exemplaires_prix}`;
 												/>
 												<span class="unite">{p.unite}</span>
 											</div>
+										)}
+										{p.type === 'choix' && (
+											<div class="saisie">
+												<select id={`${uid}-poste-${p.cle}`} data-choix={p.cle}>
+													{p.options.map((o, i) => (
+														<option
+															value={o.cle}
+															selected={'defaut' in p && p.defaut ? o.cle === p.defaut : i === 0}
+														>
+															{o.libelle}
+														</option>
+													))}
+												</select>
+											</div>
+										)}
+										{p.type === 'nombre' && 'detail' in p && p.detail && (
+											<button
+												type="button"
+												class="detailler"
+												data-detailler={p.cle}
+												aria-expanded="false"
+											>
+												Afficher le détail
+											</button>
+										)}
+									</div>
+
+									{p.type === 'cases' && (
+										<div class="cases" role="group" aria-labelledby={`${uid}-poste-${p.cle}-nom`}>
+											{p.options.map((o) => (
+												<label
+													class={`case ${'inclus' in o && o.inclus ? 'case--incluse' : ''}`}
+													data-natures={o.natures ? o.natures.join(' ') : undefined}
+												>
+													<input
+														type="checkbox"
+														data-case={p.cle}
+														value={o.cle}
+														checked={'inclus' in o && o.inclus}
+														disabled={'inclus' in o && o.inclus}
+													/>
+													<span>
+														{typo(o.libelle)}
+														{'inclus' in o && o.inclus && (
+															<span class="case__note">toujours compris</span>
+														)}
+													</span>
+												</label>
+											))}
 										</div>
-									))}
+									)}
+
+									{p.type === 'nombre' && 'detail' in p && p.detail && (
+										<div class="detail" data-detail={p.cle} hidden>
+											<div class="detail__lignes">
+												{p.detail.map((d) => (
+													<div class="champ champ--sous">
+														<label for={`${uid}-sous-${p.cle}-${d.cle}`}>{d.libelle}</label>
+														<div class="saisie">
+															<input
+																type="number"
+																id={`${uid}-sous-${p.cle}-${d.cle}`}
+																data-sous={p.cle}
+																data-sous-cle={d.cle}
+																min="0"
+																step="1"
+																placeholder="0"
+																inputmode="numeric"
+															/>
+															<span class="unite">{p.unite}</span>
+														</div>
+													</div>
+												))}
+											</div>
+										</div>
+									)}
 								</div>
-							</div>
-						)}
-					</div>
-				))
-			}
-		</div>
-	</fieldset>
-
-	<fieldset class="section">
-		<legend>Ce qu’on lui demande</legend>
-		<div class="postes">
-			{
-				modele.facteurs.map((f) => (
-					<div class="poste" data-type="choix">
-						<div class="poste__tete">
-							<span class="poste__nom">
-								<label for={`${uid}-facteur-${f.cle}`}>{f.libelle}</label>
-								<span class="aide" data-aide data-bulle>
-									<button type="button" class="aide-bouton" aria-describedby={`${uid}-aide-facteur-${f.cle}`}>
-										<span aria-hidden="true">?</span>
-										<span class="sr-only">Que change ce paramètre ?</span>
-									</button>
-									<span class="bulle" role="tooltip" id={`${uid}-aide-facteur-${f.cle}`}>
-										{typo(f.aide)}
-									</span>
-								</span>
-							</span>
-							<div class="saisie">
-								<select id={`${uid}-facteur-${f.cle}`} data-facteur={f.cle}>
-									{f.options.map((o, i) => (
-										<option value={o.cle} selected={i === 0}>
-											{typo(o.libelle)}
-										</option>
-									))}
-								</select>
-							</div>
+							))}
 						</div>
-					</div>
-				))
-			}
-		</div>
-	</fieldset>
-	</Fragment>
-	)}
-</form>
+					</fieldset>
 
-<section class={`resultat ${apercu ? 'resultat--apercu' : ''}`} data-resultat hidden aria-live="polite">
-	<TitreResultat>Ordre de prix</TitreResultat>
-	<p class="fourchette">
-		<span data-bas></span>
-		<span class="fourchette__a">à</span>
-		<span data-haut></span>
-		<span class="fourchette__ht">HT</span>
-	</p>
+					<fieldset class="section">
+						<legend>Ce qu’on lui demande</legend>
+						<div class="postes">
+							{modele.facteurs.map((f) => (
+								<div class="poste" data-type="choix">
+									<div class="poste__tete">
+										<span class="poste__nom">
+											<label for={`${uid}-facteur-${f.cle}`}>{f.libelle}</label>
+											<span class="aide" data-aide data-bulle>
+												<button
+													type="button"
+													class="aide-bouton"
+													aria-describedby={`${uid}-aide-facteur-${f.cle}`}
+												>
+													<span aria-hidden="true">?</span>
+													<span class="sr-only">Que change ce paramètre ?</span>
+												</button>
+												<span class="bulle" role="tooltip" id={`${uid}-aide-facteur-${f.cle}`}>
+													{typo(f.aide)}
+												</span>
+											</span>
+										</span>
+										<div class="saisie">
+											<select id={`${uid}-facteur-${f.cle}`} data-facteur={f.cle}>
+												{f.options.map((o, i) => (
+													<option value={o.cle} selected={i === 0}>
+														{typo(o.libelle)}
+													</option>
+												))}
+											</select>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</fieldset>
+				</Fragment>
+			)
+		}
+	</form>
 
-	<div class="barre-bloc">
-		<div class="barre" data-barre></div>
-		<div class="barre__bulle" data-barre-bulle hidden></div>
-	</div>
-	<ul class="legende" data-legende></ul>
-	<ul class="sr-only" data-detail-parts></ul>
-
-	<p class="avertissement">{typo(modele.avertissement)}</p>
-
-	{apercu && (
-		<p class="apercu__suite">
-			<a class="bouton" href="/outils/estimateur-prix">
-				Répondre à toutes les questions
-			</a>
+	<section
+		class={`resultat ${apercu ? 'resultat--apercu' : ''}`}
+		data-resultat
+		hidden
+		aria-live="polite"
+	>
+		<TitreResultat>Ordre de prix</TitreResultat>
+		<p class="fourchette">
+			<span data-bas></span>
+			<span class="fourchette__a">à</span>
+			<span data-haut></span>
+			<span class="fourchette__ht">HT</span>
 		</p>
-	)}
-</section>
+
+		<div class="barre-bloc">
+			<div class="barre" data-barre></div>
+			<div class="barre__bulle" data-barre-bulle hidden></div>
+		</div>
+		<ul class="legende" data-legende></ul>
+		<ul class="sr-only" data-detail-parts></ul>
+
+		<p class="avertissement">{typo(modele.avertissement)}</p>
+
+		{
+			apercu && (
+				<p class="apercu__suite">
+					<a class="bouton" href="/outils/estimateur-prix">
+						Répondre à toutes les questions
+					</a>
+				</p>
+			)
+		}
+	</section>
 </div>
 
 <script>
@@ -371,15 +394,16 @@ const uid = `prix${compteurs.__exemplaires_prix}`;
 						form.querySelector<HTMLSelectElement>(`[data-choix="${p.cle}"]`)?.value ??
 						('defaut' in p && p.defaut ? p.defaut : p.options[0].cle);
 				} else {
-					cases[p.cle] = [...form.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`)].map(
-						(i) => i.value
-					);
+					cases[p.cle] = [
+						...form.querySelectorAll<HTMLInputElement>(`[data-case="${p.cle}"]:checked`),
+					].map((i) => i.value);
 				}
 			}
 			const facteurs: Entrees['facteurs'] = {};
 			for (const f of M.facteurs) {
 				facteurs[f.cle] =
-					form.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)?.value ?? f.options[0].cle;
+					form.querySelector<HTMLSelectElement>(`[data-facteur="${f.cle}"]`)?.value ??
+					f.options[0].cle;
 			}
 			return { nature, nombres, choix, cases, facteurs };
 		}
@@ -420,7 +444,9 @@ const uid = `prix${compteurs.__exemplaires_prix}`;
 					segment.style.width = `${part}%`;
 					segment.style.background = couleurs[p.cle];
 					if (part < 4) segment.classList.add('barre__part--menue');
-					const valeurs = typo(`environ ${formaterEuros(p.montant)}, soit ${part < 1 ? '< 1' : Math.round(part)} % du total`);
+					const valeurs = typo(
+						`environ ${formaterEuros(p.montant)}, soit ${part < 1 ? '< 1' : Math.round(part)} % du total`
+					);
 					segment.setAttribute('aria-label', typo(`${p.libelle} : ${valeurs}`));
 					const montrer = () => {
 						const nom = document.createElement('strong');

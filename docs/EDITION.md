@@ -38,12 +38,12 @@ GitHub**, sans jeton. Cette section sera mise à jour à ce moment-là.
 
 La colonne de gauche présente quatre rubriques.
 
-| Rubrique     | Ce qu'on y modifie                                                          |
-| ------------ | --------------------------------------------------------------------------- |
-| **Pages**    | Les pages du site : accueil, entreprise, machines, contact.                  |
-| **Machines** | Une fiche par machine réalisée.                                             |
+| Rubrique     | Ce qu'on y modifie                                                                                                                                                                        |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pages**    | Les pages du site : accueil, entreprise, machines, contact.                                                                                                                               |
+| **Machines** | Une fiche par machine réalisée.                                                                                                                                                           |
 | **Outils**   | Les réglages des outils : questions du quiz, facteurs du simulateur carbone, indice de l'estimateur de prix, étapes du schéma « Où va la matière ? », critères de « Boucle ou hélice ? ». |
-| **Réglages** | Coordonnées, menus, logos des clients, secteurs, informations légales.       |
+| **Réglages** | Coordonnées, menus, logos des clients, secteurs, informations légales.                                                                                                                    |
 
 ## 3. Modifier un texte
 
@@ -81,20 +81,20 @@ Dans le champ **Blocs de la page** :
 
 ### Les blocs disponibles
 
-| Bloc                    | À quoi il sert                                                        |
-| ----------------------- | --------------------------------------------------------------------- |
-| **En-tête de page**     | Le haut d'une page : surtitre, grand titre, chapeau, boutons.          |
-| **Texte**               | Un titre et un texte libre.                                           |
-| **Texte et image**      | Un texte à côté d'une image, à gauche ou à droite.                    |
-| **Galerie d'images**    | Plusieurs images en grille.                                           |
-| **Chiffres clés**       | Des nombres avec leur légende, sur une ligne.                         |
-| **Cartes de machines**  | Les machines à faire défiler, avec leur volume manipulable.           |
-| **Visionneuse 3D**      | Un volume manipulable en grand.                                       |
-| **Citation**            | Une phrase mise en avant, avec son auteur.                            |
-| **Appel à l'action**    | Un titre, un texte court et un bouton, centrés.                       |
-| **Questions fréquentes**| Des questions qui se déplient au clic.                                |
-| **Module interactif**   | N'importe lequel des outils du site, posé dans la page.               |
-| **Logos des clients**   | La bande de logos. Les logos se modifient dans Réglages.              |
+| Bloc                     | À quoi il sert                                                |
+| ------------------------ | ------------------------------------------------------------- |
+| **En-tête de page**      | Le haut d'une page : surtitre, grand titre, chapeau, boutons. |
+| **Texte**                | Un titre et un texte libre.                                   |
+| **Texte et image**       | Un texte à côté d'une image, à gauche ou à droite.            |
+| **Galerie d'images**     | Plusieurs images en grille.                                   |
+| **Chiffres clés**        | Des nombres avec leur légende, sur une ligne.                 |
+| **Cartes de machines**   | Les machines à faire défiler, avec leur volume manipulable.   |
+| **Visionneuse 3D**       | Un volume manipulable en grand.                               |
+| **Citation**             | Une phrase mise en avant, avec son auteur.                    |
+| **Appel à l'action**     | Un titre, un texte court et un bouton, centrés.               |
+| **Questions fréquentes** | Des questions qui se déplient au clic.                        |
+| **Module interactif**    | N'importe lequel des outils du site, posé dans la page.       |
+| **Logos des clients**    | La bande de logos. Les logos se modifient dans Réglages.      |
 
 ### Poser un outil dans une page
 

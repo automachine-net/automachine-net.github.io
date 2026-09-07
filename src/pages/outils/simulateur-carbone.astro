@@ -21,11 +21,11 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 	noindex={true}
 >
 	<EntetePage
-	fil={[{ libelle: 'Accueil', href: '/' }, { libelle: 'Outils' }]}
-	surtitre="Outil en préparation"
-	titre="Quelle sera l’empreinte carbone de votre machine ?"
-	chapeau="Renseignez ce que vous savez de la machine, même grossièrement, puis affinez ce que vous connaissez précisément."
-/>
+		fil={[{ libelle: 'Accueil', href: '/' }, { libelle: 'Outils' }]}
+		surtitre="Outil en préparation"
+		titre="Quelle sera l’empreinte carbone de votre machine ?"
+		chapeau="Renseignez ce que vous savez de la machine, même grossièrement, puis affinez ce que vous connaissez précisément."
+	/>
 
 	<section class="bloc bloc--blanc">
 		<div class="bloc__interieur">
@@ -42,18 +42,17 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 					<h2>Ce que fait le calcul</h2>
 					<ul>
 						<li>
-							<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par
-							son facteur d’émission.
+							<strong>Fabrication</strong> : masse de chaque famille de matériaux, multipliée par son
+							facteur d’émission.
 						</li>
 						<li>
-							<strong>Transport</strong> : masse totale multipliée par la distance de livraison et
-							par le facteur du transport routier. Seule la livraison de la machine terminée est
-							comptée.
+							<strong>Transport</strong> : masse totale multipliée par la distance de livraison et par
+							le facteur du transport routier. Seule la livraison de la machine terminée est comptée.
 						</li>
 						<li>
-							<strong>Usage</strong> : puissance installée, taux de charge, heures par an et durée
-							de vie donnent une consommation, multipliée par le facteur du mix électrique
-							français. L’outil ne vaut donc que pour un usage en France continentale.
+							<strong>Usage</strong> : puissance installée, taux de charge, heures par an et durée de
+							vie donnent une consommation, multipliée par le facteur du mix électrique français. L’outil
+							ne vaut donc que pour un usage en France continentale.
 						</li>
 						<li><strong>Fin de vie</strong> : non chiffrée, et donc absente du total.</li>
 					</ul>
@@ -152,7 +151,8 @@ import facteurs from '../../../content/donnees/facteurs-carbone.json';
 					</div>
 
 					<p class="avertissement">
-						<strong>Fin de vie : poste non chiffré.</strong> {facteurs.fin_de_vie.remarque}
+						<strong>Fin de vie : poste non chiffré.</strong>
+						{facteurs.fin_de_vie.remarque}
 					</p>
 				</div>
 			</details>

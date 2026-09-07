@@ -56,7 +56,9 @@ const estActif = (href: string) => chemin === href || (href !== '/' && chemin.st
 			entete.classList.toggle('entete--ouvert', ouvert);
 			libelle.textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
 		};
-		bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
+		bouton.addEventListener('click', () =>
+			basculer(bouton.getAttribute('aria-expanded') !== 'true')
+		);
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') basculer(false);
 		});

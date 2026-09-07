@@ -69,7 +69,11 @@ const parts = chiffres.map((p) => {
 		}
 	</p>
 
-	<div class="apercu__barre" role="img" aria-label={typo(parts.map((p) => `${p.libelle} ${Math.round(p.pourcentage)} %`).join(', '))}>
+	<div
+		class="apercu__barre"
+		role="img"
+		aria-label={typo(parts.map((p) => `${p.libelle} ${Math.round(p.pourcentage)} %`).join(', '))}
+	>
 		{
 			parts.map((p) => (
 				<span
@@ -90,7 +94,7 @@ const parts = chiffres.map((p) => {
 		{
 			parts.map((p) => (
 				<li>
-					<span class="apercu__pastille" style={`background: ${p.couleur}`}></span>
+					<span class="apercu__pastille" style={`background: ${p.couleur}`} />
 					{typo(`${p.libelle} ${p.pourcentage < 1 ? '< 1' : Math.round(p.pourcentage)} %`)}
 				</li>
 			))

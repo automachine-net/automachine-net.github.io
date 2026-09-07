@@ -49,7 +49,7 @@ for (const question of quiz.questions) {
 
 <div class="quiz" data-quiz>
 	{/* Annonce du verdict aux lecteurs d'écran : la couleur seule ne suffit pas. */}
-	<p class="sr-only" data-annonce aria-live="polite" />
+	<p class="sr-only" data-annonce aria-live="polite"></p>
 	{
 		themes.map((theme) => (
 			<section class="theme" id={theme.id} data-theme>
@@ -79,7 +79,12 @@ for (const question of quiz.questions) {
 								<p>
 									<strong data-verdict />
 									{typo(q.explication)}
-									<a class="reference" href={lienArticle(q.reference)} rel="noopener" target="_blank">
+									<a
+										class="reference"
+										href={lienArticle(q.reference)}
+										rel="noopener"
+										target="_blank"
+									>
 										Règlement machines (UE) 2023/1230, {libelleArticle(q.reference)}
 									</a>
 								</p>
@@ -126,7 +131,9 @@ for (const question of quiz.questions) {
 							else if (autre === choix) autre.classList.add('option--fausse');
 						});
 
-						const texte = juste ? 'Exact.' : `Non, la bonne réponse est ${(bonne ?? '').toUpperCase()}.`;
+						const texte = juste
+							? 'Exact.'
+							: `Non, la bonne réponse est ${(bonne ?? '').toUpperCase()}.`;
 						verdict.textContent = texte + ' ';
 						reponse.open = true;
 						// Vidé puis rempli : un même verdict deux fois de suite doit être annoncé deux fois.

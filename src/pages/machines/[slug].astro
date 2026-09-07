@@ -122,7 +122,9 @@ const suivante = toutes[(position + 1) % toutes.length];
 								{d.caracteristiques.map((c) => (
 									<div>
 										<dt>{typo(c.libelle)}</dt>
-										<dd class={c.valeur.trim().startsWith('[À') ? 'a-rediger' : ''}>{typo(c.valeur)}</dd>
+										<dd class={c.valeur.trim().startsWith('[À') ? 'a-rediger' : ''}>
+											{typo(c.valeur)}
+										</dd>
 									</div>
 								))}
 							</dl>
@@ -141,7 +143,9 @@ const suivante = toutes[(position + 1) % toutes.length];
 					<div class="bloc__interieur suite">
 						<p class="suite__libelle">Machine suivante</p>
 						<p class="suite__nom">
-							<a class="lien" href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a>
+							<a class="lien" href={`/machines/${suivante.id}`}>
+								{typo(suivante.data.nom)}
+							</a>
 						</p>
 					</div>
 				</nav>

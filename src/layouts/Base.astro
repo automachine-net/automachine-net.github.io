@@ -20,7 +20,8 @@ const url = new URL(Astro.url.pathname, Astro.site ?? 'https://automachine-net.g
 const imageAbsolue = image ? new URL(image, url).href : undefined;
 const titrePropre = typo(titre);
 const descriptionPropre = typo(description);
-const titreComplet = titre === site.nom ? `${site.nom} — ${site.baseline}` : `${titrePropre} — ${site.nom}`;
+const titreComplet =
+	titre === site.nom ? `${site.nom} — ${site.baseline}` : `${titrePropre} — ${site.nom}`;
 ---
 
 <!doctype html>

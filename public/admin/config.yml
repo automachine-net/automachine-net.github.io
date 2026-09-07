@@ -61,8 +61,7 @@ collections:
         label_singular: Bloc
         widget: list
         collapsed: true
-        types: &blocs
-          # ------------------------------------------------ En-tête
+        types: &blocs # ------------------------------------------------ En-tête
           - name: hero
             label: En-tête de page
             summary: 'En-tête de page — {{fields.titre}}'
@@ -80,8 +79,18 @@ collections:
                   passer au paragraphe suivant.
               - { name: lien_libelle, label: Bouton — texte, widget: string, required: false }
               - { name: lien_url, label: Bouton — adresse, widget: string, required: false }
-              - { name: lien_secondaire_libelle, label: Second lien — texte, widget: string, required: false }
-              - { name: lien_secondaire_url, label: Second lien — adresse, widget: string, required: false }
+              - {
+                  name: lien_secondaire_libelle,
+                  label: Second lien — texte,
+                  widget: string,
+                  required: false,
+                }
+              - {
+                  name: lien_secondaire_url,
+                  label: Second lien — adresse,
+                  widget: string,
+                  required: false,
+                }
               - name: afficher_secteurs
                 label: Afficher les pictogrammes de secteurs
                 widget: boolean
@@ -156,7 +165,12 @@ collections:
                   - { name: image, label: Image, widget: image, required: false }
                   - { name: alt, label: Description de l'image, widget: string, required: false }
                   - { name: legende, label: Légende affichée, widget: string, required: false }
-                  - { name: attente, label: Texte du cadre d'attente, widget: string, required: false }
+                  - {
+                      name: attente,
+                      label: Texte du cadre d'attente,
+                      widget: string,
+                      required: false,
+                    }
               - name: colonnes
                 label: Nombre de colonnes
                 widget: select
@@ -215,7 +229,12 @@ collections:
                 hint: >-
                   Bouton bien visible sous les cartes, en plus du lien discret placé à côté du
                   titre. Laisser vide pour ne pas en afficher.
-              - { name: bouton_url, label: Bouton sous le carrousel — adresse, widget: string, required: false }
+              - {
+                  name: bouton_url,
+                  label: Bouton sous le carrousel — adresse,
+                  widget: string,
+                  required: false,
+                }
               - *fond
 
           # ------------------------------------------------ Visionneuse 3D
@@ -492,7 +511,12 @@ collections:
                 required: false
                 hint: À remplir seulement si le poste couvre un intervalle de composants.
               - { name: unite, label: Unité, widget: string }
-              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - {
+                  name: incertitude_pct,
+                  label: Incertitude officielle (%),
+                  widget: number,
+                  value_type: int,
+                }
               - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
               - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
               - name: approximation
@@ -509,7 +533,12 @@ collections:
               - { name: libelle, label: Nom affiché, widget: string }
               - { name: valeur, label: Valeur, widget: number, value_type: float }
               - { name: unite, label: Unité, widget: string }
-              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - {
+                  name: incertitude_pct,
+                  label: Incertitude officielle (%),
+                  widget: number,
+                  value_type: int,
+                }
               - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
               - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
               - { name: remarque, label: Remarque, widget: text }
@@ -521,7 +550,12 @@ collections:
               - { name: libelle, label: Nom affiché, widget: string }
               - { name: valeur, label: Valeur, widget: number, value_type: float }
               - { name: unite, label: Unité, widget: string }
-              - { name: incertitude_pct, label: Incertitude officielle (%), widget: number, value_type: int }
+              - {
+                  name: incertitude_pct,
+                  label: Incertitude officielle (%),
+                  widget: number,
+                  value_type: int,
+                }
               - { name: identifiant_ademe, label: Identifiant de l'élément ADEME, widget: string }
               - { name: intitule_ademe, label: Intitulé exact dans la base ADEME, widget: string }
               - { name: remarque, label: Remarque, widget: text }
@@ -578,9 +612,19 @@ collections:
             collapsed: true
             summary: '{{fields.libelle}} — {{fields.valeur}}'
             fields:
-              - { name: cle, label: Identifiant technique, widget: string, hint: "Ne pas modifier : le dessin s'y réfère." }
+              - {
+                  name: cle,
+                  label: Identifiant technique,
+                  widget: string,
+                  hint: "Ne pas modifier : le dessin s'y réfère.",
+                }
               - { name: libelle, label: Libellé, widget: string }
-              - { name: valeur, label: Valeur (millions de tonnes), widget: number, value_type: float }
+              - {
+                  name: valeur,
+                  label: Valeur (millions de tonnes),
+                  widget: number,
+                  value_type: float,
+                }
           - name: etapes
             label: Étapes de la présentation
             label_singular: Étape
@@ -596,7 +640,12 @@ collections:
                 widget: list
                 required: false
                 hint: Identifiants techniques des flux, séparés par des virgules. Vide = tous.
-              - { name: chiffre, label: Flux dont le chiffre est mis en avant, widget: string, required: false }
+              - {
+                  name: chiffre,
+                  label: Flux dont le chiffre est mis en avant,
+                  widget: string,
+                  required: false,
+                }
               - name: cumul
                 label: Flux additionnés dans l'encadré
                 widget: list
@@ -617,7 +666,12 @@ collections:
             collapsed: true
             summary: '{{fields.libelle}}'
             fields:
-              - { name: cle, label: Identifiant technique, widget: string, hint: "Ne pas modifier : le dessin s'y réfère." }
+              - {
+                  name: cle,
+                  label: Identifiant technique,
+                  widget: string,
+                  hint: "Ne pas modifier : le dessin s'y réfère.",
+                }
               - { name: libelle, label: Libellé, widget: string }
               - { name: unite, label: Unité, widget: string }
               - { name: min, label: Minimum du curseur, widget: number, value_type: float }
@@ -631,10 +685,33 @@ collections:
                 options:
                   - { label: au plus égale au seuil, value: max }
                   - { label: au moins égale au seuil, value: min }
-              - { name: seuil_reglable, label: Seuil réglable par le public, widget: boolean, default: false }
-              - { name: seuil_min, label: Seuil — minimum, widget: number, value_type: float, required: false }
-              - { name: seuil_max, label: Seuil — maximum, widget: number, value_type: float, required: false }
-              - { name: seuil_pas, label: Seuil — pas, widget: number, value_type: float, required: false }
+              - {
+                  name: seuil_reglable,
+                  label: Seuil réglable par le public,
+                  widget: boolean,
+                  default: false,
+                }
+              - {
+                  name: seuil_min,
+                  label: Seuil — minimum,
+                  widget: number,
+                  value_type: float,
+                  required: false,
+                }
+              - {
+                  name: seuil_max,
+                  label: Seuil — maximum,
+                  widget: number,
+                  value_type: float,
+                  required: false,
+                }
+              - {
+                  name: seuil_pas,
+                  label: Seuil — pas,
+                  widget: number,
+                  value_type: float,
+                  required: false,
+                }
               - { name: regle, label: Règle, widget: text }
               - { name: echec, label: Phrase quand le critère est dépassé, widget: text }
           - name: verdicts

@@ -16,10 +16,8 @@
 import donnees from '../../../content/donnees/flux-matieres.json';
 import { typo } from '../../scripts/typographie';
 
-const valeur = (cle: string): number =>
-	donnees.flux.find((f) => f.cle === cle)?.valeur ?? 0;
-const libelle = (cle: string): string =>
-	donnees.flux.find((f) => f.cle === cle)?.libelle ?? cle;
+const valeur = (cle: string): number => donnees.flux.find((f) => f.cle === cle)?.valeur ?? 0;
+const libelle = (cle: string): string => donnees.flux.find((f) => f.cle === cle)?.libelle ?? cle;
 
 const TOTAL = valeur('apports');
 
@@ -58,11 +56,31 @@ type Flux = {
 const flux: Flux[] = [
 	// Les entrées démarrent à 260 pour laisser, à leur gauche, la place de leurs étiquettes :
 	// posées sur la bande, elles ne contrastaient pas assez (2,85 : 1).
-	{ cle: 'importations', nature: 'entree', e: ep('importations'), d: bande(260, 106, APPORTS.x, 161.2) },
-	{ cle: 'extraction', nature: 'entree', e: ep('extraction'), d: bande(260, 340, APPORTS.x, 307.4) },
+	{
+		cle: 'importations',
+		nature: 'entree',
+		e: ep('importations'),
+		d: bande(260, 106, APPORTS.x, 161.2),
+	},
+	{
+		cle: 'extraction',
+		nature: 'entree',
+		e: ep('extraction'),
+		d: bande(260, 340, APPORTS.x, 307.4),
+	},
 
-	{ cle: 'exportations', nature: 'sortie', e: ep('exportations'), d: bande(APPORTS.x + APPORTS.l, 140.3, XT, 95) },
-	{ cle: 'dissipatifs', nature: 'perte', e: ep('dissipatifs'), d: bande(APPORTS.x + APPORTS.l, 178.7, XT, 205) },
+	{
+		cle: 'exportations',
+		nature: 'sortie',
+		e: ep('exportations'),
+		d: bande(APPORTS.x + APPORTS.l, 140.3, XT, 95),
+	},
+	{
+		cle: 'dissipatifs',
+		nature: 'perte',
+		e: ep('dissipatifs'),
+		d: bande(APPORTS.x + APPORTS.l, 178.7, XT, 205),
+	},
 	{
 		cle: 'emissions_hors_incineration',
 		nature: 'perte',
@@ -76,14 +94,39 @@ const flux: Flux[] = [
 		d: bande(APPORTS.x + APPORTS.l, 339.5, UTILISATION.x, 625.9),
 	},
 
-	{ cle: 'traitement', nature: 'interne', e: ep('traitement'), d: bande(UTILISATION.x + UTILISATION.l, 600.7, TRAITEMENT.x, 600.7) },
-	{ cle: 'accumulation', nature: 'stock', e: ep('accumulation'), d: bande(UTILISATION.x + UTILISATION.l, 699.4, XT, 720) },
+	{
+		cle: 'traitement',
+		nature: 'interne',
+		e: ep('traitement'),
+		d: bande(UTILISATION.x + UTILISATION.l, 600.7, TRAITEMENT.x, 600.7),
+	},
+	{
+		cle: 'accumulation',
+		nature: 'stock',
+		e: ep('accumulation'),
+		d: bande(UTILISATION.x + UTILISATION.l, 699.4, XT, 720),
+	},
 
 	// L'eau part du même point que l'incinération et s'en détache en chemin : dessinée
 	// avant, elle est recouverte à l'origine et n'apparaît qu'où elle diverge.
-	{ cle: 'eau', nature: 'perte', e: ep('eau'), d: bande(TRAITEMENT.x + TRAITEMENT.l, 561.5, XT, 430) },
-	{ cle: 'incineration', nature: 'perte', e: ep('incineration'), d: bande(TRAITEMENT.x + TRAITEMENT.l, 563.2, AIR.x, 392.5) },
-	{ cle: 'enfouis', nature: 'perte', e: ep('enfouis'), d: bande(TRAITEMENT.x + TRAITEMENT.l, 571.2, XT, 520) },
+	{
+		cle: 'eau',
+		nature: 'perte',
+		e: ep('eau'),
+		d: bande(TRAITEMENT.x + TRAITEMENT.l, 561.5, XT, 430),
+	},
+	{
+		cle: 'incineration',
+		nature: 'perte',
+		e: ep('incineration'),
+		d: bande(TRAITEMENT.x + TRAITEMENT.l, 563.2, AIR.x, 392.5),
+	},
+	{
+		cle: 'enfouis',
+		nature: 'perte',
+		e: ep('enfouis'),
+		d: bande(TRAITEMENT.x + TRAITEMENT.l, 571.2, XT, 520),
+	},
 
 	// Les deux boucles repassent sous le schéma. Le remblayage sort plus haut et boucle plus
 	// court que le recyclage : ainsi les deux trajets ne se croisent jamais.
@@ -104,7 +147,12 @@ const flux: Flux[] = [
 /** Barres sombres des nœuds et des extrémités. */
 const noeuds = [
 	{ x: APPORTS.x, y: APPORTS.haut, h: APPORTS.bas - APPORTS.haut, l: APPORTS.l },
-	{ x: UTILISATION.x, y: UTILISATION.haut, h: UTILISATION.bas - UTILISATION.haut, l: UTILISATION.l },
+	{
+		x: UTILISATION.x,
+		y: UTILISATION.haut,
+		h: UTILISATION.bas - UTILISATION.haut,
+		l: UTILISATION.l,
+	},
 	{ x: TRAITEMENT.x, y: TRAITEMENT.haut, h: TRAITEMENT.bas - TRAITEMENT.haut, l: TRAITEMENT.l },
 	{ x: AIR.x, y: AIR.haut, h: AIR.bas - AIR.haut, l: AIR.l },
 	{ x: XT, y: 95 - ep('exportations') / 2, h: ep('exportations'), l: LT },
@@ -127,35 +175,144 @@ type Etiquette = {
 };
 
 const etiquettes: Etiquette[] = [
-	{ cles: ['importations'], x: 244, y: 96, ancre: 'end', valeurCle: 'importations', lignes: ['Importations'] },
-	{ cles: ['extraction'], x: 244, y: 318, ancre: 'end', valeurCle: 'extraction', lignes: ['Extraction', 'intérieure'] },
-	{ cles: ['importations', 'extraction', 'apports'], x: APPORTS.x + APPORTS.l + 10, y: 44, ancre: 'start', valeurCle: 'apports', lignes: ['Apports directs', 'de matières'] },
+	{
+		cles: ['importations'],
+		x: 244,
+		y: 96,
+		ancre: 'end',
+		valeurCle: 'importations',
+		lignes: ['Importations'],
+	},
+	{
+		cles: ['extraction'],
+		x: 244,
+		y: 318,
+		ancre: 'end',
+		valeurCle: 'extraction',
+		lignes: ['Extraction', 'intérieure'],
+	},
+	{
+		cles: ['importations', 'extraction', 'apports'],
+		x: APPORTS.x + APPORTS.l + 10,
+		y: 44,
+		ancre: 'start',
+		valeurCle: 'apports',
+		lignes: ['Apports directs', 'de matières'],
+	},
 
-	{ cles: ['exportations'], x: XT + 26, y: 82, ancre: 'start', valeurCle: 'exportations', lignes: ['Exportations'] },
-	{ cles: ['dissipatifs'], x: XT + 26, y: 192, ancre: 'start', valeurCle: 'dissipatifs', lignes: ['Flux dissipatifs'] },
-	{ cles: ['emissions_hors_incineration'], x: 830, y: 268, ancre: 'middle', valeurCle: 'emissions_hors_incineration', lignes: ['Émissions hors', 'incinération des déchets'], sur: true },
-	{ cles: ['emissions_hors_incineration', 'incineration', 'air'], x: XT + 26, y: 325, ancre: 'start', valeurCle: 'air', lignes: ['Émissions', 'dans l’air'] },
-	{ cles: ['eau'], x: XT + 26, y: 417, ancre: 'start', valeurCle: 'eau', lignes: ['Émissions dans l’eau'] },
-	{ cles: ['enfouis'], x: XT + 26, y: 507, ancre: 'start', valeurCle: 'enfouis', lignes: ['Déchets enfouis'] },
-	{ cles: ['accumulation'], x: XT + 26, y: 707, ancre: 'start', valeurCle: 'accumulation', lignes: ['Accumulation', 'de matières'] },
+	{
+		cles: ['exportations'],
+		x: XT + 26,
+		y: 82,
+		ancre: 'start',
+		valeurCle: 'exportations',
+		lignes: ['Exportations'],
+	},
+	{
+		cles: ['dissipatifs'],
+		x: XT + 26,
+		y: 192,
+		ancre: 'start',
+		valeurCle: 'dissipatifs',
+		lignes: ['Flux dissipatifs'],
+	},
+	{
+		cles: ['emissions_hors_incineration'],
+		x: 830,
+		y: 268,
+		ancre: 'middle',
+		valeurCle: 'emissions_hors_incineration',
+		lignes: ['Émissions hors', 'incinération des déchets'],
+		sur: true,
+	},
+	{
+		cles: ['emissions_hors_incineration', 'incineration', 'air'],
+		x: XT + 26,
+		y: 325,
+		ancre: 'start',
+		valeurCle: 'air',
+		lignes: ['Émissions', 'dans l’air'],
+	},
+	{
+		cles: ['eau'],
+		x: XT + 26,
+		y: 417,
+		ancre: 'start',
+		valeurCle: 'eau',
+		lignes: ['Émissions dans l’eau'],
+	},
+	{
+		cles: ['enfouis'],
+		x: XT + 26,
+		y: 507,
+		ancre: 'start',
+		valeurCle: 'enfouis',
+		lignes: ['Déchets enfouis'],
+	},
+	{
+		cles: ['accumulation'],
+		x: XT + 26,
+		y: 707,
+		ancre: 'start',
+		valeurCle: 'accumulation',
+		lignes: ['Accumulation', 'de matières'],
+	},
 
 	// Ces deux étiquettes sont posées sur le blanc, juste au-dessus de leur bande : dessus,
 	// elles ne contrastaient pas assez.
 	// Position vérifiée par calcul de collision dans le navigateur (isPointInStroke sur
 	// toutes les bandes) : libre avec 24 unités de marge, sous la bande et loin des boucles.
-	{ cles: ['utilisation', 'vers_utilisation'], x: 588, y: 592, ancre: 'end', valeurCle: 'utilisation', lignes: ['Utilisation', 'de matières'] },
-	{ cles: ['traitement'], x: 958, y: 520, ancre: 'middle', valeurCle: 'traitement', lignes: ['Traitement des déchets'] },
-	{ cles: ['incineration'], x: 1132, y: 545, ancre: 'start', valeurCle: 'incineration', lignes: ['Incinération'] },
-	{ cles: ['remblayage'], x: 980, y: 810, ancre: 'middle', valeurCle: 'remblayage', lignes: ['Remblayage'], sur: true },
-	{ cles: ['recyclage'], x: 980, y: 892, ancre: 'middle', valeurCle: 'recyclage', lignes: ['Recyclage'], sur: true },
+	{
+		cles: ['utilisation', 'vers_utilisation'],
+		x: 588,
+		y: 592,
+		ancre: 'end',
+		valeurCle: 'utilisation',
+		lignes: ['Utilisation', 'de matières'],
+	},
+	{
+		cles: ['traitement'],
+		x: 958,
+		y: 520,
+		ancre: 'middle',
+		valeurCle: 'traitement',
+		lignes: ['Traitement des déchets'],
+	},
+	{
+		cles: ['incineration'],
+		x: 1132,
+		y: 545,
+		ancre: 'start',
+		valeurCle: 'incineration',
+		lignes: ['Incinération'],
+	},
+	{
+		cles: ['remblayage'],
+		x: 980,
+		y: 810,
+		ancre: 'middle',
+		valeurCle: 'remblayage',
+		lignes: ['Remblayage'],
+		sur: true,
+	},
+	{
+		cles: ['recyclage'],
+		x: 980,
+		y: 892,
+		ancre: 'middle',
+		valeurCle: 'recyclage',
+		lignes: ['Recyclage'],
+		sur: true,
+	},
 ];
 
 // ─── Étapes ───────────────────────────────────────────────────────────────────────────
 const etapes = donnees.etapes.map((e, i) => {
 	const v = e.chiffre ? valeur(e.chiffre) : null;
-	const cumul = 'cumul' in e && Array.isArray(e.cumul)
-		? (e.cumul as string[]).reduce((s, c) => s + valeur(c), 0)
-		: null;
+	const cumul =
+		'cumul' in e && Array.isArray(e.cumul)
+			? (e.cumul as string[]).reduce((s, c) => s + valeur(c), 0)
+			: null;
 	return {
 		index: i,
 		cle: e.cle,
@@ -192,8 +349,15 @@ const etapes = donnees.etapes.map((e, i) => {
 
 	<!-- Scène : le schéma au centre, une flèche de chaque côté. -->
 	<div class="flux__scene">
-		<button type="button" class="flux__fleche flux__fleche--scene" data-precedent aria-label="Étape précédente">
-			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg>
+		<button
+			type="button"
+			class="flux__fleche flux__fleche--scene"
+			data-precedent
+			aria-label="Étape précédente"
+		>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+				><path d="M20 12H4M11 5l-7 7 7 7"></path></svg
+			>
 		</button>
 		<svg
 			class="flux__dessin"
@@ -241,8 +405,15 @@ const etapes = donnees.etapes.map((e, i) => {
 				}
 			</g>
 		</svg>
-		<button type="button" class="flux__fleche flux__fleche--scene" data-suivant aria-label="Étape suivante">
-			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg>
+		<button
+			type="button"
+			class="flux__fleche flux__fleche--scene"
+			data-suivant
+			aria-label="Étape suivante"
+		>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+				><path d="M4 12h16M13 5l7 7-7 7"></path></svg
+			>
 		</button>
 	</div>
 
@@ -267,16 +438,31 @@ const etapes = donnees.etapes.map((e, i) => {
 		<button type="button" class="flux__plein-ecran" data-plein-ecran>
 			<span data-plein-ecran-texte>Plein écran</span>
 		</button>
-		<button type="button" class="flux__fleche flux__fleche--coin" data-precedent aria-label="Étape précédente">
-			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg>
+		<button
+			type="button"
+			class="flux__fleche flux__fleche--coin"
+			data-precedent
+			aria-label="Étape précédente"
+		>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+				><path d="M20 12H4M11 5l-7 7 7 7"></path></svg
+			>
 		</button>
-		<button type="button" class="flux__fleche flux__fleche--coin" data-suivant aria-label="Étape suivante">
-			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg>
+		<button
+			type="button"
+			class="flux__fleche flux__fleche--coin"
+			data-suivant
+			aria-label="Étape suivante"
+		>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+				><path d="M4 12h16M13 5l7 7-7 7"></path></svg
+			>
 		</button>
 	</div>
 
 	<figcaption class="flux__source">
-		<strong>Source&#8239;:</strong> {typo(donnees.source)}
+		<strong>Source&#8239;:</strong>
+		{typo(donnees.source)}
 	</figcaption>
 </figure>
 
@@ -285,115 +471,118 @@ const etapes = donnees.etapes.map((e, i) => {
 		// Un exemplaire par bloc « module » ; chaque exemplaire inclut ce script, d'où la marque
 		// « monté » qui évite de brancher deux fois le même schéma.
 		document.querySelectorAll('[data-flux-module]').forEach((module) => {
-		if (module.dataset.monte) return;
-		module.dataset.monte = '1';
+			if (module.dataset.monte) return;
+			module.dataset.monte = '1';
 
-		const titre = module.querySelector('[data-titre]');
-		const nombre = module.querySelector('[data-nombre]');
-		const commentaire = module.querySelector('[data-commentaire]');
-		const cumul = module.querySelector('[data-cumul]');
-		const jalons = [...module.querySelectorAll('[data-jalon]')];
-		const bandes = [...module.querySelectorAll('[data-flux]')];
-		const etiquettes = [...module.querySelectorAll('[data-etiquette]')];
+			const titre = module.querySelector('[data-titre]');
+			const nombre = module.querySelector('[data-nombre]');
+			const commentaire = module.querySelector('[data-commentaire]');
+			const cumul = module.querySelector('[data-cumul]');
+			const jalons = [...module.querySelectorAll('[data-jalon]')];
+			const bandes = [...module.querySelectorAll('[data-flux]')];
+			const etiquettes = [...module.querySelectorAll('[data-etiquette]')];
 
-		let courante = -1;
+			let courante = -1;
 
-		function afficher(i) {
-			const n = etapes.length;
-			const index = ((i % n) + n) % n;
-			if (index === courante) return;
-			courante = index;
-			const e = etapes[index];
-			const actifs = new Set(e.actifs);
+			function afficher(i) {
+				const n = etapes.length;
+				const index = ((i % n) + n) % n;
+				if (index === courante) return;
+				courante = index;
+				const e = etapes[index];
+				const actifs = new Set(e.actifs);
 
-			module.dataset.etape = String(index);
-			titre.textContent = e.titre;
-			commentaire.textContent = e.commentaire;
+				module.dataset.etape = String(index);
+				titre.textContent = e.titre;
+				commentaire.textContent = e.commentaire;
 
-			// Le bloc du chiffre garde toujours la même structure d'une étape chiffrée à l'autre,
-			// pour que les textes ne bougent pas. La part n'a de sens que rapportée à l'entrée :
-			// rendue invisible, non retirée, pour l'entrée. Sur une étape sans chiffre (la vue
-			// d'ensemble), le bloc disparaît et le commentaire remonte sous le titre.
-			const v = e.valeur === null ? etapes[0].valeur : e.valeur;
-			const p = e.pourcentage === null ? 100 : e.pourcentage;
-			nombre.hidden = e.valeur === null;
-			nombre.innerHTML =
-				'<span class="flux__nombre-valeur">' +
-				v.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) +
-				'</span> <span class="flux__nombre-unite">millions de tonnes par an</span>' +
-				'<span class="flux__nombre-part' +
-				(p < 100 ? '' : ' est-invisible') +
-				'">' +
-				p +
-				' % de ce qui entre</span>';
+				// Le bloc du chiffre garde toujours la même structure d'une étape chiffrée à l'autre,
+				// pour que les textes ne bougent pas. La part n'a de sens que rapportée à l'entrée :
+				// rendue invisible, non retirée, pour l'entrée. Sur une étape sans chiffre (la vue
+				// d'ensemble), le bloc disparaît et le commentaire remonte sous le titre.
+				const v = e.valeur === null ? etapes[0].valeur : e.valeur;
+				const p = e.pourcentage === null ? 100 : e.pourcentage;
+				nombre.hidden = e.valeur === null;
+				nombre.innerHTML =
+					'<span class="flux__nombre-valeur">' +
+					v.toLocaleString('fr-FR', { minimumFractionDigits: 1 }) +
+					'</span> <span class="flux__nombre-unite">millions de tonnes par an</span>' +
+					'<span class="flux__nombre-part' +
+					(p < 100 ? '' : ' est-invisible') +
+					'">' +
+					p +
+					' % de ce qui entre</span>';
 
-			// Même principe pour le cumul : sa place est réservée à toutes les étapes.
-			const cumulModele = etapes.find((x) => x.cumul !== null);
-			cumul.hidden = false;
-			cumul.classList.toggle('est-invisible', e.cumul === null);
-			const c = e.cumul === null ? cumulModele : e;
-			cumul.innerHTML = c
-				? '<strong>' + c.cumulPourcentage + ' %</strong> ' + c.cumulLibelle
-				: '';
+				// Même principe pour le cumul : sa place est réservée à toutes les étapes.
+				const cumulModele = etapes.find((x) => x.cumul !== null);
+				cumul.hidden = false;
+				cumul.classList.toggle('est-invisible', e.cumul === null);
+				const c = e.cumul === null ? cumulModele : e;
+				cumul.innerHTML = c
+					? '<strong>' + c.cumulPourcentage + ' %</strong> ' + c.cumulLibelle
+					: '';
 
-			bandes.forEach((b) => b.classList.toggle('est-actif', actifs.has(b.dataset.flux)));
-			etiquettes.forEach((et) =>
-				et.classList.toggle(
-					'est-actif',
-					et.dataset.etiquette.split(' ').some((c) => actifs.has(c))
-				)
-			);
-			jalons.forEach((j, k) => j.setAttribute('aria-current', k === index ? 'true' : 'false'));
-		}
-
-		// Les flèches existent en deux jeux (côtés du schéma, coin en plein écran) : un seul
-		// des deux est visible à la fois, les deux sont branchés.
-		module.querySelectorAll('[data-precedent]').forEach((b) => b.addEventListener('click', () => afficher(courante - 1)));
-		module.querySelectorAll('[data-suivant]').forEach((b) => b.addEventListener('click', () => afficher(courante + 1)));
-		jalons.forEach((j) => j.addEventListener('click', () => afficher(Number(j.dataset.jalon))));
-
-		// Plein écran : l'orateur projette le module seul, sans le reste de la page.
-		const boutonPlein = module.querySelector('[data-plein-ecran]');
-		const textePlein = module.querySelector('[data-plein-ecran-texte]');
-		if (document.fullscreenEnabled) {
-			boutonPlein.addEventListener('click', () => {
-				if (document.fullscreenElement) document.exitFullscreen();
-				else module.requestFullscreen();
-			});
-			document.addEventListener('fullscreenchange', () => {
-				const actif = document.fullscreenElement === module;
-				textePlein.textContent = actif ? 'Quitter le plein écran' : 'Plein écran';
-			});
-		} else {
-			boutonPlein.hidden = true;
-		}
-
-		// Le clavier ne prend la main que si le module est à l'écran : sinon les flèches
-		// doivent continuer à faire défiler la page. Le seuil est bas à dessein : sur un
-		// écran peu haut, le module dépasse la fenêtre et n'est jamais visible en entier.
-		let visible = false;
-		new IntersectionObserver(
-			(entrees) => entrees.forEach((e) => (visible = e.isIntersecting)),
-			{ threshold: 0.15 }
-		).observe(module);
-
-		addEventListener('keydown', (ev) => {
-			if (!visible && document.fullscreenElement !== module) return;
-			const cible = ev.target;
-			if (cible instanceof HTMLElement && cible.closest('input, textarea, select')) return;
-			if (ev.key === 'ArrowRight' || ev.key === ' ' || ev.key === 'PageDown') {
-				ev.preventDefault();
-				afficher(courante + 1);
-			} else if (ev.key === 'ArrowLeft' || ev.key === 'PageUp') {
-				ev.preventDefault();
-				afficher(courante - 1);
-			} else if (ev.key === 'Home') {
-				ev.preventDefault();
-				afficher(0);
+				bandes.forEach((b) => b.classList.toggle('est-actif', actifs.has(b.dataset.flux)));
+				etiquettes.forEach((et) =>
+					et.classList.toggle(
+						'est-actif',
+						et.dataset.etiquette.split(' ').some((c) => actifs.has(c))
+					)
+				);
+				jalons.forEach((j, k) => j.setAttribute('aria-current', k === index ? 'true' : 'false'));
 			}
-		});
 
-		afficher(0);
+			// Les flèches existent en deux jeux (côtés du schéma, coin en plein écran) : un seul
+			// des deux est visible à la fois, les deux sont branchés.
+			module
+				.querySelectorAll('[data-precedent]')
+				.forEach((b) => b.addEventListener('click', () => afficher(courante - 1)));
+			module
+				.querySelectorAll('[data-suivant]')
+				.forEach((b) => b.addEventListener('click', () => afficher(courante + 1)));
+			jalons.forEach((j) => j.addEventListener('click', () => afficher(Number(j.dataset.jalon))));
+
+			// Plein écran : l'orateur projette le module seul, sans le reste de la page.
+			const boutonPlein = module.querySelector('[data-plein-ecran]');
+			const textePlein = module.querySelector('[data-plein-ecran-texte]');
+			if (document.fullscreenEnabled) {
+				boutonPlein.addEventListener('click', () => {
+					if (document.fullscreenElement) document.exitFullscreen();
+					else module.requestFullscreen();
+				});
+				document.addEventListener('fullscreenchange', () => {
+					const actif = document.fullscreenElement === module;
+					textePlein.textContent = actif ? 'Quitter le plein écran' : 'Plein écran';
+				});
+			} else {
+				boutonPlein.hidden = true;
+			}
+
+			// Le clavier ne prend la main que si le module est à l'écran : sinon les flèches
+			// doivent continuer à faire défiler la page. Le seuil est bas à dessein : sur un
+			// écran peu haut, le module dépasse la fenêtre et n'est jamais visible en entier.
+			let visible = false;
+			new IntersectionObserver((entrees) => entrees.forEach((e) => (visible = e.isIntersecting)), {
+				threshold: 0.15,
+			}).observe(module);
+
+			addEventListener('keydown', (ev) => {
+				if (!visible && document.fullscreenElement !== module) return;
+				const cible = ev.target;
+				if (cible instanceof HTMLElement && cible.closest('input, textarea, select')) return;
+				if (ev.key === 'ArrowRight' || ev.key === ' ' || ev.key === 'PageDown') {
+					ev.preventDefault();
+					afficher(courante + 1);
+				} else if (ev.key === 'ArrowLeft' || ev.key === 'PageUp') {
+					ev.preventDefault();
+					afficher(courante - 1);
+				} else if (ev.key === 'Home') {
+					ev.preventDefault();
+					afficher(0);
+				}
+			});
+
+			afficher(0);
 		});
 	})();
 </script>

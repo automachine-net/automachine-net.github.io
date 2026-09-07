@@ -22,7 +22,10 @@ const classeFond = classeFond_(bloc.fond);
 		<h2>{typo(bloc.titre)}</h2>
 		{bloc.texte && <div class="prose" set:html={marked(bloc.texte)} />}
 		<p class="appel__action">
-			<a class={`bouton ${classeFond === 'bloc--sombre' ? 'bouton--clair' : ''}`} href={bloc.lien_url}>
+			<a
+				class={`bouton ${classeFond === 'bloc--sombre' ? 'bouton--clair' : ''}`}
+				href={bloc.lien_url}
+			>
 				{bloc.lien_libelle}
 			</a>
 		</p>

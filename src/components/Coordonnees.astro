@@ -21,7 +21,8 @@ const numero = site.telephone.replace(/\s/g, '');
 			<p class="coordonnees__libelle">Par courrier</p>
 			<address class="coordonnees__adresse">
 				{site.adresse_voie}<br />
-				{site.adresse_code_postal} {site.adresse_ville}
+				{site.adresse_code_postal}
+				{site.adresse_ville}
 			</address>
 		</div>
 		{
@@ -36,7 +37,9 @@ const numero = site.telephone.replace(/\s/g, '');
 			site.linkedin && (
 				<div class="coordonnees__entree">
 					<p class="coordonnees__libelle">Sur LinkedIn</p>
-					<a href={site.linkedin} rel="noopener">Page du dirigeant</a>
+					<a href={site.linkedin} rel="noopener">
+						Page du dirigeant
+					</a>
 				</div>
 			)
 		}

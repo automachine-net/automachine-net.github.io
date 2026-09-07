@@ -8,8 +8,10 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 
 <footer class="pied">
 	<div class="pied__interieur">
-		{/* Le logo occupe sa propre ligne : il ne se retrouve jamais à côté d'une colonne
-		    plus haute que lui, ce qui creusait un grand vide en dessous. */}
+		{
+			/* Le logo occupe sa propre ligne : il ne se retrouve jamais à côté d'une colonne
+		    plus haute que lui, ce qui creusait un grand vide en dessous. */
+		}
 		<a class="pied__marque" href="/" aria-label={`${site.nom}, accueil`}>
 			<img src="/images/logo/fond-noir.svg" alt="" width="157" height="59" />
 		</a>
@@ -19,7 +21,8 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 				<h2>Nous trouver</h2>
 				<address>
 					{site.adresse_voie}<br />
-					{site.adresse_code_postal} {site.adresse_ville}<br />
+					{site.adresse_code_postal}
+					{site.adresse_ville}<br />
 					{site.adresse_pays}
 				</address>
 				<p class="pied__telephone">
@@ -36,14 +39,26 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 			<nav aria-label="Navigation du pied de page">
 				<h2>Le site</h2>
 				<ul>
-					{navigation.principale.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+					{
+						navigation.principale.map((n) => (
+							<li>
+								<a href={n.href}>{n.label}</a>
+							</li>
+						))
+					}
 				</ul>
 			</nav>
 
 			<div>
 				<h2>Informations</h2>
 				<ul>
-					{navigation.pied.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+					{
+						navigation.pied.map((n) => (
+							<li>
+								<a href={n.href}>{n.label}</a>
+							</li>
+						))
+					}
 				</ul>
 			</div>
 		</div>

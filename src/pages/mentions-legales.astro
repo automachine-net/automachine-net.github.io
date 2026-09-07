@@ -26,7 +26,9 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 				<div><dt>Forme juridique</dt><dd>{legal.forme_juridique}</dd></div>
 				<div>
 					<dt>Capital social</dt>
-					<dd class={aCompleter(legal.capital_social) ? 'a-rediger' : ''}>{legal.capital_social}</dd>
+					<dd class={aCompleter(legal.capital_social) ? 'a-rediger' : ''}>
+						{legal.capital_social}
+					</dd>
 				</div>
 				<div>
 					<dt>Siège social</dt>

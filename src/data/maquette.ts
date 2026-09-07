@@ -20,8 +20,18 @@ export const machines = [
 		secteur: 'Bancs de test',
 		fonction: '[À RÉDIGER]',
 	},
-	{ slug: 'machine-a-plisser', nom: 'Machine à plisser', secteur: 'Industrie', fonction: '[À RÉDIGER]' },
-	{ slug: 'cabine-robotisee', nom: 'Cabine robotisée', secteur: 'Industrie', fonction: '[À RÉDIGER]' },
+	{
+		slug: 'machine-a-plisser',
+		nom: 'Machine à plisser',
+		secteur: 'Industrie',
+		fonction: '[À RÉDIGER]',
+	},
+	{
+		slug: 'cabine-robotisee',
+		nom: 'Cabine robotisée',
+		secteur: 'Industrie',
+		fonction: '[À RÉDIGER]',
+	},
 	{ slug: 'depacking', nom: 'Ligne de dépacking', secteur: 'Industrie', fonction: '[À RÉDIGER]' },
 	{ slug: 'sableuse', nom: 'Sableuse', secteur: 'Recherche', fonction: '[À RÉDIGER]' },
 ];

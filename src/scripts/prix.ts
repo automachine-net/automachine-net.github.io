@@ -34,8 +34,23 @@ export type Option = Montants & {
 };
 
 export type Poste =
-	| { cle: string; type: 'nombre'; libelle: string; unite: string; aide: string; louche: Montants; detail?: Option[] }
-	| { cle: string; type: 'choix'; libelle: string; aide: string; options: Option[]; defaut?: string }
+	| {
+			cle: string;
+			type: 'nombre';
+			libelle: string;
+			unite: string;
+			aide: string;
+			louche: Montants;
+			detail?: Option[];
+	  }
+	| {
+			cle: string;
+			type: 'choix';
+			libelle: string;
+			aide: string;
+			options: Option[];
+			defaut?: string;
+	  }
 	| { cle: string; type: 'cases'; libelle: string; aide: string; options: Option[] };
 
 export interface Facteur {
@@ -231,7 +246,11 @@ export function estimer(modele: Modele, e: Entrees, indice = 1, margePct = 0): R
 		prix,
 		bas: prix * (1 + modele.fourchette.bas_pct / 100),
 		haut: prix * (1 + modele.fourchette.haut_pct / 100),
-		parts: modele.parts.map((p) => ({ cle: p.cle, libelle: p.libelle, montant: montants[p.cle] ?? 0 })),
+		parts: modele.parts.map((p) => ({
+			cle: p.cle,
+			libelle: p.libelle,
+			montant: montants[p.cle] ?? 0,
+		})),
 		hypotheses,
 		vide,
 	};

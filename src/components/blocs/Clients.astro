@@ -23,7 +23,14 @@ const titre = bloc.titre || reglagesClients.titre;
 			{
 				reglagesClients.clients.map((c) => (
 					<li>
-						<img src={c.logo} alt={c.nom} width="200" height="200" loading="lazy" decoding="async" />
+						<img
+							src={c.logo}
+							alt={c.nom}
+							width="200"
+							height="200"
+							loading="lazy"
+							decoding="async"
+						/>
 					</li>
 				))
 			}

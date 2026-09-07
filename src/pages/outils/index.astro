@@ -51,10 +51,10 @@ const outils = [
 	description="Quiz, simulateurs et animations : des outils pour comprendre avant de décider."
 >
 	<EntetePage
-	fil={[{ libelle: 'Accueil', href: '/' }, { libelle: 'Outils' }]}
-	titre="Des outils pour comprendre avant de décider"
-	chapeau="Chaque outil se manipule plutôt qu’il ne se lit. Rien de ce que vous y saisissez ne nous parvient."
-/>
+		fil={[{ libelle: 'Accueil', href: '/' }, { libelle: 'Outils' }]}
+		titre="Des outils pour comprendre avant de décider"
+		chapeau="Chaque outil se manipule plutôt qu’il ne se lit. Rien de ce que vous y saisissez ne nous parvient."
+	/>
 
 	<section class="bloc bloc--clair">
 		<div class="bloc__interieur">
@@ -68,7 +68,9 @@ const outils = [
 									{o.etat && <span class="outil__etat">{o.etat}</span>}
 								</span>
 								<span class="outil__texte">{o.texte}</span>
-								<span class="outil__ouvrir" aria-hidden="true">Ouvrir →</span>
+								<span class="outil__ouvrir" aria-hidden="true">
+									Ouvrir →
+								</span>
 							</a>
 						</li>
 					))
@@ -79,7 +81,6 @@ const outils = [
 </Base>
 
 <style>
-
 	.outils {
 		list-style: none;
 		margin: 0;

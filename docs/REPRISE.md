@@ -24,23 +24,23 @@ Le site tourne sur `http://localhost:4321`. `npm run build` produit le site dans
 
 ## Où se trouve quoi
 
-| Chemin                     | Contenu                                                        |
-| -------------------------- | -------------------------------------------------------------- |
-| `content/pages/`           | Une page du site par fichier, en Markdown avec frontmatter.    |
-| `content/machines/`        | Une fiche machine par fichier.                                 |
-| `content/quiz/`            | Les questions du quiz, en JSON.                                |
-| `content/reglages/`        | Coordonnées, menus, clients, secteurs, informations légales.   |
-| `src/pages/`               | Les routes. Chaque fichier produit une adresse.                |
-| `src/layouts/Base.astro`   | Le gabarit commun : balises de tête, en-tête, pied de page.    |
-| `src/components/blocs/`    | La bibliothèque de blocs, un composant par type.               |
-| `src/components/Blocs.astro` | Le répartiteur : associe un type de bloc à son composant.    |
-| `src/components/modules/`  | Les outils interactifs (quiz, compte à rebours).               |
-| `src/content.config.ts`    | Les schémas de validation du contenu.                          |
-| `src/scripts/filaire.ts`   | Les volumes 3D filaires, dessinés au canvas, sans bibliothèque.|
-| `src/styles/base.css`      | Les jetons de couleur, les typographies, les styles communs.   |
-| `public/admin/config.yml`  | La configuration du CMS.                                       |
-| `public/fonts/`            | Les polices auto-hébergées, en woff2.                          |
-| `.github/workflows/`       | La construction et le déploiement automatiques.                |
+| Chemin                       | Contenu                                                         |
+| ---------------------------- | --------------------------------------------------------------- |
+| `content/pages/`             | Une page du site par fichier, en Markdown avec frontmatter.     |
+| `content/machines/`          | Une fiche machine par fichier.                                  |
+| `content/quiz/`              | Les questions du quiz, en JSON.                                 |
+| `content/reglages/`          | Coordonnées, menus, clients, secteurs, informations légales.    |
+| `src/pages/`                 | Les routes. Chaque fichier produit une adresse.                 |
+| `src/layouts/Base.astro`     | Le gabarit commun : balises de tête, en-tête, pied de page.     |
+| `src/components/blocs/`      | La bibliothèque de blocs, un composant par type.                |
+| `src/components/Blocs.astro` | Le répartiteur : associe un type de bloc à son composant.       |
+| `src/components/modules/`    | Les outils interactifs (quiz, compte à rebours).                |
+| `src/content.config.ts`      | Les schémas de validation du contenu.                           |
+| `src/scripts/filaire.ts`     | Les volumes 3D filaires, dessinés au canvas, sans bibliothèque. |
+| `src/styles/base.css`        | Les jetons de couleur, les typographies, les styles communs.    |
+| `public/admin/config.yml`    | La configuration du CMS.                                        |
+| `public/fonts/`              | Les polices auto-hébergées, en woff2.                           |
+| `.github/workflows/`         | La construction et le déploiement automatiques.                 |
 
 ## Ajouter un type de bloc
 

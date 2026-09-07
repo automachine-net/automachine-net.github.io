@@ -37,7 +37,9 @@ export function chargerVisionneuse(): void {
 	promesse = import('@google/model-viewer').then(({ ModelViewerElement }) => {
 		ModelViewerElement.dracoDecoderLocation = '/decodeurs/draco/';
 		document.querySelectorAll('model-viewer').forEach((v) => {
-			v.addEventListener('load', () => teinter(v as Element & { model?: { materials: unknown[] } }));
+			v.addEventListener('load', () =>
+				teinter(v as Element & { model?: { materials: unknown[] } })
+			);
 		});
 	});
 }

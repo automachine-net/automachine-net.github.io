@@ -224,6 +224,7 @@ s'ajoute à la liste du bloc en même temps qu'il est créé.
      l'électronique, × 1,5 sur les robots, appliquée au prorata de la part électrique de chaque
      poste). « Mise en position » : « large » au-delà du millimètre, le millimètre est déjà une
      exigence.
+
 - Pas de « quiz découverte » : idée abandonnée par le dirigeant, remplacée par des outils
   réellement utiles au client (empreinte carbone, ordre de prix).
 - **Accueil : un bloc par outil**, titré par ce que fait l'outil ou son sujet. Jamais de bloc
@@ -310,7 +311,7 @@ suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
     n'affichent la ligne « adresse électronique » que renseignée.
   - L'intégration « chantier » reste en place comme garde-fou : elle doit désormais n'écarter
     que les maquettes.
-  Les marqueurs restent la convention pour tout texte futur non validé (voir `docs/EDITION.md`).
+    Les marqueurs restent la convention pour tout texte futur non validé (voir `docs/EDITION.md`).
 
 ## Lots
 

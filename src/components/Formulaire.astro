@@ -13,8 +13,10 @@ import site from '../../content/reglages/site.json';
 const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true;
 ---
 
-{/* La classe « bloc--blanc » permet à ce bloc de fusionner avec l'en-tête de page, qui est
-    blanc lui aussi : sans elle, les deux marges se cumulaient et creusaient un grand vide. */}
+{
+	/* La classe « bloc--blanc » permet à ce bloc de fusionner avec l'en-tête de page, qui est
+    blanc lui aussi : sans elle, les deux marges se cumulaient et creusaient un grand vide. */
+}
 <section class="bloc bloc--blanc">
 	<div class="bloc__interieur formulaire__interieur">
 		<form
@@ -31,12 +33,25 @@ const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true
 
 			<div class="champ">
 				<label for="societe">Société</label>
-				<input type="text" id="societe" name="societe" autocomplete="organization" disabled={!actif} />
+				<input
+					type="text"
+					id="societe"
+					name="societe"
+					autocomplete="organization"
+					disabled={!actif}
+				/>
 			</div>
 
 			<div class="champ">
 				<label for="email">Votre adresse électronique <span aria-hidden="true">*</span></label>
-				<input type="email" id="email" name="email" required autocomplete="email" disabled={!actif} />
+				<input
+					type="email"
+					id="email"
+					name="email"
+					required
+					autocomplete="email"
+					disabled={!actif}
+				/>
 			</div>
 
 			<div class="champ">
@@ -70,9 +85,7 @@ const actif = (site as { formulaire_actif?: boolean }).formulaire_actif === true
 				<button class="bouton" type="submit" disabled={!actif}>Envoyer</button>
 				{
 					!actif && (
-						<span class="envoi__note">
-							L’envoi sera actif à la mise en ligne définitive.
-						</span>
+						<span class="envoi__note">L’envoi sera actif à la mise en ligne définitive.</span>
 					)
 				}
 			</p>

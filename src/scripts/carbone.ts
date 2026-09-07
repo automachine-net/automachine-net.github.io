@@ -98,7 +98,8 @@ export function calculer(e: Entrees): Resultat {
 						(sous.approche ? ' (facteur approché)' : '')
 				);
 			}
-			if (morceaux.length) hypotheses.push(`${categorie.libelle} détaillés — ${morceaux.join(' ; ')}.`);
+			if (morceaux.length)
+				hypotheses.push(`${categorie.libelle} détaillés — ${morceaux.join(' ; ')}.`);
 		} else {
 			const kg = e.categories[categorie.cle] ?? 0;
 			if (kg <= 0) continue;
