@@ -273,6 +273,26 @@ suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
   sort du plan. La liste des pages écartées est imprimée dans le journal de construction.
   Aucune liste manuelle à tenir : `PAGES_NON_REFERENCEES` ne sert plus qu'aux modules
   volontairement non publics.
+- **2026-09-07, décision du dirigeant : plus aucun marqueur, textes finalisés.** À la
+  livraison du lot B, il a demandé de retirer toutes les balises et tous les marqueurs pour
+  voir chaque page comme finie, et de finaliser les textes dans le style du site. Fait, sans
+  inventer un seul fait : là où une information manquait (années des certifications, nombre
+  de machines livrées, effectif, délais chiffrés, données techniques des fiches, intervention
+  hors de France, durée de conservation des statistiques), le texte a été écrit pour s'en
+  passer, et le point est listé dans le compte rendu au dirigeant. Conséquences :
+  - bloc « chiffres clés » retiré de la page Entreprise (deux valeurs sur quatre inconnues) ;
+  - fiches techniques des machines vidées (`caracteristiques: []`), les données réelles
+    restant à fournir ; les descriptions tiennent seules ;
+  - question « hors de France » retirée de la FAQ ;
+  - pages Flux de matières et Réversibilité publiées et référencées (elles portaient un
+    `noindex` codé en dur) ; le simulateur carbone reste non public ;
+  - `site.json` : `email` vide (règle dépôt public) et `statistiques_actives: false`. La
+    page Confidentialité dit qu'aucune mesure d'audience n'existe tant que ce réglage est
+    faux ; la section Matomo réapparaît quand il passe à vrai (lot 2b). Les mentions légales
+    n'affichent la ligne « adresse électronique » que renseignée.
+  - L'intégration « chantier » reste en place comme garde-fou : elle doit désormais n'écarter
+    que les maquettes.
+  Les marqueurs restent la convention pour tout texte futur non validé (voir `docs/EDITION.md`).
 
 ## Lots
 

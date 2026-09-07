@@ -666,13 +666,26 @@ collections:
           - { name: adresse_ville, label: Adresse — ville, widget: string }
           - { name: adresse_pays, label: Adresse — pays, widget: string }
           - { name: telephone, label: Téléphone, widget: string }
-          - { name: email, label: Adresse électronique, widget: string }
+          - name: email
+            label: Adresse électronique
+            widget: string
+            required: false
+            hint: >-
+              À laisser vide tant que le dépôt du site est public : tout ce qui y est écrit
+              est lisible par n'importe qui. Vide, la ligne n'apparaît pas sur le site.
           - { name: linkedin, label: Page LinkedIn, widget: string, required: false }
           - name: formulaire_actif
             label: Formulaire de contact en service
             widget: boolean
             default: false
             hint: À laisser décoché tant que l'hébergement définitif n'est pas en place.
+          - name: statistiques_actives
+            label: Mesure d'audience en service
+            widget: boolean
+            default: false
+            hint: >-
+              À cocher seulement quand Matomo est installé. Tant que c'est décoché, la page
+              Confidentialité dit qu'aucune mesure d'audience n'existe, ce qui est la vérité.
 
       - name: navigation
         label: Menus

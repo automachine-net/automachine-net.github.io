@@ -51,10 +51,14 @@ const Valeur = ({ v }: { v: string }) => v;
 					<dt>Téléphone</dt>
 					<dd class={aCompleter(site.telephone) ? 'a-rediger' : ''}>{site.telephone}</dd>
 				</div>
-				<div>
-					<dt>Adresse électronique</dt>
-					<dd class={aCompleter(site.email) ? 'a-rediger' : ''}>{site.email}</dd>
-				</div>
+				{
+					site.email && (
+						<div>
+							<dt>Adresse électronique</dt>
+							<dd>{site.email}</dd>
+						</div>
+					)
+				}
 			</dl>
 
 			<h2>Directeur de la publication</h2>

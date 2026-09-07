@@ -34,7 +34,7 @@ const minimum = { 2: '22rem', 3: '17rem', 4: '13rem' }[bloc.colonnes ?? 3];
 								/>
 							) : (
 								<div class={`visuel ${bloc.fond === 'sombre' ? 'visuel--sombre' : ''}`}>
-									<span>{i.attente ?? '[VISUEL À PRODUIRE]'}</span>
+									<span>{i.attente ?? 'Visuel à venir'}</span>
 								</div>
 							)}
 							{i.legende && <figcaption>{i.legende}</figcaption>}

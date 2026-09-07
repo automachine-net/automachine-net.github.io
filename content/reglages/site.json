@@ -7,7 +7,8 @@
   "adresse_ville": "Rochecorbon",
   "adresse_pays": "France",
   "telephone": "02 47 39 37 07",
-  "email": "[À COMPLÉTER À LA BASCULE]",
+  "email": "",
   "linkedin": "https://www.linkedin.com/in/stanislas-moreau-4a43a7171/",
-  "formulaire_actif": false
+  "formulaire_actif": false,
+  "statistiques_actives": false
 }

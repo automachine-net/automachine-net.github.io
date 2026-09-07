@@ -8,7 +8,9 @@ import Base from '../layouts/Base.astro';
 import legal from '../../content/reglages/legal.json';
 import site from '../../content/reglages/site.json';
 
-const aCompleter = (v: string) => v.trim().startsWith('[');
+// La mesure d'audience n'existe que lorsque le réglage le dit : tant que Matomo n'est pas
+// installé, la page dit qu'il n'y a aucune mesure, ce qui est la vérité.
+const statistiques = (site as { statistiques_actives?: boolean }).statistiques_actives === true;
 ---
 
 <Base
@@ -61,20 +63,28 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 			</ul>
 
 			<h2>Mesure d’audience</h2>
-			<p>
-				L’audience est mesurée avec <strong>Matomo</strong>, installé sur notre propre hébergement.
-				Les données ne quittent pas nos serveurs et ne sont transmises à personne.
-			</p>
-			<p>
-				La configuration retenue suit les recommandations de la CNIL permettant d’être exempté de
-				consentement : aucun cookie de suivi, adresse IP tronquée, pas de recoupement entre sites,
-				pas de suivi entre les visites. C’est la raison pour laquelle ce site n’affiche pas de
-				bandeau : il n’y a rien à accepter ou à refuser.
-			</p>
-			<p>
-				Les données d’audience sont conservées <span class="a-rediger">[À COMPLÉTER : durée retenue,
-				par exemple treize mois]</span>.
-			</p>
+			{
+				statistiques ? (
+					<Fragment>
+						<p>
+							L’audience est mesurée avec <strong>Matomo</strong>, installé sur notre propre
+							hébergement. Les données ne quittent pas nos serveurs et ne sont transmises à
+							personne.
+						</p>
+						<p>
+							La configuration retenue suit les recommandations de la CNIL permettant d’être
+							exempté de consentement : aucun cookie de suivi, adresse IP tronquée, pas de
+							recoupement entre sites, pas de suivi entre les visites. C’est la raison pour
+							laquelle ce site n’affiche pas de bandeau : il n’y a rien à accepter ou à refuser.
+						</p>
+					</Fragment>
+				) : (
+					<p>
+						Ce site ne mesure pas son audience. Aucun outil de statistiques n’y est installé, et
+						aucune donnée de navigation n’est collectée.
+					</p>
+				)
+			}
 
 			<h2>Cookies</h2>
 			<p>
@@ -86,9 +96,9 @@ const aCompleter = (v: string) => v.trim().startsWith('[');
 			<h2>Vos droits</h2>
 			<p>
 				Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation et
-				d’opposition sur les données vous concernant. Pour l’exercer, écrivez-nous à
-				<span class={aCompleter(site.email) ? 'a-rediger' : ''}>{site.email}</span> ou à l’adresse
-				postale ci-dessus.
+				d’opposition sur les données vous concernant. Pour l’exercer, écrivez-nous
+				{site.email ? <Fragment> à {site.email},</Fragment> : ''} par le{' '}
+				<a href="/contact">formulaire de contact</a> ou à l’adresse postale ci-dessus.
 			</p>
 			<p>
 				Si la réponse ne vous satisfait pas, vous pouvez saisir la Commission nationale de

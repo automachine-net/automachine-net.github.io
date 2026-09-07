@@ -1,16 +1,16 @@
 ---
 libelle: Accueil
 titre: Automachine
-description: Concepteur et fabriquant de machines spéciales à Tours, pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.
+description: Concepteur et fabricant de machines spéciales à Tours, pour l'industrie, l'agriculture, la recherche, les bancs de test et le tertiaire.
 noindex: false
 blocs:
   - type: hero
     surtitre: ''
     titre: Votre machine n'existe pas ? Nous la construisons.
     chapeau: |-
-      Chez AUTOMACHINE, nous concevons et fabriquons des machines spéciales sur mesure pour répondre aux besoins que les solutions standard ne peuvent pas satisfaire.
+      Automachine conçoit et fabrique des machines spéciales : des équipements construits à l’unité, pour les opérations auxquelles aucune machine du commerce ne répond.
 
-      De l’idée à la mise en service, nous transformons vos contraintes en solutions concrètes.
+      De l’idée à la mise en service, nous prenons en charge l’étude, la fabrication, l’automatisme et la mise en route chez vous.
     lien_libelle: Décrire un besoin
     lien_url: /contact
     lien_secondaire_libelle: Voir nos machines
@@ -33,19 +33,15 @@ blocs:
     lien_libelle: Découvrir l’entreprise
     lien_url: /entreprise
     texte: |-
-      Depuis 2011, AUTOMACHINE conçoit et réalise des machines spéciales sur mesure pour l’industrie, la recherche et des secteurs spécialisés.
+      Depuis 2011, Automachine conçoit et réalise des machines spéciales pour l’industrie, la recherche et des secteurs spécialisés.
 
-      Mécanique, automatisme, robotique, électrotechnique : notre équipe réunit les compétences nécessaires pour transformer un besoin spécifique en machine fiable, fonctionnelle et adaptée à son environnement.
+      Mécanique, automatisme, robotique, électrotechnique : l’équipe réunit sous le même toit les compétences nécessaires pour transformer un besoin précis en machine fiable, adaptée à son environnement.
 
-      Notre exigence en matière de qualité s’est notamment traduite par l’obtention des certifications **ISO 9001** et **ISO 14001** en 2017.
+      Cette exigence s’est traduite en 2017 par l’obtention des certifications **ISO 9001** et **ISO 14001**. Nous ne les avons pas reconduites, mais les méthodes de travail qu’elles ont installées sont restées les nôtres.
     fond: sombre
     image: /images/contenu/DSCF6411.JPG
     image_alt: L’équipe d’Automachine dans l’atelier, autour d’un robot industriel monté sur palette.
-    image_attente: ''
     position_image: droite
-    citation: Texte de la citation
-    auteur: Moi
-    fonction: Dire des trucs et faire un test
   - type: clients
     titre: ''
     fond: blanc
@@ -55,8 +51,4 @@ blocs:
     lien_url: /contact
     texte: ''
     fond: clair
-    image: ''
-    image_alt: ''
-    image_attente: '[VISUEL À PRODUIRE] atelier ou rendu CAO'
-    position_image: droite
 ---
