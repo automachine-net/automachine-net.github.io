@@ -267,6 +267,25 @@ le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (pag
 suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
 
 - **Lot A livré le 2026-09-07.**
+- **Lot E livré le 2026-09-07**, en six commits :
+  1. Vérification de types dans la construction (`astro check` dans `prebuild`, donc aussi
+     dans l'intégration continue) ; `tsconfig.json` restreint aux sources, sans quoi la
+     vérification incluait `node_modules` et épuisait la mémoire.
+  2. Modules multi-instances : chaque module monte chacun de ses exemplaires et ne cherche
+     ses éléments qu'en dessous de sa racine (`src/scripts/dom.ts` : `chaqueExemplaire`,
+     `element`). Les deux simulateurs préfixent leurs identifiants par exemplaire. Plus une
+     assertion `!` dans les modules. Quiz annoncé aux lecteurs d'écran (`aria-live`),
+     carrousel et réduction des animations. **Règle** : un nouveau module suit ce modèle.
+  3. `src/components/EntetePage.astro` pour les pages écrites en code. **Règle des textes du
+     CMS** : champ Markdown → `marked()`, champ court → `typo()`, jamais de `set:html` sur un
+     champ brut.
+  4. Schémas de contenu stricts (`.strict()` partout) : un champ inconnu fait échouer la
+     construction ; `src/content.config.ts` et `public/admin/config.yml` doivent lister les
+     mêmes champs (vérifié par script le 2026-09-07).
+  5. Absorbée par 2.
+  6. Prettier configuré (`.prettierrc`, `.prettierignore`) et appliqué à tout le code ;
+     `npm run formater`, `npm run formater:controler`. Pas dans l'intégration continue, pour
+     qu'un écart de style ne bloque jamais une publication.
 - **Lot D livré le 2026-09-07** : les corrections de fond prévues (phrase ISO, chiffres clés,
   FAQ, fiche ESRF) ont été absorbées par la passe éditoriale du même jour ; il restait le
   téléphone en tête de la page Contact. Composant `src/components/Coordonnees.astro` :
