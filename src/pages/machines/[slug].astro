@@ -134,14 +134,19 @@ const suivante = toutes[(position + 1) % toutes.length];
 
 		<Blocs blocs={d.blocs} />
 
-		<nav class="bloc bloc--clair" aria-label="Machine suivante">
-			<div class="bloc__interieur suite">
-				<p class="suite__libelle">Machine suivante</p>
-				<p class="suite__nom">
-					<a class="lien" href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a>
-				</p>
-			</div>
-		</nav>
+		{
+			/* Le renvoi vers la machine suivante n'a de sens qu'à partir de deux machines. */
+			toutes.length > 1 && (
+				<nav class="bloc bloc--clair" aria-label="Machine suivante">
+					<div class="bloc__interieur suite">
+						<p class="suite__libelle">Machine suivante</p>
+						<p class="suite__nom">
+							<a class="lien" href={`/machines/${suivante.id}`}>{typo(suivante.data.nom)}</a>
+						</p>
+					</div>
+				</nav>
+			)
+		}
 	</article>
 </Base>
 

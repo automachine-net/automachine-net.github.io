@@ -7,9 +7,10 @@
   },
   "scripts": {
     "cms": "node -e \"require('fs').copyFileSync('node_modules/@sveltia/cms/dist/sveltia-cms.js','public/admin/sveltia-cms.js')\"",
-    "predev": "npm run cms",
+    "detourer": "node construction/detourer.mjs",
+    "predev": "npm run cms && npm run detourer",
     "dev": "astro dev",
-    "prebuild": "npm run cms",
+    "prebuild": "npm run cms && npm run detourer",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

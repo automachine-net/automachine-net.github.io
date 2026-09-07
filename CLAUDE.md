@@ -266,6 +266,19 @@ le carrousel et le flux, quiz annoncé aux lecteurs d'écran) ; F finitions (pag
 suppression des maquettes, polices, images de partage, `BASCULE.md`, README).
 
 - **Lot A livré le 2026-09-07.**
+- **Lot C engagé le 2026-09-07** : détourage automatique des PNG transparents de
+  `src/images/machines` avant chaque construction (`construction/detourer.mjs`, scripts
+  `predev` et `prebuild`, bibliothèque sharp déjà présente). Le dépôt d'un rendu brut
+  depuis le CMS suffit. Brief des rendus dans `docs/3D.md` § 6. Reste : les six rendus, à
+  produire par le dirigeant ; les machines à ajouter au carrousel de l'accueil ; les
+  volumes filaires à retirer des pages publiées quand toutes les images existent.
+  - **Décision du dirigeant (2026-09-07) : une seule fiche machine en ligne**, la bobineuse
+    ESRF. Les six autres fiches (banc de test hydraulique, bobineuse générique, cabine
+    robotisée, dépacking, machine à plisser, sableuse) sont supprimées du contenu, textes
+    compris : elles reviendront avec leurs rendus, à recréer dans le CMS. Le renvoi
+    « Machine suivante » des fiches ne s'affiche qu'à partir de deux machines. Les formes
+    d'attente filaires (`src/scripts/filaire.ts`) et l'option « Volume d'attente » du CMS
+    restent, comme secours.
 - **Lot B livré le 2026-09-07** : intégration `src/integrations/chantier.mjs`, déclarée
   après le plan du site dans `astro.config.mjs`. Elle relit chaque page produite ; un
   marqueur visible (regex `MARQUEUR`, insensible à la casse et aux accents) vaut balise

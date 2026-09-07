@@ -1,7 +1,7 @@
 ---
 libelle: Machines
 titre: Machines
-description: 'Réalisations d''Automachine : bobineuse, banc de test hydraulique, machine à plisser, cabine robotisée, ligne de dépacking, sableuse.'
+description: 'Réalisations d''Automachine, concepteur et fabricant de machines spéciales à Tours.'
 blocs:
   - type: hero
     surtitre: Nos réalisations
